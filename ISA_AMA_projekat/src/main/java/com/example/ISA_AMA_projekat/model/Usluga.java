@@ -33,6 +33,12 @@ public class Usluga {
     inverseJoinColumns = @JoinColumn(name="hotel_id", referencedColumnName="id"))
 	private Set<Hotel> hoteli = new HashSet<Hotel>();
 	
+	@ManyToMany
+	@JoinTable(name = "usluge_servis",
+    joinColumns = @JoinColumn(name="usluga_id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name="servis_id", referencedColumnName="id"))
+	private Set<RentacarServis> servisi = new HashSet<RentacarServis>();
+	
 	public Usluga() {
 		super();
 	}
