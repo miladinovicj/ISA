@@ -4,12 +4,15 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 
 @Entity
@@ -17,9 +20,9 @@ public class Hotel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 	
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String naziv;
 	
 	@Column(nullable = false)
@@ -31,18 +34,21 @@ public class Hotel {
 	@Column
 	private double prosecna_ocena;
 	
-	@ManyToMany(mappedBy = "usluge")
+	@ManyToMany(mappedBy = "hoteli")
 	private Set<Usluga> usluge = new HashSet<Usluga>();
+	
+	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Soba> sobe = new HashSet<Soba>();
 	
 	public Hotel() {
 		super();
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -86,6 +92,14 @@ public class Hotel {
 		this.usluge = usluge;
 	}
 	
+	public Set<Soba> getSobe() {
+		return sobe;
+	}
+
+	public void setSobe(Set<Soba> sobe) {
+		this.sobe = sobe;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
