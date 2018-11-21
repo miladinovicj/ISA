@@ -18,25 +18,25 @@ public class Vozilo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique = true, nullable = false)
+	@Column
 	private String naziv;
 	
-	@Column(nullable = false)
+	@Column
 	private String marka;
 	
-	@Column(unique = true, nullable = false)
+	@Column
 	private String model;
 	
-	@Column(nullable = false)
+	@Column
 	private int godina_proizvodnje;
 	
-	@Column(nullable = false)
+	@Column
 	private int broj_sedista;
 	
-	@Column(nullable = false)
+	@Column
 	private String tip;
 	
-	@Column(nullable = false)
+	@Column
 	private double cena_dan;
 	
 	@Column

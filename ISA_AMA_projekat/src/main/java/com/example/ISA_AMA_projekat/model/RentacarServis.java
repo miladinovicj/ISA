@@ -21,7 +21,7 @@ public class RentacarServis {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String naziv;
 	
 	@Column(nullable = false)
@@ -30,7 +30,7 @@ public class RentacarServis {
 	@Column
 	private String promotivni_opis;
 	
-	@ManyToMany(mappedBy = "usluge")
+	@ManyToMany(mappedBy = "servisi")
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@Column
