@@ -48,7 +48,7 @@ public class Vozilo {
 	private RentacarServis rentacar;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rezervacija_id")
+    @JoinColumn(name = "rezervacija_id", referencedColumnName="id")
     private RezervacijaVozila rezervacija;
 
 	public Vozilo() {
