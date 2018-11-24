@@ -41,6 +41,9 @@ public class RentacarServis {
 	
 	//kako izmodelovati atribut vezan za filijale??
 	
+	@OneToMany(mappedBy = "servis", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();
+	
 	public RentacarServis() {
 		super();
 	}
