@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.example.ISA_AMA_projekat.model;
 
 import static javax.persistence.CascadeType.ALL;
@@ -6,10 +5,14 @@ import static javax.persistence.FetchType.LAZY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,6 +63,10 @@ public class Korisnik implements Serializable
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnik")
 	private List<OsobaIzRez> rezervacijeUcestvovanja = new ArrayList<OsobaIzRez>();
 	
+	@OneToMany(mappedBy = "korisnik", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();	//ovo isto msm da mozda ne treba(Milica)
+
+	
 	
 	/*
 	@OneToMany(cascade={ALL}, fetch=LAZY)
@@ -74,136 +81,180 @@ public class Korisnik implements Serializable
 	@ManyToOne
 	@JoinColumn(name="prijatelj_id", referencedColumnName="id", nullable=false)
 	private Korisnik prijatelj;
-	
-	//GET & SET:
-	
-	
-	
-}
-=======
-package com.example.ISA_AMA_projekat.model;
 
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-//ova klasa opisuje registrovanog korisnika
-
-@Entity
-public class Korisnik {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-	@Column
-	private String ime;
-	
-	@Column
-	private String prezime;
-	
-	@Column
-	private String email;
-	
-	@Column
-	private String lozinka;
-	
-	@Column
-	private String grad;
-	
-	@Column
-	private int broj_telefona; // mozda ovo i ne treba da bude int, ali sam za sada ostavila tako
-	
-	@OneToMany(mappedBy="korisnik", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Ocena> ocene = new HashSet<Ocena>();
-	
-	@OneToMany(mappedBy = "korisnik", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();	//ovo isto msm da mozda ne treba(Milica)
 
 	public Korisnik() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Long getId() {
+
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+
+
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getIme() {
-		return ime;
-	}
 
-	public void setIme(String ime) {
-		this.ime = ime;
-	}
-
-	public String getPrezime() {
-		return prezime;
-	}
-
-	public void setPrezime(String prezime) {
-		this.prezime = prezime;
-	}
 
 	public String getEmail() {
 		return email;
 	}
 
+
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
 
 	public String getLozinka() {
 		return lozinka;
 	}
 
+
+
 	public void setLozinka(String lozinka) {
 		this.lozinka = lozinka;
 	}
+
+
+
+	public String getIme() {
+		return ime;
+	}
+
+
+
+	public void setIme(String ime) {
+		this.ime = ime;
+	}
+
+
+
+	public String getPrezime() {
+		return prezime;
+	}
+
+
+
+	public void setPrezime(String prezime) {
+		this.prezime = prezime;
+	}
+
+
 
 	public String getGrad() {
 		return grad;
 	}
 
+
+
 	public void setGrad(String grad) {
 		this.grad = grad;
 	}
 
-	public int getBroj_telefona() {
-		return broj_telefona;
+
+
+	public String getTelefon() {
+		return telefon;
 	}
 
-	public void setBroj_telefona(int broj_telefona) {
-		this.broj_telefona = broj_telefona;
+
+
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
 	}
+
+
+
+	public List<Korisnik> getListaPrijatelja() {
+		return listaPrijatelja;
+	}
+
+
+
+	public void setListaPrijatelja(List<Korisnik> listaPrijatelja) {
+		this.listaPrijatelja = listaPrijatelja;
+	}
+
+
+
+	public List<Rezervacija> getRezervacije() {
+		return rezervacije;
+	}
+
+
+
+	public void setRezervacije(List<Rezervacija> rezervacije) {
+		this.rezervacije = rezervacije;
+	}
+
+
+
+	public List<OsobaIzRez> getRezervacijeUcestvovanja() {
+		return rezervacijeUcestvovanja;
+	}
+
+
+
+	public void setRezervacijeUcestvovanja(List<OsobaIzRez> rezervacijeUcestvovanja) {
+		this.rezervacijeUcestvovanja = rezervacijeUcestvovanja;
+	}
+
+
 
 	public Set<RezervacijaVozila> getRezervacije_vozila() {
 		return rezervacije_vozila;
 	}
 
+
+
 	public void setRezervacije_vozila(Set<RezervacijaVozila> rezervacije_vozila) {
 		this.rezervacije_vozila = rezervacije_vozila;
 	}
 
-	public Set<Ocena> getOcene() {
-		return ocene;
+
+
+	public Korisnik getPrijatelj() {
+		return prijatelj;
 	}
 
-	public void setOcene(Set<Ocena> ocene) {
-		this.ocene = ocene;
+
+
+	public void setPrijatelj(Korisnik prijatelj) {
+		this.prijatelj = prijatelj;
+	}
+
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
+	//GET & SET:
+	
+	
+	
+	
+	
 }
->>>>>>> 114aa7a9f089230fb2287e21c2ac436721e0dde7
