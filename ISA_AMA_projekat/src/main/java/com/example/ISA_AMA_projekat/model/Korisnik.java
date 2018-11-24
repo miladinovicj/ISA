@@ -39,8 +39,11 @@ public class Korisnik {
 	@Column
 	private int broj_telefona; // mozda ovo i ne treba da bude int, ali sam za sada ostavila tako
 	
+	@OneToMany(mappedBy="korisnik", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Ocena> ocene = new HashSet<Ocena>();
+	
 	@OneToMany(mappedBy = "korisnik", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();
+	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();	//ovo isto msm da mozda ne treba(Milica)
 
 	public Korisnik() {
 		super();
@@ -102,6 +105,21 @@ public class Korisnik {
 	public void setBroj_telefona(int broj_telefona) {
 		this.broj_telefona = broj_telefona;
 	}
-	
+
+	public Set<RezervacijaVozila> getRezervacije_vozila() {
+		return rezervacije_vozila;
+	}
+
+	public void setRezervacije_vozila(Set<RezervacijaVozila> rezervacije_vozila) {
+		this.rezervacije_vozila = rezervacije_vozila;
+	}
+
+	public Set<Ocena> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(Set<Ocena> ocene) {
+		this.ocene = ocene;
+	}
 	
 }

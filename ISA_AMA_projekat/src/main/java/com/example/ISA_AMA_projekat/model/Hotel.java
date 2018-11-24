@@ -40,6 +40,12 @@ public class Hotel {
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Soba> sobe = new HashSet<Soba>();
 	
+	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RezervacijaHotel> rezervacije_hotela = new HashSet<RezervacijaHotel>();
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Ocena> ocene = new HashSet<Ocena>();
+	
 	public Hotel() {
 		super();
 	}
@@ -98,6 +104,22 @@ public class Hotel {
 
 	public void setSobe(Set<Soba> sobe) {
 		this.sobe = sobe;
+	}
+
+	public Set<RezervacijaHotel> getRezervacije_hotela() {
+		return rezervacije_hotela;
+	}
+
+	public void setRezervacije_hotela(Set<RezervacijaHotel> rezervacije_hotela) {
+		this.rezervacije_hotela = rezervacije_hotela;
+	}
+
+	public Set<Ocena> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(Set<Ocena> ocene) {
+		this.ocene = ocene;
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.example.ISA_AMA_projekat.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +10,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Soba {
@@ -33,6 +40,19 @@ public class Soba {
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Hotel hotel;
+	
+	@ManyToMany
+	@JoinTable(name = "rezervacije_sobe",
+    joinColumns = @JoinColumn(name="soba_id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name="rezervacijaHotel_id", referencedColumnName="id"))
+	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Ocena> ocene = new HashSet<Ocena>();
+	
+	public Soba() {
+		super();
+	}
 
 	public Integer getId() {
 		return id;
@@ -80,6 +100,30 @@ public class Soba {
 
 	public void setPopust(double popust) {
 		this.popust = popust;
+	}
+
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
+	public Set<RezervacijaHotel> getRezervacije() {
+		return rezervacije;
+	}
+
+	public void setRezervacije(Set<RezervacijaHotel> rezervacije) {
+		this.rezervacije = rezervacije;
+	}
+
+	public Set<Ocena> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(Set<Ocena> ocene) {
+		this.ocene = ocene;
 	}
 	
 }

@@ -75,6 +75,14 @@ public class Usluga {
 		this.hoteli = hoteli;
 	}
 	
+	public Set<RentacarServis> getServisi() {
+		return servisi;
+	}
+
+	public void setServisi(Set<RentacarServis> servisi) {
+		this.servisi = servisi;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
