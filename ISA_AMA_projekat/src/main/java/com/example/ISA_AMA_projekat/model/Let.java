@@ -16,8 +16,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 
 @Entity
 public class Let implements Serializable
@@ -50,11 +55,14 @@ public class Let implements Serializable
 	@Column(nullable = false)
 	private double udaljenost; //u km
 	
+	@Column(nullable = true)
+	private int popust; //u %
+	
 
 	
 	
 	//SLOZENI ATRIBUTI:
-	
+
 	@ElementCollection
 	@CollectionTable(name ="presedanja")
 	private List<String> presedanja = new ArrayList<String>();
@@ -64,7 +72,7 @@ public class Let implements Serializable
 
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="let")
 	private List<Rezervacija> rezervacije = new ArrayList<Rezervacija>();
-	
+
 	//FOREIGN KEYS:
 	
 	@ManyToOne
@@ -161,6 +169,15 @@ public class Let implements Serializable
 		this.rejtinzi = rejtinzi;
 	}
 	
+	
+	public int getPopust() {
+		return popust;
+	}
+
+	public void setPopust(int popust) {
+		this.popust = popust;
+	}
+
 	
 	
 		

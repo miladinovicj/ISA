@@ -27,7 +27,7 @@ public class Rating implements Serializable
 	@Column(nullable = false)
 	private int ocena;
 	
-	@Column(nullable = false)
+	@Column(nullable = false) //videti
 	private int id_korisnika;
 	
 	

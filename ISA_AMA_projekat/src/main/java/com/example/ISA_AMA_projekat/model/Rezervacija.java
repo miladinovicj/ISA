@@ -44,6 +44,8 @@ public class Rezervacija implements Serializable{
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="rezervacija")
 	private List<OsobaIzRez> osobe = new ArrayList<OsobaIzRez>();	
 	
+	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="rezervacija")
+	private List<Poziv> pozivi = new ArrayList<Poziv>();	
 	
 	
 	//FOREIGN KEY:
