@@ -50,10 +50,34 @@ public class Vozilo {
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rezervacija_id", referencedColumnName="id")
     private RezervacijaVozila rezervacija;
+	
+	@Column
+	private boolean na_popustu;
 
 	public Vozilo() {
 		super();
 	}
+
+	
+	public RezervacijaVozila getRezervacija() {
+		return rezervacija;
+	}
+
+
+	public void setRezervacija(RezervacijaVozila rezervacija) {
+		this.rezervacija = rezervacija;
+	}
+
+
+	public boolean isNa_popustu() {
+		return na_popustu;
+	}
+
+
+	public void setNa_popustu(boolean na_popustu) {
+		this.na_popustu = na_popustu;
+	}
+
 
 	public Long getId() {
 		return id;

@@ -83,6 +83,9 @@ public class Korisnik implements Serializable
 	@JoinTable(joinColumns=@JoinColumn(name="odId"),inverseJoinColumns=@JoinColumn(name="zaId"))
 	private List<Korisnik> zahteviPrijateljstva = new ArrayList<Korisnik>();
 	
+	@Column
+	private int bonus_poeni;
+	
 	/*
 	@OneToMany(cascade={ALL}, fetch=LAZY)
 	private List<Zahtev> listaPrijatelja = new ArrayList<Zahtev>();
@@ -94,6 +97,91 @@ public class Korisnik implements Serializable
 	//FOREIGN KEY:
 	
 	
+	public List<Poziv> getPoziviZaRezervacije() {
+		return poziviZaRezervacije;
+	}
+
+
+
+	public void setPoziviZaRezervacije(List<Poziv> poziviZaRezervacije) {
+		this.poziviZaRezervacije = poziviZaRezervacije;
+	}
+
+
+
+	public Set<Ocena> getOcene() {
+		return ocene;
+	}
+
+
+
+	public void setOcene(Set<Ocena> ocene) {
+		this.ocene = ocene;
+	}
+
+
+
+	public List<Korisnik> getPrijatelji() {
+		return prijatelji;
+	}
+
+
+
+	public void setPrijatelji(List<Korisnik> prijatelji) {
+		this.prijatelji = prijatelji;
+	}
+
+
+
+	public List<Korisnik> getZahteviPrijateljstva() {
+		return zahteviPrijateljstva;
+	}
+
+
+
+	public void setZahteviPrijateljstva(List<Korisnik> zahteviPrijateljstva) {
+		this.zahteviPrijateljstva = zahteviPrijateljstva;
+	}
+
+
+
+	public int getBonus_poeni() {
+		return bonus_poeni;
+	}
+
+
+
+	public void setBonus_poeni(int bonus_poeni) {
+		this.bonus_poeni = bonus_poeni;
+	}
+
+
+
+	public List<Korisnik> getPrijatelj_od() {
+		return prijatelj_od;
+	}
+
+
+
+	public void setPrijatelj_od(List<Korisnik> prijatelj_od) {
+		this.prijatelj_od = prijatelj_od;
+	}
+
+
+
+	public List<Korisnik> getPrimljeniZahteviPrijateljstva() {
+		return primljeniZahteviPrijateljstva;
+	}
+
+
+
+	public void setPrimljeniZahteviPrijateljstva(
+			List<Korisnik> primljeniZahteviPrijateljstva) {
+		this.primljeniZahteviPrijateljstva = primljeniZahteviPrijateljstva;
+	}
+
+
+
 	@ManyToMany
 	@JoinTable(joinColumns=@JoinColumn(name="friendId"), inverseJoinColumns=@JoinColumn(name="personId"))
 	private List<Korisnik> prijatelj_od;
