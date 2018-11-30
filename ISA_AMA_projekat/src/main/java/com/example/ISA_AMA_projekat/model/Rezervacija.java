@@ -44,34 +44,106 @@ public class Rezervacija implements Serializable{
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="rezervacija")
 	private List<OsobaIzRez> osobe = new ArrayList<OsobaIzRez>();	
 	
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="rezervacija")
-	private List<Poziv> pozivi = new ArrayList<Poziv>();	
-	
-	
 	//FOREIGN KEY:
 	
 	@ManyToOne
-	@JoinColumn(name="let_id", referencedColumnName="id", nullable=false)
+	@JoinColumn(referencedColumnName="id", nullable=false)
 	private Let let;
 	
 	@ManyToOne
-	@JoinColumn(name="korisnik_id", referencedColumnName="id", nullable=false)
+	@JoinColumn(referencedColumnName="id", nullable=false)
 	private Korisnik korisnik;
 
-	/*
-	@ManyToOne
-	@JoinColumn(name="korisnik_id", referencedColumnName="id", nullable=false)
-	private Korisnik korisnik;
 	
 	@ManyToOne
-	@JoinColumn(name="hotel_rez_id", referencedColumnName="id", nullable=false)
-	private Hotel_rez asd;
+	@JoinColumn( referencedColumnName="id", nullable=false)
+	private RezervacijaHotel rezevacijaHotel;
 
 	@ManyToOne
-	@JoinColumn(name="auto_rez_id", referencedColumnName="id", nullable=false)
-	private Auto_rez asd;
-	*/
+	@JoinColumn(referencedColumnName="id", nullable=false)
+	private RezervacijaVozila rezervacijaVozila;
 	
+	
+	
+	public Rezervacija() {
+		super();
+	}
 	
 	//GET & SET:
+
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public boolean isBrza() {
+		return brza;
+	}
+
+	public void setBrza(boolean brza) {
+		this.brza = brza;
+	}
+
+	public Date getDatumRezervacije() {
+		return datumRezervacije;
+	}
+
+	public void setDatumRezervacije(Date datumRezervacije) {
+		this.datumRezervacije = datumRezervacije;
+	}
+
+	public double getCena() {
+		return cena;
+	}
+
+	public void setCena(double cena) {
+		this.cena = cena;
+	}
+
+	public List<OsobaIzRez> getOsobe() {
+		return osobe;
+	}
+
+	public void setOsobe(List<OsobaIzRez> osobe) {
+		this.osobe = osobe;
+	}
+
+	public Let getLet() {
+		return let;
+	}
+
+	public void setLet(Let let) {
+		this.let = let;
+	}
+
+	public Korisnik getKorisnik() {
+		return korisnik;
+	}
+
+	public void setKorisnik(Korisnik korisnik) {
+		this.korisnik = korisnik;
+	}
+
+	public RezervacijaHotel getRezevacijaHotel() {
+		return rezevacijaHotel;
+	}
+
+	public void setRezevacijaHotel(RezervacijaHotel rezevacijaHotel) {
+		this.rezevacijaHotel = rezevacijaHotel;
+	}
+
+	public RezervacijaVozila getRezervacijaVozila() {
+		return rezervacijaVozila;
+	}
+
+	public void setRezervacijaVozila(RezervacijaVozila rezervacijaVozila) {
+		this.rezervacijaVozila = rezervacijaVozila;
+	}
+	
+	
+	
 }
