@@ -38,22 +38,96 @@ public class OsobaIzRez implements Serializable{
 	
 	@Column(nullable = false)
 	private boolean potvrdjeno;
-	
-	
-	//SLOZENI ATRIBUTI:
-	
-	
+		
+
 	//FOREIGN KEY:
 	
 	@ManyToOne
-	@JoinColumn(name="rezervacija_id", referencedColumnName="id", nullable=false)
+	@JoinColumn(referencedColumnName="id", nullable=false)
 	private Rezervacija rezervacija;
 	
+	//nullable ako je pozvan korisnik koji nema acc
 	@ManyToOne
-	@JoinColumn(name="korisnik_id", referencedColumnName="id", nullable=true)
+	@JoinColumn(referencedColumnName="id", nullable=true)
 	private Korisnik korisnik;
 	
+	
 	//GET & SET:
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getIme() {
+		return ime;
+	}
+
+	public void setIme(String ime) {
+		this.ime = ime;
+	}
+
+	public String getPrezime() {
+		return prezime;
+	}
+
+	public void setPrezime(String prezime) {
+		this.prezime = prezime;
+	}
+
+	public String getBrojPasosa() {
+		return brojPasosa;
+	}
+
+	public void setBrojPasosa(String brojPasosa) {
+		this.brojPasosa = brojPasosa;
+	}
+
+	public int getSediste() {
+		return sediste;
+	}
+
+	public void setSediste(int sediste) {
+		this.sediste = sediste;
+	}
+
+	public boolean isPotvrdjeno() {
+		return potvrdjeno;
+	}
+
+	public void setPotvrdjeno(boolean potvrdjeno) {
+		this.potvrdjeno = potvrdjeno;
+	}
+
+	public Rezervacija getRezervacija() {
+		return rezervacija;
+	}
+
+	public void setRezervacija(Rezervacija rezervacija) {
+		this.rezervacija = rezervacija;
+	}
+
+	public Korisnik getKorisnik() {
+		return korisnik;
+	}
+
+	public void setKorisnik(Korisnik korisnik) {
+		this.korisnik = korisnik;
+	}
+	
+	
+	
 	
 
 }

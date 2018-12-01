@@ -49,14 +49,34 @@ public class Aviokompanija implements Serializable {
 	private List<Let> letovi = new ArrayList<Let>();
 	 
 	
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="aviokompanija")
+	@OneToMany(cascade={ALL}, fetch=LAZY)
 	private List<Rating> rejtinzi = new ArrayList<Rating>();
 	
 	
+	@OneToMany(cascade={ALL}, fetch=LAZY)
+	private List<Let> brziLetovi = new ArrayList<Let>();
+
 	
 	
+	
+	
+	public Aviokompanija() {
+		super();
+	}
+
+
 	//GET & SET:
 	
+	public List<Let> getBrziLetovi() {
+		return brziLetovi;
+	}
+
+
+	public void setBrziLetovi(List<Let> brziLetovi) {
+		this.brziLetovi = brziLetovi;
+	}
+
+
 	public Integer getId() {
 		return id;
 	}

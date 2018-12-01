@@ -51,9 +51,7 @@ public class Let implements Serializable
 	
 	@Column(nullable = true)
 	private int popust; //u %
-	
 
-	
 	
 	//SLOZENI ATRIBUTI:
 
@@ -61,20 +59,30 @@ public class Let implements Serializable
 	@CollectionTable(name ="presedanja")
 	private List<String> presedanja = new ArrayList<String>();
 	
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="let")
+	@OneToMany(cascade={ALL}, fetch=LAZY)
 	private List<Rating> rejtinzi = new ArrayList<Rating>();
 
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="let")
 	private List<Rezervacija> rezervacije = new ArrayList<Rezervacija>();
 
+	
+	
 	//FOREIGN KEYS:
 	
 	@ManyToOne
-	@JoinColumn(name="aviokompanija_id", referencedColumnName="id", nullable=false)
+	@JoinColumn(referencedColumnName="id", nullable=false)
 	private Aviokompanija aviokompanija;
+
+
+	
+	
+	public Let() {
+		super();
+	}
 	
 	//GET & SET:
-	
+
+
 	public Integer getId() {
 		return id;
 	}
@@ -139,12 +147,12 @@ public class Let implements Serializable
 		this.udaljenost = udaljenost;
 	}
 
-	public Aviokompanija getAviokompanija() {
-		return aviokompanija;
+	public int getPopust() {
+		return popust;
 	}
 
-	public void setAviokompanija(Aviokompanija aviokompanija) {
-		this.aviokompanija = aviokompanija;
+	public void setPopust(int popust) {
+		this.popust = popust;
 	}
 
 	public List<String> getPresedanja() {
@@ -162,16 +170,22 @@ public class Let implements Serializable
 	public void setRejtinzi(List<Rating> rejtinzi) {
 		this.rejtinzi = rejtinzi;
 	}
-	
-	
-	public int getPopust() {
-		return popust;
+
+	public List<Rezervacija> getRezervacije() {
+		return rezervacije;
 	}
 
-	public void setPopust(int popust) {
-		this.popust = popust;
+	public void setRezervacije(List<Rezervacija> rezervacije) {
+		this.rezervacije = rezervacije;
 	}
 
+	public Aviokompanija getAviokompanija() {
+		return aviokompanija;
+	}
+
+	public void setAviokompanija(Aviokompanija aviokompanija) {
+		this.aviokompanija = aviokompanija;
+	}
 	
 	
 		
