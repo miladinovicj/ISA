@@ -6,6 +6,7 @@ import static javax.persistence.FetchType.LAZY;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,14 +23,11 @@ public class Korisnik implements Serializable
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
-	private Integer id;
+	@Column(nullable = false)
+	private Long id;
 	
 	@Column(nullable = false)
 	private String email;
-	
-	@Column(nullable = false)
-	private String username;
 	
 	@Column(nullable = false)
 	private String lozinka;
@@ -70,12 +68,12 @@ public class Korisnik implements Serializable
 
 	//GET & SET:
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -87,16 +85,6 @@ public class Korisnik implements Serializable
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-
-	public String getUsername() {
-		return username;
-	}
-
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 
@@ -178,5 +166,25 @@ public class Korisnik implements Serializable
 	public void setPoziviZaRezervacije(List<Poziv> poziviZaRezervacije) {
 		this.poziviZaRezervacije = poziviZaRezervacije;
 	}
+	
+	@Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Korisnik k = (Korisnik) o;
+        if(k.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, k.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 
 }

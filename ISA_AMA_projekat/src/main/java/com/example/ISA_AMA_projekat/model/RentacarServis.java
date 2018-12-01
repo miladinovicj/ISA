@@ -19,6 +19,7 @@ public class RentacarServis {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column
 	private Long id;
 	
 	@Column(nullable = false)
@@ -43,6 +44,9 @@ public class RentacarServis {
 	
 	@OneToMany(mappedBy = "servis", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Ocena> ocene = new HashSet<Ocena>();
 	
 	public RentacarServis() {
 		super();
