@@ -30,7 +30,7 @@ public class RentacarServis {
 	@Column
 	private String promotivni_opis;
 	
-	@ManyToMany(mappedBy = "servisi")
+	@ManyToMany
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@Column

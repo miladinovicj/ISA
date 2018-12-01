@@ -35,7 +35,7 @@ public class Hotel {
 	@Column
 	private double prosecna_ocena;
 	
-	@ManyToMany(mappedBy = "hoteli")
+	@ManyToMany
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

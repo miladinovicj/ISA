@@ -56,11 +56,11 @@ public class Rezervacija implements Serializable{
 
 	
 	@ManyToOne
-	@JoinColumn( referencedColumnName="id", nullable=false)
+	@JoinColumn( referencedColumnName="id", nullable=true)
 	private RezervacijaHotel rezevacijaHotel;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName="id", nullable=false)
+	@JoinColumn(referencedColumnName="id", nullable=true)
 	private RezervacijaVozila rezervacijaVozila;
 	
 	
