@@ -29,9 +29,11 @@ public class RezervacijaVozila {
 	@JoinColumn(name = "vozilo_id", referencedColumnName="id")
 	private Vozilo vozilo; //nisam sigurna da li je ovo dobro
 	
+	/*
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "korisnik_id", referencedColumnName="id")
-	private Korisnik korisnik;
+	private Korisnik korisnik;	//ovo msm da ne treba jer je rezervacija vozila samo deo glavne rezevracije, pa tamo vec imamo korisnika
+	 */
 	
 	@Column
 	private Date datum_preuzimanja;
@@ -81,14 +83,6 @@ public class RezervacijaVozila {
 
 	public void setVozilo(Vozilo vozilo) {
 		this.vozilo = vozilo;
-	}
-
-	public Korisnik getKorisnik() {
-		return korisnik;
-	}
-
-	public void setKorisnik(Korisnik korisnik) {
-		this.korisnik = korisnik;
 	}
 
 	public Date getDatum_preuzimanja() {

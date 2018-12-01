@@ -20,6 +20,7 @@ public class Hotel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 	
 	@Column(nullable = false)
