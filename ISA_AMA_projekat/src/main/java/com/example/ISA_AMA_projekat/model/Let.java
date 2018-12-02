@@ -24,7 +24,7 @@ public class Let implements Serializable
 	private static final long serialVersionUID = 2941904332108472041L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
 	private Integer id;
 	

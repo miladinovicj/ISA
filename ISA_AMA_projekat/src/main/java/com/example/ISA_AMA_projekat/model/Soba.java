@@ -20,7 +20,7 @@ import javax.persistence.OneToMany;
 public class Soba {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Column

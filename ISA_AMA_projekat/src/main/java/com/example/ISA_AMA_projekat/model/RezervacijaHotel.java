@@ -19,7 +19,7 @@ import javax.persistence.ManyToOne;
 public class RezervacijaHotel {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Column

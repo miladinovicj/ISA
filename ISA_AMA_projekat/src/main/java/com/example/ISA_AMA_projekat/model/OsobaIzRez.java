@@ -16,7 +16,7 @@ public class OsobaIzRez implements Serializable{
 	private static final long serialVersionUID = 7632373016632740844L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
 	private Integer id;
 	

@@ -22,7 +22,7 @@ public class Aviokompanija implements Serializable {
 	
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
 	private Integer id;
 	
