@@ -22,8 +22,7 @@ public class Korisnik implements Serializable
 	private static final long serialVersionUID = 7284235902041908178L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(nullable = false)

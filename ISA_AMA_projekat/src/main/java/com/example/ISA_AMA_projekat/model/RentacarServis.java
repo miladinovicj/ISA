@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 public class RentacarServis {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Long id;
 	

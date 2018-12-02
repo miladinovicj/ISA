@@ -17,7 +17,7 @@ public class Poziv implements Serializable {
 	private static final long serialVersionUID = 6901581624741089050L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
 	private Integer id;
 	
