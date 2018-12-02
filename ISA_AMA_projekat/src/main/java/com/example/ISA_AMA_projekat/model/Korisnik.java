@@ -64,6 +64,7 @@ public class Korisnik implements Serializable
 		super();
 	}
 
+	
 
 	//GET & SET:
 
