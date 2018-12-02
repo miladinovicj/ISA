@@ -44,7 +44,7 @@ public class Korisnik implements Serializable
 	private String telefon;
 	
 	@Column(nullable = false)
-	private int bonus_poeni;
+	private int bonuspoeni;
 	
 
 	
@@ -55,13 +55,29 @@ public class Korisnik implements Serializable
 	
 	
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnik")
-	private List<Poziv> poziviZaRezervacije = new ArrayList<Poziv>();
+	private List<Poziv> pozivi = new ArrayList<Poziv>();
 
 	
 	
 	
 	public Korisnik() {
 		super();
+		this.prijateljstva=new ArrayList<FriendRequest>();
+		this.pozivi=new ArrayList<Poziv>();
+		this.bonuspoeni=0;
+	}
+	
+	public Korisnik(String email, String lozinka, String ime, String prezime, String grad, String telefon)
+	{
+		this.email=email;
+		this.lozinka=lozinka;
+		this.ime=ime;
+		this.prezime=prezime;
+		this.grad=grad;
+		this.telefon=telefon;
+		this.prijateljstva=new ArrayList<FriendRequest>();
+		this.pozivi=new ArrayList<Poziv>();
+		this.bonuspoeni=0;
 	}
 
 	
@@ -139,12 +155,12 @@ public class Korisnik implements Serializable
 
 
 	public int getBonus_poeni() {
-		return bonus_poeni;
+		return bonuspoeni;
 	}
 
 
 	public void setBonus_poeni(int bonus_poeni) {
-		this.bonus_poeni = bonus_poeni;
+		this.bonuspoeni = bonus_poeni;
 	}
 
 
@@ -158,13 +174,13 @@ public class Korisnik implements Serializable
 	}
 
 
-	public List<Poziv> getPoziviZaRezervacije() {
-		return poziviZaRezervacije;
+	public List<Poziv> getPozivi() {
+		return pozivi;
 	}
 
 
-	public void setPoziviZaRezervacije(List<Poziv> poziviZaRezervacije) {
-		this.poziviZaRezervacije = poziviZaRezervacije;
+	public void setPozivi(List<Poziv> poziviZaRezervacije) {
+		this.pozivi = pozivi;
 	}
 	
 	@Override

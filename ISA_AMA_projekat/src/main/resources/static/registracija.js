@@ -18,7 +18,7 @@ $(document).ready(function() {
 			}
 	
 		$.post({
-			url: "api/users/registruj",
+			url: "/api/users/registruj",
 			data: JSON.stringify({email: email, lozinka: lozinka, ime: ime, prezime: prezime, grad:grad, telefon: telefon}),
 			contentType: 'application/json',
 			success: function(data) {
@@ -31,7 +31,11 @@ $(document).ready(function() {
 						window.location.href="index.html";
 					});
 				}
-			}
+			},
+		error : function(data)
+		{
+			alert('Error!');
+		}
 		});
 	});
 });
