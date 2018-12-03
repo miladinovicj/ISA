@@ -35,7 +35,11 @@ $(document).ready(function() {
 					alert('User successfully registred!');
 					window.location.href="index.html";
 				}
-			}
+			},
+		error : function(data)
+		{
+			alert('Error!');
+		}
 		});
 	});
 });

@@ -31,7 +31,7 @@ public class KorisnikController {
 	@RequestMapping(
 			value = "/registruj",
 			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Korisnik> saveKorisnik(@RequestBody Korisnik korisnik){
 		
@@ -53,7 +53,7 @@ public class KorisnikController {
 		novi_korisnik.setGrad(korisnik.getGrad());
 		novi_korisnik.setTelefon(korisnik.getTelefon());
 		novi_korisnik.setBonus_poeni(0);
-		novi_korisnik.setPoziviZaRezervacije(new ArrayList<Poziv>());
+		novi_korisnik.setPozivi(new ArrayList<Poziv>());
 		novi_korisnik.setPrijateljstva(new ArrayList<FriendRequest>());
 		
 	
