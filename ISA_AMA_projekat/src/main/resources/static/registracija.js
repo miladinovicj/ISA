@@ -10,15 +10,20 @@ $(document).ready(function() {
 		let telefon = $('input[name="telefon"]').val();
 		
 		
-		if(!email || !lozinka || !password2 || !ime || !prezime || !telefon || !grad)
-			{
+		if(!email || !lozinka || !password2 || !ime || !prezime || !telefon || !grad){
 			alert('All fields must be filled!');
 			
 			return;
-			}
+		}
+			
+		if(!(lozinka == password2)){
+			alert('The passwords are not the same!');
+			
+			return;
+		}
 	
 		$.post({
-			url: "api/users/registruj",
+			url: "/api/users/registruj",
 			data: JSON.stringify({email: email, lozinka: lozinka, ime: ime, prezime: prezime, grad:grad, telefon: telefon}),
 			contentType: 'application/json',
 			success: function(data) {
@@ -27,9 +32,8 @@ $(document).ready(function() {
 				}
 				else {
 					//sessionStorage.setItem('ulogovan',JSON.stringify(data));
-					alert('User successfully registred!').show().delay(3000).fadeOut(function(){
-						window.location.href="index.html";
-					});
+					alert('User successfully registred!');
+					window.location.href="index.html";
 				}
 			}
 		});
