@@ -359,8 +359,8 @@ section
 .social_list_item
 {
 	position: relative;
-	display: inline-block;
 	margin-right: 3px;
+	font-size: 18px;
 }
 .social_list_item:last-child
 {
@@ -373,15 +373,16 @@ section
 	padding-left: 10px;
 	padding-right: 10px;
 	line-height: 36px;
+	font-size: 18px;
 }
-.social_list_item:hover a i
+.social_list_item:hover a
 {
 	color: #fa9e1c;
 }
-.social_list_item a i
+.social_list_item a
 {
-	font-size: 12px;
-	color: #FFFFFF;
+	font-size: 18px;
+	color: #ffffff;
 	-webkit-transition: all 200ms ease;
 	-moz-transition: all 200ms ease;
 	-ms-transition: all 200ms ease;
@@ -390,9 +391,8 @@ section
 }
 .social_list_item a:hover
 {
-	color: #FFFFFF;
-}
-.user_box_link
+	color: #8d4fff;
+}.user_box_link
 {
 	display: inline-block;
 }

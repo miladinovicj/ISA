@@ -377,7 +377,7 @@ section
 .social_list_item a
 {
 	font-size: 18px;
-	color: #8d4fff;
+	color: #ffffff;
 	-webkit-transition: all 200ms ease;
 	-moz-transition: all 200ms ease;
 	-ms-transition: all 200ms ease;
@@ -386,7 +386,7 @@ section
 }
 .social_list_item a:hover
 {
-	color: #FFFFFF;
+	color: #8d4fff;
 }
 .user_box_link
 {
