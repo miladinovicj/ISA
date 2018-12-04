@@ -12,7 +12,7 @@
 6. Init CTA Slider
 7. Init Testimonials Slider
 8. Init Search Form
-
+9. Load hotels
 
 ******************************/
 
@@ -255,6 +255,31 @@ $(document).ready(function()
 				var panels = $('.search_panel');
 				panels.removeClass('active');
 				$(panels[clickedIndex]).addClass('active');
+				
+				if(clickedIndex == 1)
+				{
+					$.get({
+						url: "/api/hotels/all",
+						success: function(hoteli) {
+							if(hoteli == null){
+								alert('There are no hotels!');
+							}
+							else {
+								console.log('There are ' + hoteli.length + ' hotels in memory.');
+								$('.intro_title').hide();
+								$('.social_list').empty();
+								for (let hotel of hoteli) 
+								{
+									addHotelLi(hotel);
+								}
+							}
+						},
+						error : function(data){
+							alert('Error!');
+						}
+					});
+				}
+				
 			});
 		}
 	}
@@ -398,5 +423,18 @@ $(document).ready(function()
 				}
 			});	
 		}
+	}
+	
+	/* 
+
+	9. Load hotels
+
+	*/
+	
+	function addHotelLi(hotel) {
+		console.log("naziv hotela: " + hotel.naziv);
+		let li = $('<li class="social_list_item"><a href="#">' + hotel.naziv +'</a></li>');
+		
+		$('.social_list').append(li);
 	}
 });
