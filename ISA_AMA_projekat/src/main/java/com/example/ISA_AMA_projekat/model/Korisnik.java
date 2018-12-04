@@ -43,7 +43,7 @@ public class Korisnik implements Serializable
 	@Column(nullable = false)
 	private String telefon;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private int bonuspoeni;
 	
 

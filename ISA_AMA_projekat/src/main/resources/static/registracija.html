@@ -9,14 +9,14 @@
 <h1>Register</h1>
 <form id="forma">
 		<table>
-			<tr><td>Email</td><td><input type="email" name="email"></td></tr>
+			<tr><td>Email</td><td><input type="email" name="email"></td><td hidden="true" id="validacijaEmail"></td></tr>
 			<tr><td>Password</td><td><input type="password" name="lozinka"></td></tr>
-			<tr><td>Confirm password</td><td><input type="password" name="lozinkaPonovo"></td></tr>
-			<tr><td>First name</td><td><input type="text" name="ime"></td></tr>
-			<tr><td>Last name</td><td><input type="text" name="prezime"></td></tr>
-			<tr><td>City</td><td><input type="text" name="grad"></td></tr>
-			<tr><td>Phone number</td><td><input type="tel" name="telefon"></td></tr>
-			<tr><td colspan="2" align="center"><input type="submit" value="Register"></td></tr>
+			<tr><td>Confirm password</td><td><input type="password" name="lozinkaPonovo"></td><td hidden="true" id="validacijaLozinka"></td></tr>
+			<tr><td>First name</td><td><input type="text" name="ime"></td><td hidden="true" id="validacijaIme"></td></tr>
+			<tr><td>Last name</td><td><input type="text" name="prezime"></td><td hidden="true" id="validacijaPrezime"></td></tr>
+			<tr><td>City</td><td><input type="text" name="grad"></td><td hidden="true" id="validacijaGrad"></td></tr>
+			<tr><td>Phone number</td><td><input type="tel" name="telefon"></td><td hidden="true" id="validacijaTelefon"></td></tr>
+			<tr><td colspan="2" align="center"><input type="submit" value="Register"></td><td>&nbsp</td></tr>
 		</table>
 		
 	</form>

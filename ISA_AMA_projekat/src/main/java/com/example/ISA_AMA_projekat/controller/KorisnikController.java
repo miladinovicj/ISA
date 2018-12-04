@@ -35,9 +35,10 @@ public class KorisnikController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Korisnik> saveKorisnik(@RequestBody Korisnik korisnik){
 		
-		if(korisnik==null)
+		Korisnik postoji = korisnikService.findByEmail(korisnik.getEmail());
+		if(postoji!=null)
 		{
-			System.out.println("KORISNIK JE NULL");
+			System.out.println("KORISNIK SA OVIM EMAIL-OM POSTOJI");
 			return null;
 		}
 		else
