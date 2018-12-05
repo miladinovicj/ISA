@@ -279,6 +279,11 @@ $(document).ready(function()
 						}
 					});
 				}
+				else
+				{
+					$('.social_list').empty();
+					$('.intro_title').show();
+				}
 				
 			});
 		}
