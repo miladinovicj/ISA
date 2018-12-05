@@ -231,10 +231,13 @@ $(document).ready(function()
 		let grad = $('input[name="grad"]').val();
 		let telefon = $('input[name="telefon"]').val();
 		$('#validacijaEmail').text("");
+		$('#uspesno').text("");
+		$('#neuspesno').text("");
+		
 		
 		
 		if(!email || !lozinka || !password2 || !ime || !prezime || !telefon || !grad){
-			alert('All fields must be filled!');
+			$('#neuspesno').text('All fields must be filled!');
 			ispravno=false;
 		}
 		else
@@ -314,8 +317,14 @@ $(document).ready(function()
 				else {
 					//sessionStorage.setItem('ulogovan',JSON.stringify(data));
 					$('#validacijaEmail').text("");
-					alert('User successfully registred!');
-					window.location.href="index.html";
+					$('#uspesno').text('User successfully registred! In few seconds, you will recieve email with link to confirm your registration. Enjoy in travels!');
+					$('#forma').hide();
+					
+								//window.location.href="index.html";
+								
+								
+					
+					
 				}
 			}
 		

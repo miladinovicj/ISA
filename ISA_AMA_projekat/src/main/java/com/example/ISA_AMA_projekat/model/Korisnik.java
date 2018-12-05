@@ -46,6 +46,9 @@ public class Korisnik implements Serializable
 	@Column(nullable = true)
 	private int bonuspoeni;
 	
+	@Column(nullable = true)
+	private boolean aktiviran;
+	
 
 	
 	//SLOZENI ATRIBUTI:
@@ -203,4 +206,21 @@ public class Korisnik implements Serializable
         return Objects.hashCode(id);
     }
 
+	public int getBonuspoeni() {
+		return bonuspoeni;
+	}
+
+	public void setBonuspoeni(int bonuspoeni) {
+		this.bonuspoeni = bonuspoeni;
+	}
+
+	public boolean getAktiviran() {
+		return aktiviran;
+	}
+
+	public void setAktiviran(boolean aktiviran) {
+		this.aktiviran = aktiviran;
+	}
+
+    
 }
