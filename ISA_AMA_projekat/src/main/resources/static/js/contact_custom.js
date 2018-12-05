@@ -42,7 +42,7 @@ $(document).ready(function()
 	});
 
 	initMenu();
-	initGoogleMap();
+	//initGoogleMap();
 	initSearchForm();
 
 	/* 
@@ -219,4 +219,109 @@ $(document).ready(function()
 			});	
 		}
 	}
+	
+	$('#forma').submit(function(event) {
+		event.preventDefault();
+		let ispravno=true;
+		let email = $('input[name="email"]').val();
+		let lozinka = $('input[name="lozinka"]').val();
+		let password2 = $('input[name="lozinkaPonovo"]').val();
+		let ime = $('input[name="ime"]').val();
+		let prezime = $('input[name="prezime"]').val();
+		let grad = $('input[name="grad"]').val();
+		let telefon = $('input[name="telefon"]').val();
+		$('#validacijaEmail').text("");
+		
+		
+		if(!email || !lozinka || !password2 || !ime || !prezime || !telefon || !grad){
+			alert('All fields must be filled!');
+			ispravno=false;
+		}
+		else
+		{
+			if(!(/^[a-zA-Z]+$/.test(ime)))
+			{
+			$('#validacijaIme').text("First name must contains the letters!");
+			ispravno=false;
+			}
+			else if(!(/[A-Z]/.test( ime[0])))
+				{
+				$('#validacijaIme').text("First letter of name must be capital!");
+				ispravno=false;
+				
+				}
+			else
+				$('#validacijaIme').text("");
+		
+			if(!(/^[a-zA-Z]+$/.test(prezime)))
+			{
+			$('#validacijaPrezime').text("Last name must contains the letters!");
+			ispravno=false;
+			}
+			else if(!(/[A-Z]/.test( prezime[0])))
+			{
+			$('#validacijaPrezime').text("First letter of last name must be capital!");
+			ispravno=false;
+			
+			}
+		else
+			$('#validacijaPrezime').text("");
+		
+			if(!(/^[a-zA-Z ]+$/.test(grad)))
+			{
+			$('#validacijaGrad').text("Field City must contains the letters!");
+			ispravno=false;
+			}
+			else if(!(/[A-Z]/.test( grad[0])))
+			{
+			$('#validacijaGrad').text("First letter of the city's name must be capital!");
+			ispravno=false;
+			
+			}
+		else
+			$('#validacijaGrad').text("");
+			
+			if(!(/^[0-9]+$/.test(telefon)))
+			{
+			$('#validacijaTelefon').text("Field Phone number must contains only numbers!");
+			ispravno=false;
+			}
+			else
+			$('#validacijaTelefon').text("");
+		
+			if(!(lozinka==password2))
+			{
+				$('#validacijaLozinka').text("The password must be the same!");
+				
+				ispravno=false;
+			}
+			else
+				$('#validacijaLozinka').text("");
+			
+			
+			}
+		
+		if(ispravno==true)
+			{
+		$.post({
+			url: "/api/users/registruj",
+			data: JSON.stringify({email: email, lozinka: lozinka, ime: ime, prezime: prezime, grad:grad, telefon: telefon}),
+			contentType: 'application/json',
+			success: function(data) {
+				if(data==null || data==""){
+					$('#validacijaEmail').text("User with this email already exists!");
+				}
+				else {
+					//sessionStorage.setItem('ulogovan',JSON.stringify(data));
+					$('#validacijaEmail').text("");
+					alert('User successfully registred!');
+					window.location.href="index.html";
+				}
+			}
+		
+			
+	});
+			}
+	
+});
 });
