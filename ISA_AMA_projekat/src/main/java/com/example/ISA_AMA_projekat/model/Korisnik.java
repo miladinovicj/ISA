@@ -82,6 +82,12 @@ public class Korisnik implements Serializable
 		this.pozivi=new ArrayList<Poziv>();
 		this.bonuspoeni=0;
 	}
+	
+	public Korisnik(String email, String lozinka)
+	{
+		this.email=email;
+		this.lozinka=lozinka;
+	}
 
 	
 

@@ -1,11 +1,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/prijava.js"></script>
 <title>Login</title>
 </head>
 <body>
 <h1>Login</h1>
-<form>
+<form id="formaPrijava">
 		<table>
 			<tr><td>Email</td><td><input type="email" name="email"></td></tr>
 			<tr><td>Password</td><td><input type="password" name="lozinka"></td></tr>
@@ -13,5 +15,7 @@
 		</table>
 		
 	</form>
+	<p id="uspesno"  align="center"></p>
+	<p id="neuspesno"  align="center"></p>
 </body>
 </html>

@@ -119,7 +119,7 @@ public class KorisnikController {
 		return "success";
 	}
 	
-	
+
 	@RequestMapping("/registrationConfirm/{email}")
 	public void confirmation(@PathVariable("email") String email, HttpServletResponse response) throws IOException{
 		
@@ -136,6 +136,7 @@ public class KorisnikController {
 		else
 		{
 			potvrda.setAktiviran(true);
+			korisnikService.updateAkt(true, potvrda.getId());
 			response.sendRedirect("http://localhost:8080/index.html");
 			System.out.println("USPESNO AKTIVIRAN");
 			
@@ -144,4 +145,37 @@ public class KorisnikController {
 		
 	}
 
+	@RequestMapping(
+			value = "/login",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Korisnik> prijavaKorisnik(@RequestBody Korisnik korisnik){
+		
+		Korisnik postoji = korisnikService.findByEmail(korisnik.getEmail());
+		if(postoji==null)
+		{
+			System.out.println("KORISNIK SA OVIM EMAIL-OM NE POSTOJI");
+			return null;
+		}
+		else
+		{
+		 if(!(postoji.getLozinka().equals(korisnik.getLozinka())))
+		 {
+			 System.out.println("Pogresna lozinka");
+				return null;
+		 }
+		 else
+		 {
+			 if(postoji.getAktiviran()==false)
+			 {
+				 System.out.println("Nije aktiviran");
+				 return null;
+			 }
+			 else
+				 return new ResponseEntity<Korisnik>(postoji, HttpStatus.OK);
+		 }
+		
+		}
+	}
 }

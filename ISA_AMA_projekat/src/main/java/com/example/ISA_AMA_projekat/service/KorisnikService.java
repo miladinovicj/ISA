@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.repository.KorisnikRepository;
 
@@ -35,7 +37,11 @@ public class KorisnikService {
 		return korisnikRepository.save(korisnik);
 	}
 	
-	
+	@Transactional
+	public void updateAkt(boolean aktiviran, Long id)
+	{
+		korisnikRepository.updateAktiviran(aktiviran, id);
+	}
 	
 
 }
