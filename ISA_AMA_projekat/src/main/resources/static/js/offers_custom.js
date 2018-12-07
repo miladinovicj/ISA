@@ -43,7 +43,7 @@ $(document).ready(function()
 	});
 
 	initMenu();
-	initIsotopeFiltering();
+	//initIsotopeFiltering();
 	initSearch();
 	initMoreOptions();
 	initSearchForm();
@@ -143,7 +143,7 @@ $(document).ready(function()
 
 	*/
 
-    function initIsotopeFiltering()
+    /*function initIsotopeFiltering()
     {
     	var sortBtn = $('.sort_btn');
     	var filterBtn = $('.filter_btn');
@@ -195,7 +195,7 @@ $(document).ready(function()
   				grid.isotope({ filter: filterValue });
 	        });
     	}
-    }
+    }*/
 
     /* 
 

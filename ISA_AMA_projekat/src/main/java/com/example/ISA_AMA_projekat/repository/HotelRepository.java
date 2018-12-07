@@ -6,5 +6,5 @@ import com.example.ISA_AMA_projekat.model.Hotel;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long>{
 
-	Hotel findOneByNaziv(String email);
+	Hotel findOneByNaziv(String naziv);
 }

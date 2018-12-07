@@ -242,7 +242,7 @@ $(document).ready(function()
 		}
 		else
 		{
-			if(!(/^[a-zA-Z]+$/.test(ime)))
+			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ]+$/.test(ime)))
 			{
 			$('#validacijaIme').text("First name must contains the letters!");
 			ispravno=false;
@@ -256,7 +256,7 @@ $(document).ready(function()
 			else
 				$('#validacijaIme').text("");
 		
-			if(!(/^[a-zA-Z]+$/.test(prezime)))
+			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ]+$/.test(prezime)))
 			{
 			$('#validacijaPrezime').text("Last name must contains the letters!");
 			ispravno=false;
@@ -270,7 +270,7 @@ $(document).ready(function()
 		else
 			$('#validacijaPrezime').text("");
 		
-			if(!(/^[a-zA-Z ]+$/.test(grad)))
+			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ]+$/.test(grad)))
 			{
 			$('#validacijaGrad').text("Field City must contains the letters!");
 			ispravno=false;
