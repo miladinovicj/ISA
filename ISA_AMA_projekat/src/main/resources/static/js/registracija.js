@@ -312,7 +312,7 @@ $(document).ready(function()
 			contentType: 'application/json',
 			success: function(data) {
 				if(data==null || data==""){
-					$('#validacijaEmail').text("User with this email already exists!");
+					$('#validacijaEmail').text('User with this email already exists!');
 				}
 				else {
 					//sessionStorage.setItem('ulogovan',JSON.stringify(data));
