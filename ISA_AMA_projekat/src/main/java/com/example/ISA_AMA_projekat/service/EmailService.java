@@ -26,7 +26,7 @@ public class EmailService {
 	public void sendNotificaitionAsync(Korisnik korisnik) throws MailException, InterruptedException {
 
 		//Simulacija duze aktivnosti da bi se uocila razlika
-		Thread.sleep(2500);
+		//Thread.sleep(2500);
 		System.out.println("Slanje emaila...");
 
 		SimpleMailMessage mail = new SimpleMailMessage();

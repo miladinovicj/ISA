@@ -366,6 +366,7 @@ section
 	position: relative;
 	margin-right: 3px;
 	font-size: 18px;
+	display: inline-block;
 }
 .social_list_item:last-child
 {
@@ -1933,6 +1934,10 @@ section
 	transition: all 200ms ease;
 }
 .footer_nav_item a:hover
+{
+	color: #FFFFFF;
+}
+.klasica:hover
 {
 	color: #FFFFFF;
 }

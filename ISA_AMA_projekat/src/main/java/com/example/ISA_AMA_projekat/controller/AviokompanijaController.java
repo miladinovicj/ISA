@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.service.AviokompanijaService;
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 
 @RestController
@@ -50,5 +52,16 @@ public class AviokompanijaController
 			System.out.println("ispao");
 			return null; 	
 		}
+	}
+	
+	@RequestMapping(
+			value = "",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Aviokompanija>> getHotels(){
+		
+		List<Aviokompanija> los_avios = avioServis.findAll();
+		
+		return new ResponseEntity<List<Aviokompanija>>(los_avios, HttpStatus.OK);
 	}
 }

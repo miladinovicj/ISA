@@ -141,7 +141,7 @@ public class KorisnikController {
 		{
 			potvrda.setAktiviran(true);
 			korisnikService.updateAkt(true, potvrda.getId());
-			response.sendRedirect("http://localhost:8080/index.html");
+			response.sendRedirect("http://localhost:8080/indexcoa.html");
 			System.out.println("USPESNO AKTIVIRAN");
 			
 		}
