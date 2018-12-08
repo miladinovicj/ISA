@@ -61,13 +61,15 @@ public class KorisnikController {
 	@Autowired
 	private EmailService emailService;
 	
+
 	
 	@RequestMapping(
 			value = "/registruj",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Korisnik> saveKorisnik(@RequestBody Korisnik korisnik){
+	public ResponseEntity<Korisnik> saveKorisnik(@RequestBody Korisnik korisnik)
+	{
 		
 		Korisnik postoji = korisnikService.findByEmail(korisnik.getEmail());
 		if(postoji!=null)
@@ -107,7 +109,8 @@ public class KorisnikController {
 	}
 	
 	
-	public String signUpAsync(Korisnik korisnik){
+	public String signUpAsync(Korisnik korisnik)
+	{
 
 		//slanje emaila
 		try {
@@ -121,7 +124,8 @@ public class KorisnikController {
 	
 
 	@RequestMapping("/registrationConfirm/{email}")
-	public void confirmation(@PathVariable("email") String email, HttpServletResponse response) throws IOException{
+	public void confirmation(@PathVariable("email") String email, HttpServletResponse response) throws IOException
+	{
 		
 		System.out.println("EMAIL " + email);
 		Korisnik potvrda = korisnikService.findByEmail(email);
@@ -141,8 +145,6 @@ public class KorisnikController {
 			System.out.println("USPESNO AKTIVIRAN");
 			
 		}
-
-		
 	}
 
 	@RequestMapping(
@@ -150,7 +152,8 @@ public class KorisnikController {
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Korisnik> prijavaKorisnik(@RequestBody Korisnik korisnik){
+	public ResponseEntity<Korisnik> prijavaKorisnik(@RequestBody Korisnik korisnik)
+	{
 		
 		Korisnik postoji = korisnikService.findByEmail(korisnik.getEmail());
 		if(postoji==null)

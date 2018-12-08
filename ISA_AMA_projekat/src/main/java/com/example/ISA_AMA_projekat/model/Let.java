@@ -3,8 +3,8 @@ package com.example.ISA_AMA_projekat.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -16,13 +16,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 
 @Entity
-public class Let implements Serializable
+public class Let 
 {
-	private static final long serialVersionUID = 2941904332108472041L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false)
@@ -38,13 +39,13 @@ public class Let implements Serializable
 	private String dokle;
 	
 	@Column(nullable = false)
-	private int vremePoletanja;
+	private Date vremePoletanja;
 	
 	@Column(nullable = false)
 	private int trajanje;
 	
 	@Column(nullable = false)
-	private int vremeSletanja;
+	private Date vremeSletanja;
 	
 	@Column(nullable = false)
 	private double udaljenost; //u km
@@ -71,6 +72,7 @@ public class Let implements Serializable
 	
 	@ManyToOne
 	@JoinColumn(referencedColumnName="id", nullable=false)
+    @JsonBackReference
 	private Aviokompanija aviokompanija;
 
 
@@ -115,11 +117,11 @@ public class Let implements Serializable
 		this.dokle = dokle;
 	}
 
-	public int getVremePoletanja() {
+	public Date getVremePoletanja() {
 		return vremePoletanja;
 	}
 
-	public void setVremePoletanja(int vremePoletanja) {
+	public void setVremePoletanja(Date vremePoletanja) {
 		this.vremePoletanja = vremePoletanja;
 	}
 
@@ -131,11 +133,11 @@ public class Let implements Serializable
 		this.trajanje = trajanje;
 	}
 
-	public int getVremeSletanja() {
+	public Date getVremeSletanja() {
 		return vremeSletanja;
 	}
 
-	public void setVremeSletanja(int vremeSletanja) {
+	public void setVremeSletanja(Date vremeSletanja) {
 		this.vremeSletanja = vremeSletanja;
 	}
 

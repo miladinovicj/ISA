@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Aviokompanija implements Serializable {
 	
@@ -36,7 +38,7 @@ public class Aviokompanija implements Serializable {
 	private String opis;
 	
 	@Column(nullable = true)
-	private double ocena;
+	private Double ocena;
 	
 	@Column(nullable = false)
 	private String info;
@@ -46,6 +48,7 @@ public class Aviokompanija implements Serializable {
 	
 	//SLOZENI ATRIBUTI:
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="aviokompanija")
+    @JsonManagedReference
 	private List<Let> letovi = new ArrayList<Let>();
 	 
 	
@@ -117,12 +120,12 @@ public class Aviokompanija implements Serializable {
 	}
 
 
-	public double getOcena() {
+	public Double getOcena() {
 		return ocena;
 	}
 
 
-	public void setOcena(double ocena) {
+	public void setOcena(Double ocena) {
 		this.ocena = ocena;
 	}
 

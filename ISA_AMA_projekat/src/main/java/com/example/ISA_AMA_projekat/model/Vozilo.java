@@ -56,7 +56,7 @@ public class Vozilo {
     private RezervacijaVozila rezervacija;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Ocena> ocene = new HashSet<Ocena>();
+	private Set<Rating> ocene = new HashSet<Rating>();
 	
 	@Column
 	private boolean na_popustu;

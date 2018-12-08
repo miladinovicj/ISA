@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Single Listing</title>
+<title id="titl_aviokompanija">asd</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="js/jquery-3.2.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
 <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
@@ -14,9 +15,27 @@
 <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
 <link rel="stylesheet" type="text/css" href="styles/single_listing_styles.css">
 <link rel="stylesheet" type="text/css" href="styles/single_listing_responsive.css">
+	<link rel="stylesheet" type="text/css" href="styles/offers_styles.css">
+	<link rel="stylesheet" type="text/css" href="styles/offers_responsive.css">
 </head>
 
 <body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
+<script src="js/mustache.js"></script>
+<script src="plugins/Isotope/isotope.pkgd.min.js"></script>
+<script src="plugins/colorbox/jquery.colorbox-min.js"></script>
+<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="styles/bootstrap4/popper.js"></script>
+<script src="styles/bootstrap4/bootstrap.min.js"></script>
+<script src="plugins/parallax-js-master/parallax.min.js"></script>
+<script src="plugins/easing/easing.js"></script>
+
+<script src="js/single_listing_custom.js"></script>
+<script src="js/aviokompanija.js"></script>
+<script src="js/offers_custom.js"></script>
+
 
 <div class="super_container">
 	
@@ -118,7 +137,7 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/single_background.jpg"></div>
 		<div class="home_content">
-			<div class="home_title">My profile</div>
+			<div class="home_title" id="aviokompanija_ime">Ime aviokompanije</div>
 		</div>
 	</div>
 
@@ -144,66 +163,39 @@
 							<!-- Search Panel -->
 
 							<div class="search_panel active">
-								<form action="#" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-									<div style="width: 49%;" class="search_item">
-										<div>Name: </div>
+								<form style="width: 100%;" action="#" id="search_form_3" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+									<div style="width: 31%;" class="search_item">
+										<div>From</div>
 										<input type="text" class="destination search_input" required="required">
-										<br>
 									</div>
 
-									<div style="width: 49%;" class="search_item">
-										<div>Lastname: </div>
+									<div style="width: 31%;" class="search_item">
+										<div>To</div>
 										<input type="text" class="destination search_input" required="required">
-										<br>
 									</div>
 
-
-
-									<div style="width: 49%; margin-top: 5%" class="search_item">
-										<div>Username:</div>
-										<input type="text" class="destination search_input" required="required">
-										<br>
+									<div class="search_item">
+										<div>check in</div>
+										<input type="text" class="check_in search_input" placeholder="YYYY-MM-DD">
 									</div>
-
-
-									<div style="width: 25%;  margin-top: 5%" class="search_item">
-										<div>Password: </div>
-										<input type="text" class="destination search_input" required="required">
-										<br>
+									<div class="search_item">
+										<div>check out</div>
+										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
 									</div>
+									<div class="search_item">
+										<div>adults</div>
+										<select name="adults" id="adults_3" class="dropdown_item_select search_input">
+											<option>01</option>
+											<option>02</option>
+											<option>03</option>
+										</select>
+									</div>
+									<div class="search_item" style="width: 50%;">
 
-									<button style="margin-top: 5%" class="button search_button">change password</button>
-
-
-									<div style="width: 49%; margin-top: 5%" class="search_item">
-										<div>Email:</div>
-										<input type="text" class="destination search_input" required="required">
-										<br>
 									</div>
 
 
-									<div style="width: 49%;  margin-top: 5%" class="search_item">
-										<div>Phone number: </div>
-										<input type="text" class="destination search_input" required="required">
-										<br>
-									</div>
-
-									<div style="width: 49%; margin-top: 5%" class="search_item">
-										<div>City:</div>
-										<input type="text" class="destination search_input" required="required">
-										<br>
-									</div>
-
-
-									<div style="width: 49%;  margin-top: 5%" class="search_item">
-										<div>Adress: </div>
-										<input type="text" class="destination search_input" required="required">
-										<br>
-									</div>
-
-
-
-									<button class="button search_button">Edit<span></span><span></span><span></span></button>
+									<button class="button search_button">search flights<span></span><span></span><span></span></button>
 								</form>
 							</div>
 
@@ -223,89 +215,121 @@
 				<div class="col-lg-12">
 					<div class="single_listing">
 
-						<!-- Zahtevi na cekanju -->
-						<h1 style="margin-bottom: 5%" class="hotel_title">Pending requests</h1>
-						<div class="review">
-							<div class="row">
-								<div class="col-lg-1">
-									<div class="review_image">
-										<img src="images/review_1.jpg" alt="https://unsplash.com/@saaout">
-									</div>
-								</div>
-								<div class="col-lg-11">
-									<div class="review_content">
-										<div class="review_title_container">
-											<div class="review_title" style="font-style: normal; margin-top: 2%">Milica Mukic</div>
-											<button class="button search_button" style="float: right; margin-top: -5%">CONFIRM<button>
-										</div>
+								<!-- DESTINACIJE -->
 
 
+						<br>
+						<h1 class="hotel_title">Destinations</h1>
+
+
+						<div class="rooms">
+						<ul style="list-style-type:none" id="destination_list">
+								<template id="destination_template">
+									<div class="room">
+		
+										<!-- Room -->
+											<div class="row">
+												<div class="col-lg-2">
+													<div class="room_image"></div>
+												</div>
+												<div class="col-lg-7">
+													<div class="room_content">
+		
+														<div style="font-size: x-large; margin-top: 7%;margin-left: -29%" class="room_text">{{dokle}}</div>
+													</div>
+												</div>
+												<div class="col-lg-3 text-lg-right">
+													<div class="room_button">
+														<div style="margin-top: 3%" class="button book_button trans_200"><a href="#">show flights<span></span><span></span><span></span></a></div>
+													</div>
+												</div>
+		
+											</div>
+		
+										<hr>
 									</div>
-								</div>
+								</template>
+							</ul>
+
+
+							<!-- Room -->
+							<div class="room">
+
+
 							</div>
+
 						</div>
 
-						<p> No new friend requests. </p>
-
-
-
-						<div class="reviews">
-							<div>
-								<input style="border: black 1px solid; float: left; width: 30%" type="text" placeholder="Search for people in" class="destination search_input" required="required">
-								<select style="width: 20%;border: black 1px solid; margin-left: 3%;" class=" search_input">
-									<option>Friends</option>
-									<option>All users</option>
-								</select>
-								<hr>
-							</div>
-							<div class="reviews_container">
-							<br><br>
 
 
 
 
-								<!-- PRIJATELJ -->
-								<div class="review">
-									<div class="row">
-										<div class="col-lg-1">
-											<div class="review_image">
-												<img src="images/review_1.jpg" alt="https://unsplash.com/@saaout">
-											</div>
-										</div>
-										<div class="col-lg-11">
-											<div class="review_content">
-												<div class="review_title_container">
-													<div class="review_title" style="font-style: normal; margin-top: 2%">Alen Mukic</div>
-													<button class="button search_button" style="float: right; margin-top: -5%">Unfriend<butto>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						<!-- Letovi na akciji -->
+						<br>
+								<br>
+								<h1 class="hotel_title">Special Offers</h1>
+								<br>
+								<div class="rooms">
+									<ul style="list-style-type:none" id="action_list">
+										<!-- Room -->
+										<template id="action_template">
+											<div class="room">
+												<!-- Room -->
+												<div class="row">
+													<div class="col-lg-2">
+														<div class="room_image"><img src="images/departure.png" style="height: 40%;width: 40%; margin-top: 35%; margin-left: 35%" alt=""></div>
+													</div>
+													<div class="col-lg-7">
+														<div class="room_content">
+															<div class="room_title">{{odakle}}</div>
+															<div class="room_price" id="vremePoletanja" style="margin-top: 0%">{{vremePoletanja}}</div>
+															<br>
+															<div class="room_title">{{dokle}}</div>
+															<div class="room_price" id="vremeSletanja" style="margin-top: 0%">{{vremeSletanja}}</div>
+																<div style="font-size: x-large" class="room_text">{{cena}}</div>
+														</div>
+													</div>
+													<div class="col-lg-3 text-lg-right">
+														<div class="room_button">
+															<div style="margin-top: 0%" class="button book_button trans_200"><a href="#">book<span></span><span></span><span></span></a></div>
+														</div>
+													</div>
+		
 												</div>
-
-												<div class="review_date">Friend</div>
-
+		
+												<hr>
 											</div>
-										</div>
+										</template>
+
+	
+									 	</ul>
 									</div>
 								</div>
 
-								<!-- NEPRIJATELJ -->
-								<div class="review">
-									<div class="row">
-										<div class="col-lg-1">
-											<div class="review_image">
-												<img src="images/review_1.jpg" alt="https://unsplash.com/@saaout">
-											</div>
-										</div>
-										<div class="col-lg-11">
-											<div class="review_content">
-												<div class="review_title_container">
-													<div class="review_title" style="font-style: normal; margin-top: 2%">Milica Mukic</div>
-													<button class="button search_button" style="float: right; margin-top: -5%">Send Request<butto>
-												</div>
 
-
-											</div>
-										</div>
-									</div>
-								</div>
 							</div>
 						</div>
 
@@ -341,14 +365,21 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 </div>
 
+
+<!--FRAMEWORKS-->
+
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="styles/bootstrap4/popper.js"></script>
 <script src="styles/bootstrap4/bootstrap.min.js"></script>
+<script src="plugins/Isotope/isotope.pkgd.min.js"></script>
 <script src="plugins/easing/easing.js"></script>
 <script src="plugins/parallax-js-master/parallax.min.js"></script>
-<script src="plugins/colorbox/jquery.colorbox-min.js"></script>
-<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="js/single_listing_custom.js"></script>
+<script src="js/offers_custom.js"></script>
+
+
+
+
+
 
 </body>
 
