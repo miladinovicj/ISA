@@ -37,7 +37,7 @@ public class Korisnik implements Serializable
 	@Column(nullable = false)
 	private String ime;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String prezime;
 	
 	@Column(nullable = false)
@@ -192,7 +192,7 @@ public class Korisnik implements Serializable
 
 
 	public void setPozivi(List<Poziv> poziviZaRezervacije) {
-		this.pozivi = pozivi;
+		this.pozivi = poziviZaRezervacije;
 	}
 	
 	@Override

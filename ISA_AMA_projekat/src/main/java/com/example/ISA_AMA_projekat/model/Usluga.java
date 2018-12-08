@@ -22,20 +22,6 @@ public class Usluga {
 	@Column(nullable = false)
 	private double cena;
 	
-	/*
-	@ManyToMany
-	@JoinTable(name = "usluge_hotela",
-    joinColumns = @JoinColumn(name="usluga_id", referencedColumnName="id"),
-    inverseJoinColumns = @JoinColumn(name="hotel_id", referencedColumnName="id"))
-	private Set<Hotel> hoteli = new HashSet<Hotel>();
-	
-	@ManyToMany
-	@JoinTable(name = "usluge_servis",
-    joinColumns = @JoinColumn(name="usluga_id", referencedColumnName="id"),
-    inverseJoinColumns = @JoinColumn(name="servis_id", referencedColumnName="id"))
-	private Set<RentacarServis> servisi = new HashSet<RentacarServis>();
-	*/
-	
 	public Usluga() {
 		super();
 	}
@@ -63,24 +49,6 @@ public class Usluga {
 	public void setCena(double cena) {
 		this.cena = cena;
 	}
-
-	/*
-	public Set<Hotel> getHoteli() {
-		return hoteli;
-	}
-
-	public void setHoteli(Set<Hotel> hoteli) {
-		this.hoteli = hoteli;
-	}
-	
-	public Set<RentacarServis> getServisi() {
-		return servisi;
-	}
-
-	public void setServisi(Set<RentacarServis> servisi) {
-		this.servisi = servisi;
-	}
-	*/
 
 	@Override
     public boolean equals(Object o) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -20,6 +21,7 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 
 @Entity
 public class Let 
@@ -70,7 +72,7 @@ public class Let
 	
 	//FOREIGN KEYS:
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(referencedColumnName="id", nullable=false)
     @JsonBackReference
 	private Aviokompanija aviokompanija;
