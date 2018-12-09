@@ -24,6 +24,7 @@ function showHotel(hotel)
     $("#title_hotel").text(hotel.naziv);
     $("#hotel_name").text(hotel.naziv);
     $('#hotel_info_text').text(hotel.promotivni_opis);
+    $('#adresa_hotel').text(hotel.adresa);
     
     if(hotel.sobe.length == 0)
 	{
