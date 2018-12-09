@@ -13,19 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"naziv"})})
 public class Hotel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String naziv;
 	
 	@Column(nullable = false)
@@ -41,6 +40,7 @@ public class Hotel {
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private Set<Soba> sobe = new HashSet<Soba>();
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -15,7 +15,7 @@ public class HotelService {
 	@Autowired
 	private HotelRepository hotelRepository;
 	
-	public Hotel findByEmail(String naziv) {
+	public Hotel findByNaziv(String naziv) {
 		return hotelRepository.findOneByNaziv(naziv);
 	}
 
@@ -23,7 +23,7 @@ public class HotelService {
 		return hotelRepository.findAll();
 	}
 	
-	public Optional<Hotel> findById(Long id){
+	public Optional<Hotel> findById(Integer id){
 		return hotelRepository.findById(id);
 	}
 	

@@ -216,6 +216,7 @@ $(document).ready(function()
 				var panels = $('.search_panel');
 				panels.removeClass('active');
 				$(panels[clickedIndex]).addClass('active');
+				
 			});
 		}
 	}

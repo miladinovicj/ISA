@@ -16,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Soba {
 
@@ -39,6 +41,7 @@ public class Soba {
 	private double popust;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonBackReference
 	private Hotel hotel;
 	
 	@ManyToMany
