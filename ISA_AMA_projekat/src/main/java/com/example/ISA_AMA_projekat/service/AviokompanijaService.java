@@ -20,7 +20,16 @@ public class AviokompanijaService
 		return avioRepo.findById(id);
 	}
 	
+	public Aviokompanija findByNaziv(String naziv)
+	{
+		return avioRepo.findOneByNaziv(naziv);
+	}
+	
 	public List<Aviokompanija> findAll() {
 		return avioRepo.findAll();
+	}
+	
+	public Aviokompanija save(Aviokompanija aviokompanija) {
+		return avioRepo.save(aviokompanija);
 	}
 }

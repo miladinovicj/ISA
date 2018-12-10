@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,5 +53,34 @@ public class HotelController {
 			System.out.println("Ne postoji hotel sa id: " + id);
 			return null; 	
 		}
+	}
+	
+	@RequestMapping(
+			value = "/save",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> saveHotel(@RequestBody Hotel hotel) throws Exception{
+		
+		Hotel postoji = hotelService.findByNaziv(hotel.getNaziv());
+		
+		if(postoji != null) {
+			System.out.println("Hotel sa ovim nazivom vec postoji u bazi");
+			return new ResponseEntity<Hotel>(postoji, HttpStatus.CONFLICT);
+		}else {
+			Hotel saved = hotelService.save(hotel);
+			return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
+		}
+		/*
+		Hotel saved = null;
+		try {
+			saved = hotelService.save(hotel);
+		} catch(Exception e) {
+			System.out.println("Hotel sa ovim nazivom vec postoji u bazi");
+			return new ResponseEntity<Hotel>(postoji, HttpStatus.CONFLICT);
+		}
+		
+		return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
+		*/
 	}
 }
