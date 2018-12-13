@@ -49,7 +49,7 @@ public class Vozilo {
 	private double prosecna_ocena;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private RentacarServis rentacar;
+	private Filijala filijala;
 	
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rezervacija_id", referencedColumnName="id")
@@ -158,12 +158,12 @@ public class Vozilo {
 		this.prosecna_ocena = prosecna_ocena;
 	}
 
-	public RentacarServis getRentacar() {
-		return rentacar;
+	public Filijala getFilijala() {
+		return filijala;
 	}
 
-	public void setRentacar(RentacarServis rentacar) {
-		this.rentacar = rentacar;
+	public void setFilijala(Filijala filijala) {
+		this.filijala = filijala;
 	}
 	
 	
