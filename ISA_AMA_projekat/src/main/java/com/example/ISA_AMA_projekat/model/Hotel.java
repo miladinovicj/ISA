@@ -30,7 +30,7 @@ public class Hotel {
 	@Column(nullable = false)
 	private String adresa;
 	
-	@Column
+	@Column(nullable = true)
 	private String promotivni_opis;
 	
 	@Column
