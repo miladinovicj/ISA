@@ -21,10 +21,31 @@ insert into korisnik (email, lozinka, ime, prezime, grad, telefon, bonuspoeni, a
 insert into aviokompanija(id,adresa, info, max_kapacitet, naziv, ocena, opis) values 
 (1, 'Tolstojeva 66, Novi Sad','Najjaci popusti najjace zezanje drugari',300, 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari');
 
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja,aviokompanija_id) values (1,1000,'Tokyo - JPN', 'Belgrade - SRB', 0, 15, 60000, '2018-12-2', '2018-12-3',1);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja,aviokompanija_id) values (2,1000,'Palermo - ITA', 'Belgrade - SRB', 0, 15, 60000, '2018-12-2', '2018-12-3',1);
 
-insert into aviokompanija_brzi_letovi(aviokompanija_id,brzi_letovi_id) values(1,1);
+
+
+
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
+
+
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
+
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (5,5000,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
+
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (2,250,'Milano - ITA', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
+
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (3,500,'Washington DC - USA', ' Nis - SRB', 0, 15, 15000,'2019-1-15 02:59:59.999999','2019-1-15 23:59:59.999999',1);
+
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 15000,'2018-12-25 3:00:00.999999','2018-12-25 6:00:00.999999',1);
+
+
+insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,1);
+insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,2);
+
+
+
+
+
 
 insert into soba (prosecna_ocena, cena_nocenja, broj_kreveta, brza_soba, popust, hotel_id) values (4.8, 120.5, 3, false, 20.5, 6);
 insert into soba (prosecna_ocena, cena_nocenja, broj_kreveta, brza_soba, popust, hotel_id) values (3.77, 53, 2, false, 0, 6);
