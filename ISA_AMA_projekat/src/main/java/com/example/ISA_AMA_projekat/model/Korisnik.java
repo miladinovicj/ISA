@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"email", "ime"})})
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"ime", "prezime"})})
 public class Korisnik implements Serializable 
 {
 
@@ -28,7 +28,7 @@ public class Korisnik implements Serializable
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String email;
 	
 	@Column(nullable = false)
@@ -37,7 +37,7 @@ public class Korisnik implements Serializable
 	@Column(nullable = false)
 	private String ime;
 	
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String prezime;
 	
 	@Column(nullable = false)

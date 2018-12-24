@@ -28,7 +28,7 @@ public class Aviokompanija implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String naziv;
 	
 	@Column(nullable = false)

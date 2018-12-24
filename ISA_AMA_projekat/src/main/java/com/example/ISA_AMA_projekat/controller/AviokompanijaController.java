@@ -1,18 +1,8 @@
 package com.example.ISA_AMA_projekat.controller;
 
 import org.springframework.http.MediaType;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.service.AviokompanijaService;
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
-import com.example.ISA_AMA_projekat.model.Hotel;
-import com.example.ISA_AMA_projekat.model.Korisnik;
 
 @RestController
 @RequestMapping(value="rest/airline")
@@ -58,10 +46,29 @@ public class AviokompanijaController
 			value = "",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Aviokompanija>> getHotels(){
+	public ResponseEntity<List<Aviokompanija>> getAviokompanije(){
 		
 		List<Aviokompanija> los_avios = avioServis.findAll();
 		
 		return new ResponseEntity<List<Aviokompanija>>(los_avios, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/save",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Aviokompanija> saveAviokompanija(@RequestBody Aviokompanija aviokompanija){
+		
+		Aviokompanija postoji = avioServis.findByNaziv(aviokompanija.getNaziv());
+		
+		if(postoji != null) {
+			System.out.println("Aviokompanija sa ovim nazivom vec postoji u bazi");
+			return null;
+		}else {
+			Aviokompanija saved = avioServis.save(aviokompanija);
+			return new ResponseEntity<Aviokompanija>(saved, HttpStatus.CREATED);
+		}
+		
 	}
 }

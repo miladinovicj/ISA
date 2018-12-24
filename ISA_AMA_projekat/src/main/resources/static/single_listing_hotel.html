@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Hotel</title>
+<title id="title_hotel">Hotel</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
@@ -111,7 +111,7 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/single_background.jpg"></div>
 		<div class="home_content">
-			<div class="home_title">the offers</div>
+			<div class="home_title" id="hotel_name">ime hotela</div>
 		</div>
 	</div>
 
@@ -124,107 +124,57 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
-					<div class="single_listing">
+					<div class="single_listing" style="padding-top: 10px;">
 						
 						<!-- Hotel Info -->
 
 						<div class="hotel_info">
 
-							<!-- Title -->
-							<div class="hotel_title_container d-flex flex-lg-row flex-column">
-								<div class="hotel_title_content">
-									<h1 class="hotel_title">Grand Hotel Eurostar</h1>
-									<div class="rating_r rating_r_4 hotel_rating">
-										<i></i>
-										<i></i>
-										<i></i>
-										<i></i>
-										<i></i>
-									</div>
-									<div class="hotel_location">345 677 Gran Via Street, no 34, Madrid, Spain</div>
-								</div>
-								<div class="hotel_review_container d-flex flex-column align-items-center justify-content-center">
-									<div class="hotel_review">
-										<div class="hotel_review_content">
-											<div class="hotel_review_title">very good</div>
-											<div class="hotel_review_subtitle">100 reviews</div>
-										</div>
-										<div class="hotel_review_rating text-center">8.1</div>
-									</div>
-								</div>
-								<!-- 
-								<div class="hotel_title_button ml-lg-auto text-lg-right">
-									<div class="button book_button trans_200"><a href="#">book<span></span><span></span><span></span></a></div>
-									<div class="hotel_map_link_container">
-										<div class="hotel_map_link">See Location on Map</div>
-									</div>
-								</div>
-								-->
-							</div>
-
 							<!-- Hotel Info Text -->
-
-							<div class="hotel_info_text">
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eu convallis tortor. Suspendisse potenti. In faucibus massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eu convallis tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus quis vulputate eros, iaculis consequat nisl. Nunc et suscipit urna. Integer elementum orci eu vehicula pretium. Donec bibendum tristique condimentum. Aenean in lacus ligula. Phasellus euismod gravida eros. Aenean nec ipsum aliquet, pharetra magna id, interdum sapien. Etiam id lorem eu nisl pellentesque semper. Nullam tincidunt metus placerat, suscipit leo ut, tempus nulla. Fusce at eleifend tellus. Ut eleifend dui nunc, non fermentum quam placerat non. Etiam venenatis nibh augue, sed eleifend justo tristique eu</p>
+							
+							<div class="hotel_info_text" style="padding-bottom: 20px;">
+								<p id="hotel_info_text" style="font-size: 20px; color: #4d0066;">promotivni opis hotela</p>
 							</div>
-
+							<div>
+								<span class="contact_info_icon" style="float: left;"><img src="images/placeholder.svg" alt="" height="20" width="20"></span>
+								<span><p class="offers_text" id = "adresa_hotel"></p></span>
+							</div>
 							<!-- Hotel Info Tags -->
 							<!-- OVDE NAPRAVITI TABELU SA USLUGAMA -->
-							<div class="hotel_info_tags">
-								
+							<div class="hotel_info_tags" >
+								<p id="text_no_services" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Additional services: </p>
+								<ul id="usluge_hotela" style="margin-left: 60px; font-size: 15px; list-style-type: disc;">
+									
+								</ul>
 							</div>
 
 						</div>
-						
+						<p id="text_no_rooms" style="font-size: 15pt; font-weight: bold; color: #4d0066;"></p>
 						<!-- Rooms -->
-
-						<div class="rooms">
-
-							<!-- Room -->
-							<template class="template_single_hotel" id="template_single_hotel">
-								<div class="room">
-	
-									<!-- Room -->
-									<div class="row">
-										<div class="col-lg-7">
-											<div class="room_content">
-												<div class="room_title">Double or Twin Room</div>
-												<div class="room_price">$99/night</div>
-												<div class="room_text">FREE cancellation before 23:59 on 20 December 2017</div>
-												<div class="room_extra">Breakfast $7.50</div>
-											</div>
-										</div>
-										<div class="col-lg-3 text-lg-right">
-											<div class="room_button">
-												<div class="button book_button trans_200"><a href="#">book<span></span><span></span><span></span></a></div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</template>
-
-							<!-- Room -->
-							<div class="room">
-
+						
+						<div class="rooms" id="ubaci_sobe_template">
+								<template id="template_room">
 								<!-- Room -->
-								<div class="row">
-									<div class="col-lg-7">
-										<div class="room_content">
-											<span class="span_room room_name">Double or Twin Room</span>
-											<span class="span_room room_price">$99/night</span>
-											<span class="span_room room_rating review_rating" style="margin-left: 40px; margin-bottom: 80px; align: "center";">rating 7.50</span>
-											<span class="button book_button trans_200" style="margin-left: 120px;"><a href="#">book<span></span><span></span><span></span></a></span>
-										</div>
+									<div class="room" id="ubaci_sobu">
+										
+										<!-- Room -->
+										<div class="row">
+											<div class="col-lg-7" style="text-align: center;">
+													<span class="span_room room_name" id="broj_kreveta" style="font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+													<span class="span_room room_price" id="cena_nocenja" style="margin-top: 0px; margin-bottom: 15px; float: left; font-size: 20pt"></span>
+													<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 15px; width: 65px; position: relative"></span>
+													<span class="span_room button book_button trans_200" style=" float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a href="#">book<span></span><span></span><span></span></a></span>
+												
+											</div>
+										</div>	
 									</div>
-								</div>	
-							</div>
-
+								</template>
 						</div>
 
 						<!-- Location on Map -->
 
 						<div class="location_on_map">
-							<div class="location_on_map_title">location on map</div>
+							<div class="location_on_map_title"></div>
 
 							<!-- Google Map -->
 		
@@ -321,6 +271,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
 <script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
 <script src="js/single_listing_custom.js"></script>
+<script src="js/single_listing_hotel.js"></script>
+<script src="js/mustache.js"></script>
 
 </body>
 

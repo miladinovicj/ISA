@@ -109,9 +109,9 @@
 
 							<div class="search_tabs_container">
 								<div class="search_tabs d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-									<div class="search_tab active d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="images/departure.png" alt="">flights</div>
-									<div class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="images/suitcase.png" alt=""><span>hotels</span></div>
-									<div class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="images/bus.png" alt="">car rentals</div>
+									<div onclick="javascript:showContentAvio()" class="search_tab active d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="images/departure.png" alt="">flights</div>
+									<div onclick="javascript:showContentHotel()" class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="images/suitcase.png" alt=""><span>hotels</span></div>
+									<div onclick="javascript:showContentRent()" class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="images/bus.png" alt="">car rentals</div>
 								</div>
 							</div>
 
@@ -162,7 +162,7 @@
 										<div>check out</div>
 										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
 									</div>
-									<button style="margin-left: 80%;" class="button search_button" onclick="javascript:showContent()">search<span></span><span></span><span></span></button>
+									<button style="margin-left: 80%;" class="button search_button" onclick="javascript:showContentHotel()">search<span></span><span></span><span></span></button>
 								</form>
 							</div>
 
@@ -199,10 +199,51 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-1 temp_col"></div>
+				
+								<div class="col-lg-12" >
+					<br>
+					<br>
+					<!-- Offers Grid -->
+					<!-- PREPORUCENI HOTELI -->
+					<div class="offers_grid" id="ubaci_hotele_template" style="display: none;">
+					<h1 class="hotel_title" id="hotel_title">Hotels</h1>
+					
+						<!-- Offers Item -->
+						<template class="template_hotel" id="template_hotel">
+							<div class="offers_item rating_4" id="ubaci">
+								<div class="row">
+									<div class="col-lg-3 col-1680-4">
+										<div class="offers_image_container">
+											<div class="offer_name" style=" height: 70%; text-align: center; padding: 13% 0px"><p id = "name_hotel" style = "color:white;"></p></div>
+										</div>
+									</div>
+									<div class="col-lg-8">
+									
+										<div class="offers_content">
+											<div>
+												<span class="contact_info_icon" style="float: left;"><img src="images/placeholder.svg" alt="" height="20" width="20"></span>
+												<span><p class="offers_text" id = "text_hotel"></p></span>
+											</div>
+											<div class="button book_button" id="dugme_view_details"></div>
+											<div class="offer_reviews">
+												<div class="offer_reviews_content">
+													<div class="offer_reviews_title">rating</div>
+												</div>
+												<div class="offer_reviews_rating text-center" id = "rating_hotel"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</template>
+						
+					</div>
+				</div>
+				
 				<div class="col-lg-11">
 					
 					<!-- Offers Sorting -->
-					<div class="offers_sorting_container">
+					<div class="offers_sorting_container" id="id_special_prices" style="display: block;">
 
 
 
@@ -276,49 +317,6 @@
 					</div>
 				</div>
 				
-					
-				<div class="col-lg-12" >
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<br>
-					<!-- Offers Grid -->
-					<!-- PREPORUCENI HOTELI -->
-					<h1 class="hotel_title"></h1>
-					<div class="offers_grid" id="ubaci_hotele_template">
-
-						<!-- Offers Item -->
-						<template class="template_hotel" id="template_hotel">
-							<div class="offers_item rating_4" id="ubaci">
-								<div class="row">
-									<div class="col-lg-1 temp_col"></div>
-									<div class="col-lg-3 col-1680-4">
-										<div class="offers_image_container">
-											<div class="offer_name" style=" height: 70%; text-align: center; padding: 13% 0px"><p id = "name_hotel" style = "color:white;"></p></div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-									
-										<div class="offers_content">
-											<p class="offers_text" id = "text_hotel"></p>
-											<div class="button book_button"><a href="single_listing.html">view details<span></span><span></span><span></span></a></div>
-											<div class="offer_reviews">
-												<div class="offer_reviews_content">
-													<div class="offer_reviews_title">rating</div>
-												</div>
-												<div class="offer_reviews_rating text-center" id = "rating_hotel"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</template>
-						
-					</div>
-				</div>
 
 				<div class="col-lg-12" style="display: none;">
 					<br>
