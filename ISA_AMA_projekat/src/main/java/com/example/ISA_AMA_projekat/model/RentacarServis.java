@@ -38,12 +38,7 @@ public class RentacarServis {
 	private double prosecna_ocena;
 	
 	@OneToMany(mappedBy = "rentacar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Vozilo> vozila = new HashSet<Vozilo>();
-	
-	//kako izmodelovati atribut vezan za filijale??
-	
-	@OneToMany(mappedBy = "servis", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();
+	private Set<Filijala> filijale = new HashSet<Filijala>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
@@ -100,6 +95,21 @@ public class RentacarServis {
 		this.usluge = usluge;
 	}
 	
+	public Set<Filijala> getFilijale() {
+		return filijale;
+	}
+
+	public void setFilijale(Set<Filijala> filijale) {
+		this.filijale = filijale;
+	}
+
+	public Set<Rating> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(Set<Rating> ocene) {
+		this.ocene = ocene;
+	}
 	@Override
     public boolean equals(Object o) {
         if (this == o) {

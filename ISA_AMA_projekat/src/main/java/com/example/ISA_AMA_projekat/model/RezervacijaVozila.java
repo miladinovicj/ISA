@@ -21,19 +21,14 @@ public class RezervacijaVozila {
 	private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "servis_id", referencedColumnName="id")
-	private RentacarServis servis; //ovde bi trebalo samo id da bude u tabeli?
+	@JoinColumn(name = "filijala_id", referencedColumnName="id")
+	private Filijala filijalaRez; 
 	
 	@OneToOne(mappedBy = "rezervacija", cascade = CascadeType.ALL, 
             fetch = FetchType.LAZY)
 	@JoinColumn(name = "vozilo_id", referencedColumnName="id")
-	private Vozilo vozilo; //nisam sigurna da li je ovo dobro
+	private Vozilo vozilo; 
 	
-	/*
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "korisnik_id", referencedColumnName="id")
-	private Korisnik korisnik;	//ovo msm da ne treba jer je rezervacija vozila samo deo glavne rezevracije, pa tamo vec imamo korisnika
-	 */
 	
 	@Column
 	private Date datum_preuzimanja;
@@ -69,12 +64,12 @@ public class RezervacijaVozila {
 		this.id = id;
 	}
 
-	public RentacarServis getServis() {
-		return servis;
+	public Filijala getFilijala() {
+		return filijalaRez;
 	}
 
-	public void setServis(RentacarServis servis) {
-		this.servis = servis;
+	public void setFilijala(Filijala filijala) {
+		this.filijalaRez = filijala;
 	}
 
 	public Vozilo getVozilo() {
