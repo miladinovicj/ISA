@@ -1,7 +1,7 @@
 $(document).ready(function()	
 {
     var id_presented = window.location.search.substring(4);
-    console.log('id hotela: ' + id_presented);
+    console.log('[single_listing_hotel: document.ready()]: id hotela: ' + id_presented);
 
     $.ajax({
         type: 'GET',

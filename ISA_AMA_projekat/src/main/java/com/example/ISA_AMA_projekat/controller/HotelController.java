@@ -1,6 +1,8 @@
 package com.example.ISA_AMA_projekat.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,40 @@ public class HotelController {
 		Collection<Hotel> hotels = hotelService.findAll();
 		
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/search/{name_location}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable("name_location") String name_location){
+		
+		name_location = name_location.toLowerCase();
+		String[] search = name_location.split(" ");
+
+		String forSearch = "%";
+		
+		for(int i=0; i<search.length; i++) {
+			forSearch += search[i] + "%";
+		}
+		
+		
+		//Collection<Hotel> hotels = hotelService.search(forSearch);
+		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
+		for(int i=0; i<hotels.size(); i++) {
+			System.out.println("hotel name: " + hotels.get(i).getNaziv() + ", hotel address: " + hotels.get(i).getAdresa());
+		}
+		
+		if(search.length>1) {
+			System.out.println("Search ima vise reci");
+			Collection<Hotel> hoteli = pretraga(hotels, search);
+			
+			return new ResponseEntity<Collection<Hotel>>(hoteli, HttpStatus.OK);
+		}else {
+			System.out.println("Search ima jednu rec");
+			return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
+		}
+		
 	}
 	
 	@RequestMapping(
@@ -82,5 +118,22 @@ public class HotelController {
 		
 		return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
 		*/
+	}
+	
+	public Collection<Hotel> pretraga(List<Hotel> hoteli, String[] search){
+		Collection<Hotel> result = new ArrayList<Hotel>();
+		
+		for(int j=0; j<hoteli.size(); j++) {
+			for(int i=1; i<search.length; i++) {
+				System.out.println("adresa hotela: " + hoteli.get(j).getAdresa().toLowerCase() + ", search: " + search[i]);
+				System.out.println("naziv hotela: " + hoteli.get(j).getNaziv().toLowerCase() + ", search: " + search[i]);
+				if(hoteli.get(j).getAdresa().toLowerCase().contains(search[i]) || hoteli.get(j).getNaziv().toLowerCase().contains(search[i])) {
+					result.add(hoteli.get(j));
+				}
+			}
+		}
+		
+		
+		return result;
 	}
 }

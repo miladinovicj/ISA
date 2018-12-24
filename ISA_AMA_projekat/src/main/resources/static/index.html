@@ -142,17 +142,17 @@
 										<input type="number" class="adults search_input" placeholder="0">
 									</div>
 
-									<button style="margin-left: 80%;" class="button search_button">search<span></span><span></span><span></span></button>
+									<button style="margin-left: 80%;" class="button search_button" >search<span></span><span></span><span></span></button>
 								</form>
 							</div>
 
 
 							<!-- Search panel za hotele -->
 							<div class="search_panel">
-								<form action="#" id="search_form_2" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<form id="search_form_2" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<div style="width: 50%;" class="search_item">
 										<div>hotel name or location</div>
-										<input type="text" class="destination hotel_name search_input" style="width: 100%;" required="required">
+										<input type="text" class="destination hotel_name search_input" name="name_location_hotel" id="name_location_hotel" style="width: 100%;" required="required">
 									</div>
 									<div style="width: 22%" class="search_item">
 										<div>check in</div>
@@ -162,7 +162,7 @@
 										<div>check out</div>
 										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
 									</div>
-									<button style="margin-left: 80%;" class="button search_button" onclick="javascript:showContentHotel()">search<span></span><span></span><span></span></button>
+									<button style="margin-left: 80%;" class="button search_button">search<span></span><span></span><span></span></button>
 								</form>
 							</div>
 
@@ -171,7 +171,7 @@
 
 							<!-- Search panel za rentale -->
 							<div class="search_panel">
-								<form style="width: 100%;"	 action="#" id="search_form_3" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<form style="width: 100%;" id="search_form_3" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<div style="width: 50%;" class="search_item">
 										<div>rental name or location</div>
 										<input type="text" class="destination rental_name search_input" required="required">
@@ -408,7 +408,7 @@
 				</div>
 				
 				
-				<h1 class="hotel_title">Aviokompanije</h1>
+				<h1 class="hotel_title" id="aviokompanije_naslov">Aviokompanije</h1>
 				<ul style="margin-top: 5%; margin-left:-17%" id="aviokompanije">
 				
 				

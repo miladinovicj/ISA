@@ -31,4 +31,7 @@ public class HotelService {
 		return hotelRepository.save(hotel);
 	}
 	
+	public List<Hotel> search(String name_location) {
+		return hotelRepository.search(name_location);
+	}
 }
