@@ -238,22 +238,35 @@ $(document).ready(function()
 			
 		if(ispravno==true)
 			{
+			//$scope.error = false;
+			//$scope.credentials = {};
 		$.post({
-			url: "/api/users/login",
+			url: "/auth/login",
 			data: JSON.stringify({email: email, lozinka: lozinka}),
 			contentType: 'application/json',
-			success: function(data) {
-				if(data==null || data==""){
-					$('#neuspesno').text("Incorrect email or password or you did not activate your profile with link you received on email!");
-				}
-				else {
-					//sessionStorage.setItem('ulogovan',JSON.stringify(data));
-					$('#neuspesno').text("");
-					$('#uspesno').text('User successfully logged in! Enjoy!');
-					$('#formaPrijava').hide();
-					$("#uspesno").show().delay(2000).fadeOut(function(){
-						window.location.href="index.html";
-					});
+			//headers: authService.createAuthorizationTokenHeader(),
+			  
+			success: function(res) {
+				
+				$('#neuspesno').text("");
+				$('#uspesno').text('User successfully logged in! Enjoy!');
+				$('#formaPrijava').hide();
+				// $rootScope.authenticated = true;
+				 //$scope.error = false;
+			     // authService.setJwtToken(res.accessToken);
+				$("#uspesno").show().delay(2000).fadeOut(function(){
+					window.location.href="index.html";
+				});
+					
+				},
+			error: function()
+			{
+				$('#neuspesno').text("Incorrect email or password or you did not activate your profile with link you received on email!");
+				authService.removeJwtToken();
+			    //$rootScope.authenticated = false;
+			    //$scope.error = true;
+			}
+				});
 					
 								//window.location.href="index.html";
 								
@@ -261,12 +274,9 @@ $(document).ready(function()
 					
 					
 				}
-			}
+			
 		
 			
 	});
-			}
 	
-});
-		
 });
