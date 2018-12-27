@@ -1,19 +1,16 @@
 package com.example.ISA_AMA_projekat.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class RezervacijaHotel {
@@ -27,15 +24,12 @@ public class RezervacijaHotel {
 	
 	@Column
 	private Date datum_dolaska;
+	
+	@Column
+	private Date datum_odlaska;
 
 	@Column
 	private int broj_nocenja;
-
-	@Column
-	private int broj_osoba;
-
-	@Column
-	private int broj_soba;
 
 	@Column
 	private double ukupna_cena;
@@ -43,12 +37,15 @@ public class RezervacijaHotel {
 	@Column
 	private boolean brza;
 	
+	/*
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Hotel hotel;
+	*/
 	
-	@ManyToMany(mappedBy="rezervacije")
-	private Set<Soba> sobe = new HashSet<Soba>();
-
+	@ManyToOne
+	@JsonBackReference
+	private Soba soba;
+	
 	public RezervacijaHotel() {
 		super();
 	}
@@ -85,22 +82,6 @@ public class RezervacijaHotel {
 		this.broj_nocenja = broj_nocenja;
 	}
 
-	public int getBroj_osoba() {
-		return broj_osoba;
-	}
-
-	public void setBroj_osoba(int broj_osoba) {
-		this.broj_osoba = broj_osoba;
-	}
-
-	public int getBroj_soba() {
-		return broj_soba;
-	}
-
-	public void setBroj_soba(int broj_soba) {
-		this.broj_soba = broj_soba;
-	}
-
 	public double getUkupna_cena() {
 		return ukupna_cena;
 	}
@@ -117,6 +98,7 @@ public class RezervacijaHotel {
 		this.brza = brza;
 	}
 
+	/*
 	public Hotel getHotel() {
 		return hotel;
 	}
@@ -124,15 +106,24 @@ public class RezervacijaHotel {
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
 	}
-
-	public Set<Soba> getSobe() {
-		return sobe;
-	}
-
-	public void setSobe(Set<Soba> sobe) {
-		this.sobe = sobe;
-	}
+	*/
 	
+	public Soba getSoba() {
+		return soba;
+	}
+
+	public void setSoba(Soba soba) {
+		this.soba = soba;
+	}
+
+	public Date getDatum_odlaska() {
+		return datum_odlaska;
+	}
+
+	public void setDatum_odlaska(Date datum_odlaska) {
+		this.datum_odlaska = datum_odlaska;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -155,7 +146,6 @@ public class RezervacijaHotel {
 
 	@Override
 	public String toString() {
-		return "RezervacijaHotel [id=" + id + ", broj_nocenja=" + broj_nocenja + ", broj_soba="
-				+ broj_soba + ", ukupna_cena=" + ukupna_cena + "]";
+		return "RezervacijaHotel [id=" + id + ", broj_nocenja=" + broj_nocenja + ", ukupna_cena=" + ukupna_cena + "]";
 	}
 }

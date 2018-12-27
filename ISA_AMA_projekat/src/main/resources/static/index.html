@@ -10,14 +10,12 @@
 <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="styles/offers_styles.css">
 <link rel="stylesheet" type="text/css" href="styles/offers_responsive.css">
-	<link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
-	<link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-	<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-	<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
-	<link rel="stylesheet" type="text/css" href="styles/single_listing_styles.css">
-	<link rel="stylesheet" type="text/css" href="styles/single_listing_responsive.css">
+<link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="styles/single_listing_styles.css">
+<link rel="stylesheet" type="text/css" href="styles/single_listing_responsive.css">
 </head>
 
 <body>
@@ -119,23 +117,23 @@
 							<!-- Search panel za letove -->
 							<div class="search_panel active">
 								<form style="width: 100%;" action="#" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-									<div style="width: 27%;" class="search_item">
+									<div style="width: 25%;" class="search_item">
 										<div>From</div>
 										<input type="text" class="destination search_input" required="required">
 									</div>
 
-									<div style="width: 27%;" class="search_item">
+									<div style="width: 25%;" class="search_item">
 										<div>To</div>
 										<input type="text" class="destination search_input" required="required">
 									</div>
 
-									<div class="search_item" style="width: 13%;">
+									<div class="search_item" style="width: 15%;">
 										<div>check in</div>
-										<input type="text" class="check_in search_input" placeholder="YYYY-MM-DD">
+										<input type="date" class="check_in search_input" placeholder="dd/mm/yyyy">
 									</div>
-									<div class="search_item" style="width: 13%;">
+									<div class="search_item" style="width: 15%;">
 										<div>check out</div>
-										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
+										<input type="date" class="check_out search_input" placeholder="dd/mm/yyyy">
 									</div>
 									<div class="search_item">
 										<div>adults</div>
@@ -156,13 +154,17 @@
 									</div>
 									<div style="width: 22%" class="search_item">
 										<div>check in</div>
-										<input type="text" class="check_in search_input" placeholder="YYYY-MM-DD">
+										<input type="date" class="check_in search_input" name="check_in_hotel" placeholder="dd/mm/yyyy" required="required">
 									</div>
 									<div  style="width: 22%" class="search_item">
 										<div>check out</div>
-										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
+										<input type="date" class="check_out search_input" name="check_out_hotel" placeholder="dd/mm/yyyy" required="required">
 									</div>
+									<div style="width: 100%"  style="display: none;">
+										<p id="error_date" style="height: 35px; margin-left: 52.5%; margin-top: 1%; display: none; color: white; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Check in date is after check out date.</p>
+									</div>	
 									<button style="margin-left: 80%;" class="button search_button">search<span></span><span></span><span></span></button>
+									
 								</form>
 							</div>
 
@@ -178,11 +180,11 @@
 									</div>
 									<div class="search_item" style="width: 22%;">
 										<div>check in</div>
-										<input type="text" class="check_in search_input" placeholder="YYYY-MM-DD">
+										<input type="date" class="check_in search_input" placeholder="dd/mm/yyyy">
 									</div>
 									<div class="search_item" style="width: 22%;">
 										<div>check out</div>
-										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
+										<input type="date" class="check_out search_input" placeholder="dd/mm/yyyy">
 									</div>
 
 									<button style="margin-left: 80%;" class="button search_button">search<span></span><span></span><span></span></button>
