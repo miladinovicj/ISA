@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +33,8 @@ public class KorisnikController {
 	@Autowired
 	private EmailService emailService;
 	
-
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@RequestMapping(
 			value = "/registruj",
@@ -40,7 +43,7 @@ public class KorisnikController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Korisnik> saveKorisnik(@RequestBody Korisnik korisnik)
 	{
-		
+		System.out.println("KORISNIK: " + korisnik.getLozinka());
 		Korisnik postoji = korisnikService.findByEmail(korisnik.getEmail());
 		if(postoji!=null)
 		{
@@ -58,7 +61,10 @@ public class KorisnikController {
 		{
 				Korisnik novi_korisnik = new Korisnik();
 				novi_korisnik.setEmail(korisnik.getEmail());
-				novi_korisnik.setLozinka(korisnik.getLozinka());
+			
+				
+				novi_korisnik.setLozinka(passwordEncoder.encode(korisnik.getLozinka()));
+				
 				novi_korisnik.setIme(korisnik.getIme());
 				novi_korisnik.setPrezime(korisnik.getPrezime());
 				novi_korisnik.setGrad(korisnik.getGrad());
@@ -111,13 +117,13 @@ public class KorisnikController {
 		{
 			potvrda.setAktiviran(true);
 			korisnikService.updateAkt(true, potvrda.getId());
-			response.sendRedirect("http://localhost:8080/indexcoa.html");
+			response.sendRedirect("http://localhost:8080/prijava.html");
 			System.out.println("USPESNO AKTIVIRAN");
 			
 		}
 	}
 
-	@RequestMapping(
+/*	@RequestMapping(
 			value = "/login",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
@@ -150,5 +156,5 @@ public class KorisnikController {
 		 }
 		
 		}
-	}
+	}*/
 }

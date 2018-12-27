@@ -1,5 +1,7 @@
 delete from rating;
 delete from korisnik;
+delete from AUTHORITY;
+delete from user_authority;
 delete from aviokompanija_brzi_letovi;
 delete from let;
 delete from aviokompanija;
@@ -49,3 +51,7 @@ insert into hotel_usluge (hotel_id, usluge_id) values (6, 3);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena) values (1, '2018-12-25', '2018-12-26', 1, 1, false, 10);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena) values (2, '2018-12-25', '2018-12-27', 3, 2, false, 10);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena) values (3, '2018-12-20', '2018-12-23', 3, 3, false, 10);
+
+insert into korisnik (id, email, lozinka, ime, prezime, grad, telefon, bonuspoeni, aktiviran) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 'Ruma', '062522006', 0, true);
+insert into AUTHORITY (id, name) values (1, 'ROLE_USER');
+insert into user_authority (user_id, authority_id) values (1, 1);
