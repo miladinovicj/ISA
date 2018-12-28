@@ -10,13 +10,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Soba {
@@ -40,14 +38,15 @@ public class Soba {
 	@Column
 	private double popust;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Column
+	private boolean zauzeta;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
 	private Hotel hotel;
 	
-	@ManyToMany
-	@JoinTable(name = "rezervacije_sobe",
-    joinColumns = @JoinColumn(name="soba_id", referencedColumnName="id"),
-    inverseJoinColumns = @JoinColumn(name="rezervacijaHotel_id", referencedColumnName="id"))
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="soba")
+	@JsonManagedReference
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -55,6 +54,7 @@ public class Soba {
 	
 	public Soba() {
 		super();
+		this.zauzeta = false;
 	}
 
 	public Integer getId() {
@@ -127,6 +127,14 @@ public class Soba {
 
 	public void setOcene(Set<Rating> ocene) {
 		this.ocene = ocene;
+	}
+
+	public boolean isZauzeta() {
+		return zauzeta;
+	}
+
+	public void setZauzeta(boolean zauzeta) {
+		this.zauzeta = zauzeta;
 	}
 	
 }

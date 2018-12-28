@@ -31,10 +31,8 @@ function showContentHotel() {
 		url: "/api/hotels/all",
 		success: function(hoteli) {
 
-		    
-		    
 			if(hoteli == null){
-				alert('There are no hotels!');
+				alert('There are no hotels');
 				document.getElementById('hotel_title').innerHTML = '';
 			}
 			else if(help.childElementCount == 2){
@@ -50,7 +48,7 @@ function showContentHotel() {
 			}
 		},
 		error : function(data){
-			alert('Error!');
+			alert('Error with loading hotels');
 			document.getElementById('hotel_title').innerHTML = '';
 		}
 	});
@@ -172,6 +170,8 @@ $(document).ready(function()
 	console.log('[search.js: showContentHotelSearch()]: document.ready()');
 	var search = window.location.search;
 	
+	var splitted = search.split('&');
+	
 	$('.search_tab').removeClass('active');
 	if(search.indexOf('hotel') !== -1){
 		$('div[onclick="javascript:showContentHotel()"]').addClass('active');
@@ -180,39 +180,72 @@ $(document).ready(function()
 		panels.removeClass('active');
 		$(panels[1]).addClass('active');
 		
-		var name_location = search.substring(21);
-		name_location = name_location.replace('+', ' ');
-		$('input[name="name_location_hotel"]').val(name_location);
+		var name_location = splitted[0].substring(21);
+		var check_in_fake = splitted[1].substring(15);
+		var check_out_fake = splitted[2].substring(16);
 		
-		$.get({
-			url: '/api/hotels/search/' + name_location,
-			success: function(hoteli) {
-				
-				if(hoteli == null || hoteli.length == 0){
-					//alert('There are no hotels for this search!');
-					document.getElementById('hotel_title').innerHTML = 'There are no hotels for this search.';
-					document.getElementById('ubaci_hotele_template').style.display='block';
-					document.getElementById("aviokompanije").style.display='none';
-					document.getElementById("aviokompanije_naslov").style.display='none';
-				}
-				else {
-					console.log('There are ' + hoteli.length + ' hotels for this search.');
-					document.getElementById('hotel_title').innerHTML = 'Results of search:';
-					document.getElementById('ubaci_hotele_template').style.display='block';
-					document.getElementById("aviokompanije").style.display='none';
-					document.getElementById("aviokompanije_naslov").style.display='none';
-					for (let hotel of hoteli) 
-					{
-						addHotelLi(hotel);
+		var date_check_in = new Date(check_in_fake);
+		var date_check_out = new Date(check_out_fake);
+		
+		if(date_check_in > date_check_out)
+		{
+			//alert('datum dolaska je nakon datuma polaska');
+			document.getElementById("error_date").style.display='block';
+			
+			name_location = name_location.split('+').join(' ');
+			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
+			var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+			
+			$('input[name="name_location_hotel"]').val(name_location);
+			$('input[name="check_in_hotel"]').val(check_in_fake);
+			$('input[name="check_out_hotel"]').val(check_out_fake);
+		}
+		else
+		{
+			document.getElementById("error_date").style.display='none';
+			
+			name_location = name_location.split('+').join(' ');
+			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
+			var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+			
+			$('input[name="name_location_hotel"]').val(name_location);
+			$('input[name="check_in_hotel"]').val(check_in_fake);
+			$('input[name="check_out_hotel"]').val(check_out_fake);
+			
+			if(check_in == "--")
+				check_in = "0001-01-01";
+			if(check_out == "--")
+				check_out = "0001-01-01";
+			
+			$.get({
+				url: '/api/hotels/search/' + name_location + '/' + check_in + '/' + check_out,
+				success: function(hoteli) {
+					
+					if(hoteli == null || hoteli.length == 0){
+						document.getElementById('hotel_title').innerHTML = 'There are no hotels for this search.';
+						document.getElementById('ubaci_hotele_template').style.display='block';
+						document.getElementById("aviokompanije").style.display='none';
+						document.getElementById("aviokompanije_naslov").style.display='none';
 					}
-				}
+					else {
+						console.log('There are ' + hoteli.length + ' hotels for this search.');
+						document.getElementById('hotel_title').innerHTML = 'Results of search:';
+						document.getElementById('ubaci_hotele_template').style.display='block';
+						document.getElementById("aviokompanije").style.display='none';
+						document.getElementById("aviokompanije_naslov").style.display='none';
+						for (let hotel of hoteli) 
+						{
+							addHotelLi(hotel);
+						}
+					}
 
-			},
-			error : function(data){
-				alert('Error!');
-				document.getElementById('hotel_title').innerHTML = '';
-			}
-		});
+				},
+				error : function(data){
+					alert('Error!');
+					document.getElementById('hotel_title').innerHTML = '';
+				}
+			});
+		}
 	}
 	
 });

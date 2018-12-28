@@ -1,7 +1,12 @@
 package com.example.ISA_AMA_projekat.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Hotel;
+import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
+import com.example.ISA_AMA_projekat.model.Soba;
 import com.example.ISA_AMA_projekat.service.HotelService;
 
 
@@ -38,37 +45,30 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "/search/{name_location}",
+			value = "/search/{name_location}/{check_in}/{check_out}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable("name_location") String name_location){
+	public ResponseEntity<List<Hotel>> getHotelsSearch(@PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException{
 		
+		System.out.println("[HotelController: getHotelsSearch]: name_location-" + name_location + ", check_in-" + check_in + ", check_out-" + check_out);
 		name_location = name_location.toLowerCase();
 		String[] search = name_location.split(" ");
-
-		String forSearch = "%";
 		
-		for(int i=0; i<search.length; i++) {
-			forSearch += search[i] + "%";
-		}
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date_check_in = format.parse(check_in);
+		Date date_check_out = format.parse(check_out);
 		
-		
-		//Collection<Hotel> hotels = hotelService.search(forSearch);
 		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
+		
+		/*
 		for(int i=0; i<hotels.size(); i++) {
-			System.out.println("hotel name: " + hotels.get(i).getNaziv() + ", hotel address: " + hotels.get(i).getAdresa());
+			System.out.println("[HotelController: getHotelsSearch]: hotel name: " + hotels.get(i).getNaziv() + ", hotel address: " + hotels.get(i).getAdresa());
 		}
+		*/
 		
-		if(search.length>1) {
-			System.out.println("Search ima vise reci");
-			Collection<Hotel> hoteli = pretraga(hotels, search);
+		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out);
 			
-			return new ResponseEntity<Collection<Hotel>>(hoteli, HttpStatus.OK);
-		}else {
-			System.out.println("Search ima jednu rec");
-			return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
-		}
-		
+		return new ResponseEntity<List<Hotel>>(hoteli, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -120,19 +120,70 @@ public class HotelController {
 		*/
 	}
 	
-	public Collection<Hotel> pretraga(List<Hotel> hoteli, String[] search){
-		Collection<Hotel> result = new ArrayList<Hotel>();
+	public List<Hotel> pretraga(List<Hotel> hoteli, String[] search, Date check_in, Date check_out){
+		List<Hotel> result = new ArrayList<Hotel>();
+		
+		for(int i=0; i<hoteli.size(); i++) {
+			result.add(hoteli.get(i));
+		}
 		
 		for(int j=0; j<hoteli.size(); j++) {
-			for(int i=1; i<search.length; i++) {
-				System.out.println("adresa hotela: " + hoteli.get(j).getAdresa().toLowerCase() + ", search: " + search[i]);
-				System.out.println("naziv hotela: " + hoteli.get(j).getNaziv().toLowerCase() + ", search: " + search[i]);
-				if(hoteli.get(j).getAdresa().toLowerCase().contains(search[i]) || hoteli.get(j).getNaziv().toLowerCase().contains(search[i])) {
-					result.add(hoteli.get(j));
+			System.out.println("[HotelController: pretraga]: naziv hotela: " + hoteli.get(j).getNaziv() + ", adresa hotela: " + hoteli.get(j).getAdresa());
+			for(int i=0; i<search.length; i++) {
+				if(!(hoteli.get(j).getAdresa().toLowerCase().contains(search[i]) || hoteli.get(j).getNaziv().toLowerCase().contains(search[i]))) {
+					result.remove(hoteli.get(j));
+					System.out.println("[HotelController: pretraga]: obrisan hotel sa nazivom - " + hoteli.get(j).getNaziv());
 				}
 			}
 		}
 		
+		boolean postojiTerminSoba;
+		boolean postojiSoba;
+		
+		for (int i=0; i<result.size(); i++) {
+			Hotel hotel = result.get(i);
+			postojiSoba = false;
+			System.out.println("[HotelController: pretraga]: iteracija pomocu iteratora; naziv hotela: " + hotel.getNaziv());
+			for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
+				System.out.println("[HotelController: pretraga]: usao u for za prolazak kroz sobe; ima " + hotel.getSobe().size() + " soba.");
+				Soba soba = (Soba) iteratorSoba.next();
+				postojiTerminSoba = true;
+				
+				if(soba.getRezervacije().isEmpty()) {
+					System.out.println("[HotelController: pretraga]: soba nema rezervacija.");
+					postojiTerminSoba = true;
+					postojiSoba = true;
+					break;
+				}else {
+					for(Iterator<RezervacijaHotel> iteratorRezervacija = soba.getRezervacije().iterator(); iteratorRezervacija.hasNext();) {
+						System.out.println("[HotelController: pretraga]: postoje rezervacije za sobu; ima ih " + soba.getRezervacije().size() + ".");
+						RezervacijaHotel rezervacijaHotel = iteratorRezervacija.next();
+						System.out.println("[HotelController: pretraga]: zahtev:  datum dolaska: " + check_in + ", datum odlaska: " + check_out + ".");
+						System.out.println("[HotelController: pretraga]: rezervacija: " + rezervacijaHotel.getId() + ", datum dolaska: " + rezervacijaHotel.getDatum_dolaska() + ", datum odlaska: " + rezervacijaHotel.getDatum_odlaska() + ".");
+						System.out.println("[HotelController: pretraga]: " + check_in.equals(rezervacijaHotel.getDatum_dolaska()));
+						System.out.println("[HotelController: pretraga]: " + check_in.after(rezervacijaHotel.getDatum_dolaska()));
+						System.out.println("[HotelController: pretraga]: " + check_in.before(rezervacijaHotel.getDatum_odlaska()));
+						if( check_in.equals(rezervacijaHotel.getDatum_dolaska()) || check_in.equals(rezervacijaHotel.getDatum_odlaska()) || check_out.equals(rezervacijaHotel.getDatum_dolaska()) || ((rezervacijaHotel.getDatum_dolaska()).after(check_in) && (rezervacijaHotel.getDatum_dolaska()).before(check_out)) || (check_in.after(rezervacijaHotel.getDatum_dolaska()) && check_in.before(rezervacijaHotel.getDatum_odlaska())) || (check_out.after(rezervacijaHotel.getDatum_dolaska()) && check_out.before(rezervacijaHotel.getDatum_odlaska()))) {
+							System.out.println("[HotelController: pretraga]: soba je zauzeta u trazenom periodu.");
+							postojiTerminSoba = false;
+							break;
+						}else {
+							System.out.println("[HotelController: pretraga]: soba je slobodna u trazenom periodu.");
+						}
+					}
+					
+					if(postojiTerminSoba) {
+						postojiSoba = true;
+						break;
+					}
+				}
+			}
+			
+			if(!postojiSoba) {
+				result.remove(hotel);
+				i--;
+			}
+		}
 		
 		return result;
 	}
