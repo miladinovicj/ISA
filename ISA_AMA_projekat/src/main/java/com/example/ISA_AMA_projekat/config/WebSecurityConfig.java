@@ -1,9 +1,13 @@
 package com.example.ISA_AMA_projekat.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
+import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,6 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.ISA_AMA_projekat.security.TokenUtils;
 import com.example.ISA_AMA_projekat.security.auth.RestAuthenticationEntryPoint;
@@ -24,7 +31,7 @@ import com.example.ISA_AMA_projekat.service.KorisnikService;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -86,5 +93,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
 		web.ignoring().antMatchers(HttpMethod.GET, "/", "/images/*", "/fonts/*", "/js/*", "/plugins/*", "/styles/*",   "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js");
 	}
+	
+	@Bean
+	public DeviceResolverHandlerInterceptor 
+	        deviceResolverHandlerInterceptor() {
+	    return new DeviceResolverHandlerInterceptor();
+	}
+
+	@Bean
+	public DeviceHandlerMethodArgumentResolver 
+	        deviceHandlerMethodArgumentResolver() {
+	    return new DeviceHandlerMethodArgumentResolver();
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+	    registry.addInterceptor(deviceResolverHandlerInterceptor());
+	}
+
+	@Override
+	public void addArgumentResolvers(
+	        List<HandlerMethodArgumentResolver> argumentResolvers) {
+	    argumentResolvers.add(deviceHandlerMethodArgumentResolver());
+	}
+	
+	
 
 }

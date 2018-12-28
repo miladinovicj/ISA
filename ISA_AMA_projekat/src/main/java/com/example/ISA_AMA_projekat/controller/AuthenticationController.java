@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +39,9 @@ public class AuthenticationController {
 	TokenUtils tokenUtils;
 
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
@@ -49,25 +53,51 @@ public class AuthenticationController {
 	
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, 
-			HttpServletResponse response, Device device) throws AuthenticationException, IOException {
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody Korisnik korisnik,HttpServletResponse response, Device device) throws AuthenticationException, IOException {
+		Korisnik postoji = userDetailsService.findByEmail(korisnik.getEmail());
+		if(postoji==null)
+		{
+			System.out.println("KORISNIK SA OVIM EMAIL-OM NE POSTOJI");
+			return null;
+		}
+		else
+		{
+			
+		 if(!passwordEncoder.matches(korisnik.getLozinka(), postoji.getLozinka()))
+		 {
+			 System.out.println("Pogresna lozinka");
+				return null;
+		 }
+		 else
+		 {
+			 if(postoji.getAktiviran()==false)
+			 {
+				 System.out.println("Nije aktiviran");
+				 return null;
+			 }
+			 else
+			 {
+				 final Authentication authentication = authenticationManager
+							.authenticate(new UsernamePasswordAuthenticationToken(
+									postoji.getEmail(),
+									korisnik.getLozinka()));
 
-		final Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(
-						authenticationRequest.getUsername(),
-						authenticationRequest.getPassword()));
+					// Ubaci username + password u kontext
+					SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		// Ubaci username + password u kontext
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+					// Kreiraj token
+					Korisnik user = (Korisnik) authentication.getPrincipal();
+					System.out.println("DA LI JE AKRIVAN: " + user.getAktiviran() + "DA LI JE ENABLED: " + user.isEnabled());
+					String jwt = tokenUtils.generateToken(user.getEmail(), device);
+					int expiresIn = tokenUtils.getExpiredIn(device);
 
-		// Kreiraj token
-		Korisnik user = (Korisnik) authentication.getPrincipal();
-		System.out.println("DA LI JE AKRIVAN: " + user.getAktiviran() + "DA LI JE ENABLED: " + user.isEnabled());
-		String jwt = tokenUtils.generateToken(user.getEmail(), device);
-		int expiresIn = tokenUtils.getExpiredIn(device);
-
-		// Vrati token kao odgovor na uspesno autentifikaciju
-		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+					// Vrati token kao odgovor na uspesno autentifikaciju
+					return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			 }
+		 }
+		
+		}
+		
 	}
 	
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
