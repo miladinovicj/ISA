@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -33,9 +34,10 @@ public class RentacarServis {
 	@Column
 	private String promotivni_opis;
 	
-	@OneToMany(mappedBy="rentacar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonBackReference
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "rentacar_id", referencedColumnName = "id")
 	private Set<Filijala> filijale;
+	
 	
 	@ManyToMany
 	private Set<Usluga> usluge = new HashSet<Usluga>();
@@ -45,6 +47,8 @@ public class RentacarServis {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
+	
+	
 	
 	public RentacarServis() {
 		super();

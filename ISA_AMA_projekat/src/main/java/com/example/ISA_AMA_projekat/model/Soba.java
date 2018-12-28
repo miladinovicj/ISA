@@ -45,6 +45,7 @@ public class Soba {
 	@JsonBackReference
 	private Hotel hotel;
 	
+	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="soba")
 	@JsonManagedReference
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
@@ -56,7 +57,8 @@ public class Soba {
 		super();
 		this.zauzeta = false;
 	}
-
+	
+	
 	public Integer getId() {
 		return id;
 	}

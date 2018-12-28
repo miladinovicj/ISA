@@ -26,9 +26,6 @@ public class Filijala {
 	@Column(nullable = false)
 	private String adresa;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonBackReference
-	private RentacarServis rentacar;
 	
 	@OneToMany(mappedBy = "filijala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
@@ -74,13 +71,6 @@ public class Filijala {
 	}
 
 	
-	public RentacarServis getRentacar() {
-		return rentacar;
-	}
-
-	public void setRentacar(RentacarServis rentacar) {
-		this.rentacar = rentacar;
-	}
 
 	
 	

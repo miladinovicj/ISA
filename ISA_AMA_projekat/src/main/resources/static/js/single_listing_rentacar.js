@@ -32,7 +32,7 @@ function showRentacar(rentacar)
 	}
     else
 	{
-    	$("#text_no_filijale").text("");
+    	$("#text_no_filijale").text("Branches:");
     	for (let filijala of rentacar.filijale) 
     	{
     		addFilijala(filijala);
@@ -62,7 +62,7 @@ function addFilijala(filijala)
 	div = temp.content.querySelector("div#ubaci_filijalu");
 	
 	
-	temp.content.getElementById("adresa_filijale").innerHTML = filijala.adresa;
+	temp.content.getElementById("adresa_filijale").innerHTML = "<a>" + filijala.adresa + "</a>";
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
