@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class RentacarServis {
 
@@ -31,14 +33,15 @@ public class RentacarServis {
 	@Column
 	private String promotivni_opis;
 	
+	@OneToMany(mappedBy="rentacar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonBackReference
+	private Set<Filijala> filijale;
+	
 	@ManyToMany
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@Column
 	private double prosecna_ocena;
-	
-	@OneToMany(mappedBy = "rentacar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Filijala> filijale = new HashSet<Filijala>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
@@ -46,6 +49,7 @@ public class RentacarServis {
 	public RentacarServis() {
 		super();
 	}
+
 
 	public Long getId() {
 		return id;
@@ -95,6 +99,7 @@ public class RentacarServis {
 		this.usluge = usluge;
 	}
 	
+
 	public Set<Filijala> getFilijale() {
 		return filijale;
 	}

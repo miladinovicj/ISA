@@ -1,4 +1,20 @@
 function showContentHotel() {
+	
+	if(document.getElementById('ubaci_hotele_template').style.display=='none') { 
+        document.getElementById('ubaci_hotele_template').style.display='block'; 
+        document.getElementById("hotel_title").style.display='block';
+    }
+    
+    if(document.getElementById('ubaci_rentacar_template').style.display=='block') { 
+        document.getElementById('ubaci_rentacar_template').style.display='none'; 
+        document.getElementById("rentacar_title").style.display='none';
+    }
+    
+    if(document.getElementById("aviokompanije").style.display=='block'){
+	    document.getElementById("aviokompanije").style.display='none';
+		document.getElementById("aviokompanije_naslov").style.display='none';
+    }
+    
 	console.log("[search.js: showContentHotel()]: ucitavanje svih hotela");
 	
 	$('input[name="name_location_hotel"]').val('');
@@ -58,7 +74,13 @@ function addHotelLi(hotel) {
 
 function showContentAvio() {
     if(document.getElementById('ubaci_hotele_template').style.display=='block') { 
-        document.getElementById('ubaci_hotele_template').style.display='none'; 
+        document.getElementById('ubaci_hotele_template').style.display='none';
+        document.getElementById("hotel_title").style.display='none';
+    }
+    
+    if(document.getElementById('ubaci_rentacar_template').style.display=='block') { 
+        document.getElementById('ubaci_rentacar_template').style.display='none'; 
+        document.getElementById("rentacar_title").style.display='none';
     }
     
     if(document.getElementById("aviokompanije").style.display=='none'){
@@ -70,16 +92,79 @@ function showContentAvio() {
 }
 
 function showContentRent() {
-    if(document.getElementById('ubaci_hotele_template').style.display=='block') { 
-        document.getElementById('ubaci_hotele_template').style.display='none'; 
+	if(document.getElementById('ubaci_hotele_template').style.display=='block') { 
+        document.getElementById('ubaci_hotele_template').style.display='none';
+        document.getElementById("hotel_title").style.display='none';
+    }
+    
+    if(document.getElementById('ubaci_rentacar_template').style.display=='none') { 
+        document.getElementById('ubaci_rentacar_template').style.display='block'; 
+        document.getElementById("rentacar_title").style.display='block';
     }
     
     if(document.getElementById("aviokompanije").style.display=='block'){
 	    document.getElementById("aviokompanije").style.display='none';
 		document.getElementById("aviokompanije_naslov").style.display='none';
     }
+console.log("[search.js: showContentRent()]: ucitavanje svih rentacar servisa");
+	
+	var help = document.getElementById("ubaci_rentacar_template");
+	if(help.childElementCount > 2)
+	{
+		for(var i=help.childElementCount; i>=3; i--)
+		{
+			help.removeChild(help.children[i-1]);
+		}
+	}
+	
+	$.get({
+		url: "/api/rents/all",
+		success: function(rents) {
+
+		  if(rents == null){
+				alert('There are no rentacars!');
+				document.getElementById('rentacar_title').innerHTML = '';
+			}
+			else if(help.childElementCount == 2)
+				{
+				console.log('There are ' + rents.length + ' rentacars in memory.');
+				document.getElementById('rentacar_title').innerHTML = 'Rent-a-car';
+				document.getElementById('ubaci_rentacar_template').style.display='block';
+				/*document.getElementById("aviokompanije").style.display='none';
+				document.getElementById("aviokompanije_naslov").style.display='none';
+				document.getElementById("ubaci_hotel_template").style.display='none';
+				document.getElementById("hotel_title").style.display='none';*/
+				for (let rentacar of rents) 
+				{
+					
+					addRentacar(rentacar);
+				}
+			}
+		},
+		error : function(data){
+			alert('Error!');
+			document.getElementById('rentacar_title').innerHTML = '';
+		}
+	});
     
-    return false;
+}
+
+function addRentacar(rentacar) {
+	console.log("naziv rentacar servisa: " + rentacar.naziv);
+	for (let fil of rentacar.filijale)
+	console.log("adresa filijale rentacar servisa: " + fil.adresa);
+	var temp, div, a, i, text, name;
+	temp = document.getElementById("template_rentacar");
+	div = temp.content.querySelector("div#ubaciRentacar");
+	
+    temp.content.getElementById("name_rentacar").innerHTML = rentacar.naziv;
+    temp.content.getElementById("text_rentacar").innerHTML = rentacar.adresa;
+    temp.content.getElementById("rating_rentacar").innerHTML = rentacar.prosecna_ocena;
+    temp.content.getElementById("dugme_view_details_rentacar").innerHTML = '<a href="single_listing_rentacar.html?id=' + rentacar.id +'">view details</a>';
+    
+    a = document.importNode(div, true);
+    document.getElementById("ubaci_rentacar_template").appendChild(a);
+    
 }
 
 $(document).ready(function()
