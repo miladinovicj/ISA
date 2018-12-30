@@ -191,6 +191,12 @@ $(document).ready(function()
 		var name_location = splitted[0].substring(21);
 		var check_in_fake = splitted[1].substring(15);
 		var check_out_fake = splitted[2].substring(16);
+		var adults = 0;
+		
+		if(splitted[3].length > 13)
+		{
+			adults = splitted[3].substring(13);
+		}
 		
 		var date_check_in = new Date(check_in_fake);
 		var date_check_out = new Date(check_out_fake);
@@ -207,6 +213,7 @@ $(document).ready(function()
 			$('input[name="name_location_hotel"]').val(name_location);
 			$('input[name="check_in_hotel"]').val(check_in_fake);
 			$('input[name="check_out_hotel"]').val(check_out_fake);
+			$('input[name="adults_hotel"]').val(adults);
 		}
 		else
 		{
@@ -219,6 +226,7 @@ $(document).ready(function()
 			$('input[name="name_location_hotel"]').val(name_location);
 			$('input[name="check_in_hotel"]').val(check_in_fake);
 			$('input[name="check_out_hotel"]').val(check_out_fake);
+			$('input[name="adults_hotel"]').val(adults);
 			
 			if(check_in == "--")
 				check_in = "0001-01-01";
@@ -226,7 +234,7 @@ $(document).ready(function()
 				check_out = "0001-01-01";
 			
 			$.get({
-				url: '/api/hotels/search/' + name_location + '/' + check_in + '/' + check_out,
+				url: '/api/hotels/search/' + name_location + '/' + check_in + '/' + check_out + '/' + adults,
 				success: function(hoteli) {
 					
 					if(hoteli == null || hoteli.length == 0){

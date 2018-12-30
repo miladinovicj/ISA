@@ -41,6 +41,9 @@ public class Soba {
 	@Column
 	private boolean zauzeta;
 	
+	@Column
+	private String opis;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
 	private Hotel hotel;
@@ -137,6 +140,14 @@ public class Soba {
 
 	public void setZauzeta(boolean zauzeta) {
 		this.zauzeta = zauzeta;
+	}
+
+	public String getOpis() {
+		return opis;
+	}
+
+	public void setOpis(String opis) {
+		this.opis = opis;
 	}
 	
 }

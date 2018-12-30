@@ -1,7 +1,10 @@
 package com.example.ISA_AMA_projekat.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -37,10 +41,11 @@ public class RezervacijaHotel {
 	@Column
 	private boolean brza;
 	
-	/*
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Hotel hotel;
-	*/
+	@Column
+	private boolean aktivirana;
+	
+	@OneToMany
+	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@ManyToOne
 	@JsonBackReference
@@ -97,16 +102,6 @@ public class RezervacijaHotel {
 	public void setBrza(boolean brza) {
 		this.brza = brza;
 	}
-
-	/*
-	public Hotel getHotel() {
-		return hotel;
-	}
-
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
-	}
-	*/
 	
 	public Soba getSoba() {
 		return soba;
@@ -122,6 +117,30 @@ public class RezervacijaHotel {
 
 	public void setDatum_odlaska(Date datum_odlaska) {
 		this.datum_odlaska = datum_odlaska;
+	}
+
+	public boolean isAktivirana() {
+		return aktivirana;
+	}
+
+	public void setAktivirana(boolean aktivirana) {
+		this.aktivirana = aktivirana;
+	}
+
+	public Set<Usluga> getUsluge() {
+		return usluge;
+	}
+
+	public void setUsluge(Set<Usluga> usluge) {
+		this.usluge = usluge;
+	}
+	
+	public void removeUsluga(Usluga usluga) {
+		for(Iterator<Usluga> iteratorUsluga = this.usluge.iterator(); iteratorUsluga.hasNext();) {
+			if(usluga.getId().equals(iteratorUsluga.next().getId())) {
+				this.usluge.remove(iteratorUsluga.next());
+			}
+		}
 	}
 
 	@Override
