@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.Soba;
+import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.service.HotelService;
+import com.example.ISA_AMA_projekat.service.RezervacijaHotelService;
+import com.example.ISA_AMA_projekat.service.SobaService;
+import com.example.ISA_AMA_projekat.service.UslugaService;
 
 
 @RestController
@@ -32,6 +38,15 @@ public class HotelController {
 
 	@Autowired
 	private HotelService hotelService;
+	
+	@Autowired
+	private RezervacijaHotelService rezervacijaHotelService;
+	
+	@Autowired
+	private UslugaService uslugaService;
+	
+	@Autowired
+	private SobaService sobaService;
 	
 	@RequestMapping(
 			value = "/all",
@@ -45,12 +60,12 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "/search/{name_location}/{check_in}/{check_out}",
+			value = "/search/{name_location}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Hotel>> getHotelsSearch(@PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException{
+	public ResponseEntity<List<Hotel>> getHotelsSearch(HttpServletRequest request, @PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException{
 		
-		System.out.println("[HotelController: getHotelsSearch]: name_location-" + name_location + ", check_in-" + check_in + ", check_out-" + check_out);
+		System.out.println("[HotelController: getHotelsSearch]: name_location-" + name_location + ", check_in-" + check_in + ", check_out-" + check_out + ", adults-" + adults);
 		name_location = name_location.toLowerCase();
 		String[] search = name_location.split(" ");
 		
@@ -58,15 +73,23 @@ public class HotelController {
 		Date date_check_in = format.parse(check_in);
 		Date date_check_out = format.parse(check_out);
 		
+		RezervacijaHotel rezervacijaHotel = new RezervacijaHotel();
+		rezervacijaHotel.setDatum_dolaska(date_check_in);
+		rezervacijaHotel.setDatum_odlaska(date_check_out);
+		rezervacijaHotel.setBrza(false);
+		int broj_nocenja = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
+		System.out.println("[HotelController: getHotelsSearch]: broj_nocenja-" + broj_nocenja);
+		rezervacijaHotel.setBroj_nocenja(broj_nocenja);
+		rezervacijaHotel.setAktivirana(false);
+		
+		rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
+		request.getSession().setAttribute("rezervacijaHotel", rezervacijaHotel);
+		
 		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
 		
-		/*
-		for(int i=0; i<hotels.size(); i++) {
-			System.out.println("[HotelController: getHotelsSearch]: hotel name: " + hotels.get(i).getNaziv() + ", hotel address: " + hotels.get(i).getAdresa());
-		}
-		*/
+		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out, adults);
 		
-		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out);
+		request.getSession().setAttribute("hoteliPretraga", hoteli);
 			
 		return new ResponseEntity<List<Hotel>>(hoteli, HttpStatus.OK);
 	}
@@ -75,10 +98,10 @@ public class HotelController {
 			value = "/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hotel> getHotel(@PathVariable("id") Integer id)
+	public ResponseEntity<Hotel> getHotel(HttpServletRequest request, @PathVariable("id") Integer id)
 	{
 		System.out.println("usao u metodu api/hotels/{id}");
-		try
+		/*try
 		{
 			Hotel found = hotelService.findById(id).get();
 			System.out.println("Nasao hotel sa id:" + found.getId());
@@ -88,7 +111,17 @@ public class HotelController {
 		{
 			System.out.println("Ne postoji hotel sa id: " + id);
 			return null; 	
+		}*/
+		List<Hotel> hoteliPretraga = (List<Hotel>) request.getSession().getAttribute("hoteliPretraga");
+		Hotel result = null;
+		
+		for(int i=0; i<hoteliPretraga.size(); i++) {
+			if(hoteliPretraga.get(i).getId() == id) {
+				result = hoteliPretraga.get(i);
+			}
 		}
+		
+		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -120,7 +153,90 @@ public class HotelController {
 		*/
 	}
 	
-	public List<Hotel> pretraga(List<Hotel> hoteli, String[] search, Date check_in, Date check_out){
+	@RequestMapping(
+			value = "/add_usluga/{usluga_id}",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Usluga> addUsluga(@PathVariable("usluga_id") Integer id, HttpServletRequest request) throws java.sql.SQLIntegrityConstraintViolationException{
+		
+		RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
+		Usluga usluga =  uslugaService.findById(id).get();
+		rezervacijaHotel.getUsluge().add(usluga);
+		request.getSession().setAttribute("rezervacijaHotel", rezervacijaHotel);
+		
+		try {
+			rezervacijaHotelService.updateUsluga(usluga.getId(), rezervacijaHotel.getId());
+		}catch(Exception e) {
+			System.out.println("[HotelController: addUsluga]: usluga sa id: " + usluga.getId() + "je vec dodata");
+		}
+		
+		return new ResponseEntity<Usluga>(usluga, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/remove_usluga/{usluga_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Usluga> removeUsluga(@PathVariable("usluga_id") Integer id, HttpServletRequest request){
+		
+		RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
+		Usluga usluga =  uslugaService.findById(id).get();
+		rezervacijaHotel.getUsluge().remove(usluga);
+		request.getSession().setAttribute("rezervacijaHotel", rezervacijaHotel);
+		
+		rezervacijaHotelService.removeUsluga(usluga.getId(), rezervacijaHotel.getId());
+		
+		return new ResponseEntity<Usluga>(usluga, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/get_number_of_days",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getNumberOfDays(HttpServletRequest request)
+	{
+		System.out.println("[HotelController: getNumberOfDays]: usao u metodu getnumberOfDays");
+		RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
+		Date date_check_in = rezervacijaHotel.getDatum_dolaska();
+		Date date_check_out = rezervacijaHotel.getDatum_odlaska();
+		int result = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
+		System.out.println("[HotelController: getNumberOfDays]: numberOfDays: " + result);
+		
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(
+			value = "/book_room/{soba_id}",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> bookRoom(@PathVariable("soba_id") Integer soba_id, HttpServletRequest request){
+		
+		RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
+		Soba soba =  sobaService.findById(soba_id).get();
+		rezervacijaHotel.setSoba(soba);
+		rezervacijaHotel.setAktivirana(true);
+		
+		Date date_check_in = rezervacijaHotel.getDatum_dolaska();
+		Date date_check_out = rezervacijaHotel.getDatum_odlaska();
+		int broj_dana = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
+		
+		double cena_rez = broj_dana * soba.getCena_nocenja();
+		for(Iterator<Usluga> iteratorUsluga = rezervacijaHotel.getUsluge().iterator(); iteratorUsluga.hasNext();) {
+			cena_rez += broj_dana * iteratorUsluga.next().getCena();
+		}
+		
+		rezervacijaHotel.setUkupna_cena(cena_rez);
+		request.getSession().setAttribute("rezervacijaHotel", rezervacijaHotel);
+		
+		rezervacijaHotelService.updateSoba(soba.getId(), true, cena_rez, rezervacijaHotel.getId());
+		
+		request.getSession().removeAttribute("rezervacijaHotel");
+		
+		return new ResponseEntity<Soba>(soba, HttpStatus.OK);
+	}
+	
+	public List<Hotel> pretraga(List<Hotel> hoteli, String[] search, Date check_in, Date check_out, int adults){
 		List<Hotel> result = new ArrayList<Hotel>();
 		
 		for(int i=0; i<hoteli.size(); i++) {
@@ -153,7 +269,7 @@ public class HotelController {
 					System.out.println("[HotelController: pretraga]: soba nema rezervacija.");
 					postojiTerminSoba = true;
 					postojiSoba = true;
-					break;
+					//break;
 				}else {
 					for(Iterator<RezervacijaHotel> iteratorRezervacija = soba.getRezervacije().iterator(); iteratorRezervacija.hasNext();) {
 						System.out.println("[HotelController: pretraga]: postoje rezervacije za sobu; ima ih " + soba.getRezervacije().size() + ".");
@@ -163,10 +279,11 @@ public class HotelController {
 						System.out.println("[HotelController: pretraga]: " + check_in.equals(rezervacijaHotel.getDatum_dolaska()));
 						System.out.println("[HotelController: pretraga]: " + check_in.after(rezervacijaHotel.getDatum_dolaska()));
 						System.out.println("[HotelController: pretraga]: " + check_in.before(rezervacijaHotel.getDatum_odlaska()));
-						if( check_in.equals(rezervacijaHotel.getDatum_dolaska()) || check_in.equals(rezervacijaHotel.getDatum_odlaska()) || check_out.equals(rezervacijaHotel.getDatum_dolaska()) || ((rezervacijaHotel.getDatum_dolaska()).after(check_in) && (rezervacijaHotel.getDatum_dolaska()).before(check_out)) || (check_in.after(rezervacijaHotel.getDatum_dolaska()) && check_in.before(rezervacijaHotel.getDatum_odlaska())) || (check_out.after(rezervacijaHotel.getDatum_dolaska()) && check_out.before(rezervacijaHotel.getDatum_odlaska()))) {
+						if(rezervacijaHotel.isAktivirana() && (check_in.equals(rezervacijaHotel.getDatum_dolaska()) || check_in.equals(rezervacijaHotel.getDatum_odlaska()) || check_out.equals(rezervacijaHotel.getDatum_dolaska()) || ((rezervacijaHotel.getDatum_dolaska()).after(check_in) && (rezervacijaHotel.getDatum_dolaska()).before(check_out)) || (check_in.after(rezervacijaHotel.getDatum_dolaska()) && check_in.before(rezervacijaHotel.getDatum_odlaska())) || (check_out.after(rezervacijaHotel.getDatum_dolaska()) && check_out.before(rezervacijaHotel.getDatum_odlaska())))) {
 							System.out.println("[HotelController: pretraga]: soba je zauzeta u trazenom periodu.");
+							hotel.getSobe().remove(soba);
 							postojiTerminSoba = false;
-							break;
+							//break;
 						}else {
 							System.out.println("[HotelController: pretraga]: soba je slobodna u trazenom periodu.");
 						}
@@ -174,7 +291,7 @@ public class HotelController {
 					
 					if(postojiTerminSoba) {
 						postojiSoba = true;
-						break;
+						//break;
 					}
 				}
 			}
@@ -182,6 +299,28 @@ public class HotelController {
 			if(!postojiSoba) {
 				result.remove(hotel);
 				i--;
+			}
+		}
+		
+		if(adults != 0) {
+			boolean postoji;
+			
+			for(int i=0; i<result.size(); i++) {
+				postoji = false;
+				Hotel hotel = result.get(i);
+				for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
+					Soba soba = (Soba) iteratorSoba.next();
+					if(soba.getBroj_kreveta() <= adults) {
+						postoji = true;
+						//break;
+					}else {
+						hotel.getSobe().remove(soba);
+					}
+				}
+				if(!postoji) {
+					result.remove(hotel);
+					i--;
+				}
 			}
 		}
 		

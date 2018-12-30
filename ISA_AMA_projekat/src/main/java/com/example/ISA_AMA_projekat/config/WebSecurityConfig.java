@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/auth/**").permitAll()
 			.antMatchers("/api/users/registruj**").permitAll()
 			.antMatchers("/api/users/registrationConfirm/**").permitAll()
+			.antMatchers("/api/**").permitAll()
 			
 			// svaki zahtev mora biti autorizovan
 			.anyRequest().authenticated().and()
