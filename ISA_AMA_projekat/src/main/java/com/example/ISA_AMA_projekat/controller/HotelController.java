@@ -308,14 +308,19 @@ public class HotelController {
 			for(int i=0; i<result.size(); i++) {
 				postoji = false;
 				Hotel hotel = result.get(i);
+				System.out.println("[HotelController: pretraga]: hotel " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
 				for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
 					Soba soba = (Soba) iteratorSoba.next();
-					if(soba.getBroj_kreveta() <= adults) {
-						postoji = true;
-						//break;
-					}else {
-						hotel.getSobe().remove(soba);
-					}
+						System.out.println("[HotelController: pretraga]: iteratorSoba.next() nije null.");
+						if(soba.getBroj_kreveta() <= adults) {
+							postoji = true;
+							System.out.println("[HotelController: pretraga]: soba.getBroj_kreveta() <= adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
+							//break;
+						}else {
+							iteratorSoba.remove();
+							System.out.println("[HotelController: pretraga]: uklanjanje sobe.");
+							System.out.println("[HotelController: pretraga]: soba.getBroj_kreveta() > adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
+						}
 				}
 				if(!postoji) {
 					result.remove(hotel);
