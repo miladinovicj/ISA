@@ -14,16 +14,18 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Filijala {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
 	private Long id;
 
 	@Column(nullable = false)
 	private String adresa;
+	
 	
 	@OneToMany(mappedBy = "filijala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
@@ -31,13 +33,11 @@ public class Filijala {
 	@OneToMany(mappedBy = "filijalaRez", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private RentacarServis rentacar;
 
 	public Filijala() {
 		super();
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -70,38 +70,8 @@ public class Filijala {
 		this.rezervacije_vozila = rezervacije_vozila;
 	}
 
-	public RentacarServis getRentacar() {
-		return rentacar;
-	}
-
-	public void setRentacar(RentacarServis rentacar) {
-		this.rentacar = rentacar;
-	}
 	
-	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Filijala f = (Filijala) o;
-        if(f.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, f.id);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-	@Override
-	public String toString() {
-		return "Filijala [id=" + id + ", adresa=" + adresa;
-	}
 	
 	
 }

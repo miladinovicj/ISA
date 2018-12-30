@@ -30,7 +30,10 @@ public class RentacarController {
 	public ResponseEntity<Collection<RentacarServis>> getRentacarServis(){
 		
 		Collection<RentacarServis> rents = rentService.findAll();
-		
+		for (RentacarServis rs : rents)
+		{
+			System.out.println("IMA LI FILIJALA: " + rs.getFilijale().size());
+		}
 		return new ResponseEntity<Collection<RentacarServis>>(rents, HttpStatus.OK);
 	}
 	
@@ -47,7 +50,7 @@ public class RentacarController {
 		}
 		catch(NoSuchElementException e)
 		{
-			System.out.println("Ne postoji hotel sa id: " + id);
+			System.out.println("Ne postoji servis sa id: " + id);
 			return null; 	
 		}
 	}

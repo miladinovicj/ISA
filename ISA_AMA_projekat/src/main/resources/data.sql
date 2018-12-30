@@ -1,3 +1,4 @@
+
 delete from rating;
 delete from user_authority;
 delete from AUTHORITY;
@@ -53,6 +54,4 @@ insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_n
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana) values (2, '2018-12-25', '2018-12-27', 3, 2, false, 10, true);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana) values (3, '2018-12-20', '2018-12-23', 3, 3, false, 10, true);
 
-insert into korisnik (id, email, lozinka, ime, prezime, grad, telefon, bonuspoeni, aktiviran) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 'Ruma', '062522006', 0, true);
-insert into AUTHORITY (id, name) values (1, 'ROLE_USER');
-insert into user_authority (user_id, authority_id) values (1, 1);
+
