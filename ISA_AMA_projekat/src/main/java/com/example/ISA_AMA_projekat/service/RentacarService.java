@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.repository.RentacarRepository;
 
@@ -29,6 +30,10 @@ public class RentacarService {
 	
 	public RentacarServis save(RentacarServis rent){
 		return rentRepository.save(rent);
+	}
+	
+	public List<RentacarServis> search(String name_location) {
+		return rentRepository.search(name_location);
 	}
 
 }

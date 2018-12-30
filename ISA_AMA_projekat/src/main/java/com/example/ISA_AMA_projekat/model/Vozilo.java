@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 
 @Entity
@@ -49,11 +52,12 @@ public class Vozilo {
 	private double prosecna_ocena;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonBackReference
 	private Filijala filijala;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rezervacija_id", referencedColumnName="id")
-    private RezervacijaVozila rezervacija;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="vozilo")
+	@JsonManagedReference
+	private Set<RezervacijaVozila> rezervacije = new HashSet<RezervacijaVozila>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
@@ -66,14 +70,34 @@ public class Vozilo {
 	}
 
 	
-	public RezervacijaVozila getRezervacija() {
-		return rezervacija;
+	
+
+	public Set<RezervacijaVozila> getRezervacije() {
+		return rezervacije;
 	}
 
 
-	public void setRezervacija(RezervacijaVozila rezervacija) {
-		this.rezervacija = rezervacija;
+
+
+	public void setRezervacije(Set<RezervacijaVozila> rezervacije) {
+		this.rezervacije = rezervacije;
 	}
+
+
+
+
+	public Set<Rating> getOcene() {
+		return ocene;
+	}
+
+
+
+
+	public void setOcene(Set<Rating> ocene) {
+		this.ocene = ocene;
+	}
+
+
 
 
 	public boolean isNa_popustu() {

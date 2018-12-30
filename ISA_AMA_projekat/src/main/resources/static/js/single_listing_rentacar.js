@@ -62,8 +62,42 @@ function addFilijala(filijala)
 	div = temp.content.querySelector("div#ubaci_filijalu");
 	
 	
-	temp.content.getElementById("adresa_filijale").innerHTML = "<a>" + filijala.adresa + "</a>";
+	temp.content.getElementById("adresa_filijale").innerHTML =  filijala.adresa ;
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
+    if(filijala.vozila.length == 0)
+	{
+    	//$("#text_no_cars").text("There are no cars in this branch of rentacar service.");
+	}
+    else
+	{
+    	$("#text_no_cars").text("");
+    	for (let car of filijala.vozila) 
+    	{
+    		addVozilo(car);
+    	}
+	}
 }
+
+function addVozilo(car)
+{
+	var temp, div, a;
+	temp = document.getElementById("template_auto");
+	div = temp.content.querySelector("div#ubaci_auto");
+	
+	var broj_sedista_string = "Number of seats: " + car.broj_sedista;
+	var god_proizvodnje_string = "The year of production: " + car.godina_proizvodnje;
+	var naziv_vozila= car.marka + " " + car.model + " " + car.naziv + " " + car.tip;
+	
+	
+	temp.content.getElementById("naziv_auta").innerHTML = naziv_vozila;
+	temp.content.getElementById("godina_proizvodnje").innerHTML = god_proizvodnje_string;
+	temp.content.getElementById("broj_sedista").innerHTML = broj_sedista_string;
+	temp.content.getElementById("cena_auta").innerHTML = '$' + car.cena_dan + '/day';
+	temp.content.getElementById("prosecna_ocena").innerHTML = car.prosecna_ocena;
+	
+	a = document.importNode(div, true);
+    document.getElementById("ubaci_auto_template").appendChild(a);
+}
+

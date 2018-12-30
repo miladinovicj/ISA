@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Filijala {
@@ -28,6 +29,7 @@ public class Filijala {
 	
 	
 	@OneToMany(mappedBy = "filijala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
 	
 	@OneToMany(mappedBy = "filijalaRez", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class RezervacijaVozila {
 	
@@ -24,10 +26,9 @@ public class RezervacijaVozila {
 	@JoinColumn(name = "filijala_id", referencedColumnName="id")
 	private Filijala filijalaRez; 
 	
-	@OneToOne(mappedBy = "rezervacija", cascade = CascadeType.ALL, 
-            fetch = FetchType.LAZY)
-	@JoinColumn(name = "vozilo_id", referencedColumnName="id")
-	private Vozilo vozilo; 
+	@ManyToOne
+	@JsonBackReference
+	private Vozilo vozilo;
 	
 	
 	@Column

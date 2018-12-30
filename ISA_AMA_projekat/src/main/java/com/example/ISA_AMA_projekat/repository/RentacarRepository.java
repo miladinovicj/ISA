@@ -1,10 +1,19 @@
 package com.example.ISA_AMA_projekat.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 
 public interface RentacarRepository extends JpaRepository<RentacarServis, Long>{
 
 		RentacarServis findOneByNaziv(String naziv);
+		
+		@Modifying
+		@Query("select rentacar_servis from RentacarServis rentacar_servis where rentacar_servis.adresa like ?1 or rentacar_servis.naziv like ?1")
+		List<RentacarServis> search(String name_location);
 }
