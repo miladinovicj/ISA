@@ -1,4 +1,3 @@
-
 delete from rating;
 delete from user_authority;
 delete from AUTHORITY;
@@ -7,6 +6,12 @@ delete from aviokompanija_brzi_letovi;
 delete from let;
 delete from aviokompanija;
 
+delete from rezervacija_vozila;
+delete from rentacar_servis_usluge;
+delete from vozilo;
+delete from filijala;
+delete from rentacar_servis;
+
 delete from rezervacija_hotel_usluge;
 delete from rezervacija_hotel;
 delete from hotel_usluge;
@@ -14,6 +19,9 @@ delete from usluga;
 delete from soba;
 delete from hotel;
 
+insert into korisnik (id, email, lozinka, ime, prezime, grad, telefon, bonuspoeni, aktiviran) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 'Ruma', '062522006', 0, true);
+insert into AUTHORITY (id, name) values (1, 'ROLE_USER');
+insert into user_authority (user_id, authority_id) values (1, 1);
 
 insert into hotel (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (1, 'Hotel Park', 'Novosadskog sajma 35 Novi Sad', 'hotel sa 4 zvezdice', 4.8);
 insert into hotel (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (2, 'Hotel Novi Sad', 'Jase Tomica 2 Novi Sad', 'fantastican hotel', 3.79);
@@ -22,9 +30,6 @@ insert into hotel (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (4
 insert into hotel (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (5, 'Grand hotel', 'Zmaj Jovina 3', 'Hotel u srcu Novog Sada', 3.87);
 insert into hotel (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (6, 'Rezidencija Makarica', 'Njegoseva 46 Stepanovicevo', 'Luksuzna vila sa 4 apartmana. Svaki apartman poseduje tv, klima uredjaj, mini bar, terasu, kupatilo. Odlican Wi-Fi signal. Prostrano dvoriste i obezbedjen parking za goste. Najupecatljiviji utisak ostavljaju ljubaznost i gostoprimljivost domacina.', 4.99);
 insert into hotel (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (7, 'Sole mio', 'Bulevar oslobodjenja 56a', 'Hotel sa tradicijom dugom 78 godina.', 4.5);
-
-insert into korisnik (id, aktiviran, bonuspoeni, email, grad, ime, lozinka, prezime, telefon) values (2, true, 0, 'krsmanovicc.aleksa@gmail.com', 'Savac', 'Aleksa', '12345', 'Krsmanovic', '1234567');
-insert into korisnik (id, email, lozinka, ime, prezime, grad, telefon, bonuspoeni, aktiviran) values (3, 'makaric.milica@gmail.com', 'makarica', 'Milica', 'Makaric', 'Stepanovicevo', '0652034133', 0, true);
 
 insert into aviokompanija(id,adresa, info, max_kapacitet, naziv, ocena, opis) values (1, 'Tolstojeva 66, Novi Sad','Najjaci popusti najjace zezanje drugari',300, 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari');
 
@@ -47,6 +52,12 @@ insert into usluga (id, naziv, cena) values (2, 'Wi-Fi', 2);
 insert into usluga (id, naziv, cena) values (3, 'swimming pool', 3);
 insert into usluga (id, naziv, cena) values (4, 'gym', 2);
 insert into usluga (id, naziv, cena) values (5, 'sauna', 4);
+insert into usluga (id, naziv, cena) values (6, 'driver', 17);
+insert into usluga (id, naziv, cena) values (7, 'radio', 3);
+insert into usluga (id, naziv, cena) values (8, 'navigation', 7);
+insert into usluga (id, naziv, cena) values (9, 'anti-lock braking system', 12);
+insert into usluga (id, naziv, cena) values (10, 'automatic car parking system', 8);
+insert into usluga (id, naziv, cena) values (11, 'car video monitor', 10);
 
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 1);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 2);
@@ -56,4 +67,32 @@ insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_n
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana) values (2, '2018-12-25', '2018-12-27', 3, 2, false, 10, true);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana) values (3, '2018-12-20', '2018-12-23', 3, 3, false, 10, true);
 
+insert into rentacar_servis (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (1, 'Angel', 'Vojvode Supljikca 20 Novi Sad', 'Mlada firma sa velikom vizijom. Iznajmljivanje automobila sa i bez vozaca.', 3.2);
+insert into rentacar_servis (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (2, 'Cartize Company', 'Novosadski put 19 Novi Sad', 'Najpovoljnije cene rentiranja automobila u Novom Sadu', 4.8);
+insert into rentacar_servis (id, naziv, adresa, promotivni_opis, prosecna_ocena) values (3, 'Stars', 'Bulevar Mihajla Pupina 52 Beograd', 'U Beogradu svi iznajmljuju automobile od nas.', 4);
+
+insert into filijala (id, adresa, rentacar_id) values (1, 'Janka Cmelika 20 Novi Sad', 1);
+insert into filijala (id, adresa, rentacar_id) values (2, 'Mise Dimitrijevica 55 Novi Sad', 1);
+insert into filijala (id, adresa, rentacar_id) values (3, 'Puskinova 15 Zrenjanin', 1);
+insert into filijala (id, adresa, rentacar_id) values (4, 'Bulevar kralja Aleksandra 56 Beograd', 3);
+
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, na_popustu) values (3, 'Comfortline', 'Volkswagen', 'Polo', 2015, 5, 'City car', 300,4.7, 1 , false);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, na_popustu) values (1, 'SportTourer', 'Opel', 'Astra', 2011, 5, 'Executive car', 400,4.5, 1 , false);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, na_popustu) values (2, '70 Trend', 'Ford', 'Fiesta', 2018, 5, 'Supermini', 280, 4, 4 , false);
+
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 6);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 7);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 8);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 9);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 10);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 11);
+
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (2, 6);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (2, 8);
+
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 11);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 6);
+insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 9);
+
+insert into rezervacija_vozila (id, broj_putnika, brza, datum_preuzimanja, datum_vracanja, mesto_preuzimanja, mesto_vracanja, ukupna_cena, vozilo_id) values (1, 3, false, '2019-01-09', '2019-01-15', 'Beograd', 'Beograd', 1680, 2);
 

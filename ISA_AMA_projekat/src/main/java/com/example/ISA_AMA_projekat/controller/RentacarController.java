@@ -108,7 +108,7 @@ public class RentacarController {
 		
 		
 		List<RentacarServis> servisi = pretragaServisa(rents, search, date_check_in, date_check_out);
-			
+			System.out.println("SERVISI VRACENI: " + servisi.size());
 		return new ResponseEntity<List<RentacarServis>>(servisi, HttpStatus.OK);
 		
 	}

@@ -32,9 +32,6 @@ public class Filijala {
 	@JsonManagedReference
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
 	
-	@OneToMany(mappedBy = "filijalaRez", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RezervacijaVozila> rezervacije_vozila = new HashSet<RezervacijaVozila>();
-	
 
 	public Filijala() {
 		super();
@@ -64,13 +61,6 @@ public class Filijala {
 		this.vozila = vozila;
 	}
 
-	public Set<RezervacijaVozila> getRezervacije_vozila() {
-		return rezervacije_vozila;
-	}
-
-	public void setRezervacije_vozila(Set<RezervacijaVozila> rezervacije_vozila) {
-		this.rezervacije_vozila = rezervacije_vozila;
-	}
 
 	
 

@@ -41,7 +41,7 @@ function showRentacar(rentacar)
     
     if(rentacar.usluge.length == 0)
 	{
-    	$("#text_no_services").text("There are no additional services this hotel.");
+    	$("#text_no_services").text("There are no additional services.");
 	}
     else
 	{

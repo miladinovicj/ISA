@@ -22,9 +22,6 @@ public class RezervacijaVozila {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "filijala_id", referencedColumnName="id")
-	private Filijala filijalaRez; 
 	
 	@ManyToOne
 	@JsonBackReference
@@ -65,13 +62,6 @@ public class RezervacijaVozila {
 		this.id = id;
 	}
 
-	public Filijala getFilijala() {
-		return filijalaRez;
-	}
-
-	public void setFilijala(Filijala filijala) {
-		this.filijalaRez = filijala;
-	}
 
 	public Vozilo getVozilo() {
 		return vozilo;

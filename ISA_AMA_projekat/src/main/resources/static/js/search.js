@@ -270,11 +270,11 @@ $(document).ready(function()
 
 		var panels = $('.search_panel');
 		panels.removeClass('active');
-		$(panels[1]).addClass('active');
+		$(panels[2]).addClass('active');
 		
 		var name_location = splitted[0].substring(24);
-		var check_in_fake = splitted[1].substring(15);
-		var check_out_fake = splitted[2].substring(16);
+		var check_in_fake = splitted[1].substring(13);
+		var check_out_fake = splitted[2].substring(14);
 		
 		var date_check_in = new Date(check_in_fake);
 		var date_check_out = new Date(check_out_fake);
@@ -313,7 +313,7 @@ $(document).ready(function()
 				url: '/api/rents/search/' + name_location + '/' + check_in + '/' + check_out,
 				success: function(rents) {
 					
-					if(hoteli == null || hoteli.length == 0){
+					if(rents == null || rents.length == 0){
 						document.getElementById('rentacar_title').innerHTML = 'There are no rentacar services for this search.';
 						document.getElementById('ubaci_rentacar_template').style.display='block';
 						document.getElementById("aviokompanije").style.display='none';
