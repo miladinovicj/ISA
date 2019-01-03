@@ -146,6 +146,12 @@ console.log("[search.js: showContentRent()]: ucitavanje svih rentacar servisa");
     
 }
 
+function odjava()
+{
+	localStorage.clear();
+}
+
+
 function addRentacar(rentacar) {
 	console.log("naziv rentacar servisa: " + rentacar.naziv);
 	
@@ -175,6 +181,12 @@ function addRentacar(rentacar) {
 
 $(document).ready(function()
 {
+	$.ajaxSetup({
+	    headers:{
+	        'Authorization': 'Bearer ' + localStorage.token
+	    }
+	});
+	
 	console.log('[search.js: showContentHotelSearch()]: document.ready()');
 	var search = window.location.search;
 	

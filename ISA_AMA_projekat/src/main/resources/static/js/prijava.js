@@ -15,9 +15,10 @@
 
 $(document).ready(function()
 {
+	var token=localStorage.getItem('jwtToken');
 	$.ajaxSetup({
 	    headers:{
-	        'Authorization': 'Bearer ' + localStorage.token
+	        'Authorization': 'Bearer ' + token
 	    }
 	});
 	"use strict";

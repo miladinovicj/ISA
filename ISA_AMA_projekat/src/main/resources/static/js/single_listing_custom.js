@@ -26,6 +26,7 @@ $(document).ready(function()
 	1. Vars and Inits
 
 	*/
+	
 
 	var menu = $('.menu');
 	var menuActive = false;
