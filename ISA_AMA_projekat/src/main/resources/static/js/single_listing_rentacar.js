@@ -11,8 +11,11 @@ $(document).ready(function()
         complete: function (data)
 		{
             var rentacar = data.responseJSON;
+            longitude = rentacar.adresa.longitude;
+        	latitude = rentacar.adresa.latitude;
             console.log(rentacar);
             showRentacar(rentacar);
+            initMap();
 		}
     });
 	
@@ -101,3 +104,18 @@ function addVozilo(car)
     document.getElementById("ubaci_auto_template").appendChild(a);
 }
 
+function initMap()
+{
+	var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([longitude, latitude]),
+          zoom: 17
+        })
+      });
+}

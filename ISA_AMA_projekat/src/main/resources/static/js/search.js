@@ -104,7 +104,7 @@ function showContentRent() {
 	    document.getElementById("aviokompanije").style.display='none';
 		document.getElementById("aviokompanije_naslov").style.display='none';
     }
-console.log("[search.js: showContentRent()]: ucitavanje svih rentacar servisa");
+    console.log("[search.js: showContentRent()]: ucitavanje svih rentacar servisa");
 	
 	var help = document.getElementById("ubaci_rentacar_template");
 	if(help.childElementCount > 2)
@@ -179,6 +179,22 @@ function addRentacar(rentacar) {
     
 }
 
+function initMap()
+{
+	var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([19.851044, 45.246496]),
+          zoom: 17
+        })
+      });
+}
+
 $(document).ready(function()
 {
 	$.ajaxSetup({
@@ -186,6 +202,8 @@ $(document).ready(function()
 	        'Authorization': 'Bearer ' + localStorage.token
 	    }
 	});
+	
+	initMap();
 	
 	console.log('[search.js: showContentHotelSearch()]: document.ready()');
 	var search = window.location.search;

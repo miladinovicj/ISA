@@ -23,6 +23,12 @@ public class Adresa {
 	@Column
 	private String broj;
 	
+	@Column
+	private double longitude;
+	
+	@Column
+	private double latitude;
+	
 	public Adresa() {
 		super();
 	}
@@ -57,6 +63,22 @@ public class Adresa {
 
 	public void setBroj(String broj) {
 		this.broj = broj;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
 }

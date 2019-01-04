@@ -10,10 +10,15 @@ $(document).ready(function()
         url: 'api/hotels/' + id_presented,
         success: function (hotel)
 		{
+        	longitude = hotel.adresa.longitude;
+        	latitude = hotel.adresa.latitude;
             console.log(hotel);
-            showHotel(hotel)
+            showHotel(hotel);
+            initMap();
 		}
     });
+    
+    
 	
 });
 
@@ -302,4 +307,20 @@ function hideSpecialPrice()
 	document.getElementById('additional_services').style.display = 'block';
 	document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
 	document.getElementById('button_back_roomsp').style.display = 'none';
+}
+
+function initMap()
+{
+	var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([longitude, latitude]),
+          zoom: 17
+        })
+      });
 }

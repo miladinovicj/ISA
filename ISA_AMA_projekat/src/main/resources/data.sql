@@ -1,6 +1,4 @@
 delete from rating;
-delete from grad;
-delete from adresa;
 delete from user_authority;
 delete from AUTHORITY;
 delete from korisnik;
@@ -23,6 +21,9 @@ delete from popust;
 delete from soba;
 delete from hotel;
 
+delete from adresa;
+delete from grad;
+
 insert into korisnik (id, email, lozinka, ime, prezime, grad, telefon, bonuspoeni, aktiviran) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 'Ruma', '062522006', 0, true);
 insert into AUTHORITY (id, name) values (1, 'ROLE_USER');
 insert into user_authority (user_id, authority_id) values (1, 1);
@@ -34,20 +35,20 @@ insert into grad (id, naziv) values (4, 'Ruma');
 insert into grad (id, naziv) values (5, 'Sabac');
 insert into grad (id, naziv) values (6, 'Zrenjanin');
 
-insert into adresa (id, grad_id, ulica, broj) values (1, 1, 'Novosadskog sajma', '35');
-insert into adresa (id, grad_id, ulica, broj) values (2, 1, 'Jase Tomica', '2');
-insert into adresa (id, grad_id, ulica, broj) values (3, 1, 'Futoski put', 'bb');
-insert into adresa (id, grad_id, ulica, broj) values (4, 1, 'Zmaj Jovina', '3');
-insert into adresa (id, grad_id, ulica, broj) values (5, 3, 'Njegoseva', '46');
-insert into adresa (id, grad_id, ulica, broj) values (6, 1, 'Bulevar oslobodjenja', '56a');
-insert into adresa (id, grad_id, ulica, broj) values (7, 1, 'Tolstojeva', '66');
-insert into adresa (id, grad_id, ulica, broj) values (8, 1, 'Vojvode Supljikca', '20');
-insert into adresa (id, grad_id, ulica, broj) values (9, 1, 'Novosadski put', '19');
-insert into adresa (id, grad_id, ulica, broj) values (10, 2, 'Bulevar Mihajla Pupina', '52');
-insert into adresa (id, grad_id, ulica, broj) values (11, 1, 'Janka Cmelika', '20');
-insert into adresa (id, grad_id, ulica, broj) values (12, 1, 'Mise Dimitrijevica', '55');
-insert into adresa (id, grad_id, ulica, broj) values (13, 6, 'Puskinova', '15');
-insert into adresa (id, grad_id, ulica, broj) values (14, 2, 'Bulevar kralja Aleksandra', '56');
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (1, 1, 'Novosadskog sajma', '35', 45.252529, 19.826855);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (2, 1, 'Bulevar Jase Tomica', '1', 45.263826, 19.824309);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (3, 1, 'Novosadski put', '115', 45.244017, 19.781183);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (4, 1, 'Zmaj Jovina', '3', 45.255903, 19.846423);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (5, 3, 'Njegoseva', '46', 45.413690, 19.700000);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (6, 1, 'Sentandrejski put', '165', 45.310406, 19.825943);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (7, 1, 'Tolstojeva', '66', 45.242086, 19.831200);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (8, 1, 'Vojvode Supljikca', '20', 45.260170, 19.839039);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (9, 1, 'Novosadski put', '19', 45.247340, 19.766725);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (10, 2, 'Bulevar Mihajla Pupina', '52', 44.833884, 20.410505);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (11, 1, 'Janka Cmelika', '20', 45.256904, 19.814087);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (12, 1, 'Mise Dimitrijevica', '55', 45.243127, 19.830059);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (13, 6, 'Puskinova', '15', 45.378302, 20.366988);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (14, 2, 'Bulevar kralja Aleksandra', '56', 44.807612, 20.470238);
 
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Hotel Park', 1, 'hotel sa 4 zvezdice', 4.8);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Hotel Novi Sad', 2, 'fantastican hotel', 3.79);
