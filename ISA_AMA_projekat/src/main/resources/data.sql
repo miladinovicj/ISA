@@ -43,7 +43,7 @@ insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,1);
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,2);
 
-insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, brza_soba, popust, hotel_id, zauzeta, opis) values (1, 4.8, 120.5, 3, false, 20.5, 6, false, 'Nalazi se na prvom spratu.\r\nTip: apartman.');
+insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, brza_soba, popust, hotel_id, zauzeta, opis) values (1, 4.8, 120.5, 3, true, 20.5, 6, false, 'Nalazi se na prvom spratu.\r\nTip: apartman.');
 insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, brza_soba, popust, hotel_id, zauzeta, opis) values (2, 3.77, 53, 2, false, 0, 6, false, 'Nalazi se na drugom spratu.\r\nTip: apartman.');
 insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, brza_soba, popust, hotel_id, zauzeta, opis) values (3, 4.8, 120.5, 3, false, 20.5, 1, false, 'Nalazi se na prvom spratu.\r\nTip: apartman.');
 
@@ -95,4 +95,10 @@ insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 6)
 insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 9);
 
 insert into rezervacija_vozila (id, broj_putnika, brza, datum_preuzimanja, datum_vracanja, mesto_preuzimanja, mesto_vracanja, ukupna_cena, vozilo_id) values (1, 3, false, '2019-01-09', '2019-01-15', 'Beograd', 'Beograd', 1680, 2);
+
+insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (1, '2019-01-03', '2019-01-04', 20);
+insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (2, '2019-01-06', '2019-01-08', 25);
+
+insert into soba_popusti (soba_id, popusti_id) values (1, 1);
+insert into soba_popusti (soba_id, popusti_id) values (1, 2);
 

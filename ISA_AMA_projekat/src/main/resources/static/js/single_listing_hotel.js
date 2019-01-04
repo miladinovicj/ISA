@@ -145,8 +145,16 @@ function addSoba(soba)
 	broj_soba = broj_soba + 1;
 	temp.content.getElementById("broj_kreveta").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
 	
-	cena_rez = number_of_days * soba.cena_nocenja;
-	temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night\r\nTotal: $' + cena_rez;
+	if(number_of_days != 0)
+	{
+		cena_rez = number_of_days * soba.cena_nocenja;
+		temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night\r\nTotal: $' + cena_rez;
+	}
+	else
+	{
+		temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night';
+	}
+	
 	temp.content.getElementById("prosecna_ocena").innerHTML = soba.prosecna_ocena;
 	
 	a = document.importNode(div, true);

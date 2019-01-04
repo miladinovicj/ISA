@@ -33,12 +33,6 @@ public class Soba {
 	private int broj_kreveta;
 	
 	@Column
-	private boolean brza_soba;
-	
-	@Column
-	private double popust;
-	
-	@Column
 	private boolean zauzeta;
 	
 	@Column
@@ -48,6 +42,8 @@ public class Soba {
 	@JsonBackReference
 	private Hotel hotel;
 	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private Set<Popust> popusti = new HashSet<Popust>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="soba")
 	@JsonManagedReference
@@ -94,22 +90,6 @@ public class Soba {
 		this.broj_kreveta = broj_kreveta;
 	}
 
-	public boolean isBrza_soba() {
-		return brza_soba;
-	}
-
-	public void setBrza_soba(boolean brza_soba) {
-		this.brza_soba = brza_soba;
-	}
-
-	public double getPopust() {
-		return popust;
-	}
-
-	public void setPopust(double popust) {
-		this.popust = popust;
-	}
-
 	public Hotel getHotel() {
 		return hotel;
 	}
@@ -148,6 +128,14 @@ public class Soba {
 
 	public void setOpis(String opis) {
 		this.opis = opis;
+	}
+	
+	public Set<Popust> getPopusti() {
+		return popusti;
+	}
+	
+	public void setPopusti(Set<Popust> popusti) {
+		this.popusti = popusti;
 	}
 	
 }
