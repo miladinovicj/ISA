@@ -11,8 +11,11 @@ $(document).ready(function()
         complete: function (data)
 		{
             var rentacar = data.responseJSON;
+            longitude = rentacar.adresa.longitude;
+        	latitude = rentacar.adresa.latitude;
             console.log(rentacar);
             showRentacar(rentacar);
+            initMap();
 		}
     });
 	
@@ -24,7 +27,7 @@ function showRentacar(rentacar)
     $("#title_rentacar").text(rentacar.naziv);
     $("#rentacar_name").text(rentacar.naziv);
     $('#rentacar_info_text').text(rentacar.promotivni_opis);
-    $('#adresa_rentacar').text(rentacar.adresa);
+    $('#adresa_rentacar').text(rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv);
     
     if(rentacar.filijale == 0)
 	{
@@ -62,7 +65,7 @@ function addFilijala(filijala)
 	div = temp.content.querySelector("div#ubaci_filijalu");
 	
 	
-	temp.content.getElementById("adresa_filijale").innerHTML =  filijala.adresa ;
+	temp.content.getElementById("adresa_filijale").innerHTML =  filijala.adresa.ulica + ' ' + filijala.adresa.broj + ', ' + filijala.adresa.grad.naziv; ;
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
@@ -101,3 +104,18 @@ function addVozilo(car)
     document.getElementById("ubaci_auto_template").appendChild(a);
 }
 
+function initMap()
+{
+	var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([longitude, latitude]),
+          zoom: 17
+        })
+      });
+}

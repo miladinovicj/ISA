@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.security.TokenUtils;
-import com.example.ISA_AMA_projekat.security.auth.JwtAuthenticationRequest;
 import com.example.ISA_AMA_projekat.common.DeviceProvider;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.UserTokenState;

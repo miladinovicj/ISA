@@ -61,7 +61,7 @@ function addHotelLi(hotel) {
 	div = temp.content.querySelector("div#ubaci");
 	
     temp.content.getElementById("name_hotel").innerHTML = hotel.naziv;
-    temp.content.getElementById("text_hotel").innerHTML = hotel.adresa;
+    temp.content.getElementById("text_hotel").innerHTML = hotel.adresa.ulica + ' ' + hotel.adresa.broj + ', ' + hotel.adresa.grad.naziv;
     temp.content.getElementById("rating_hotel").innerHTML = hotel.prosecna_ocena;
     temp.content.getElementById("dugme_view_details").innerHTML = '<a href="single_listing_hotel.html?id=' + hotel.id +'">view details</a>';
     
@@ -104,7 +104,7 @@ function showContentRent() {
 	    document.getElementById("aviokompanije").style.display='none';
 		document.getElementById("aviokompanije_naslov").style.display='none';
     }
-console.log("[search.js: showContentRent()]: ucitavanje svih rentacar servisa");
+    console.log("[search.js: showContentRent()]: ucitavanje svih rentacar servisa");
 	
 	var help = document.getElementById("ubaci_rentacar_template");
 	if(help.childElementCount > 2)
@@ -165,11 +165,11 @@ function addRentacar(rentacar) {
 		{
 			fil_string= "Branches:<br/>";
 				for (let fil of rentacar.filijale)
-				fil_string+= fil.adresa + "<br/>";
+				fil_string+= fil.adresa.ulica + ' ' + fil.adresa.broj + ', ' + fil.adresa.grad.naziv + "<br/>";
 		}
 	
     temp.content.getElementById("name_rentacar").innerHTML = rentacar.naziv;
-    temp.content.getElementById("text_rentacar").innerHTML = rentacar.adresa;
+    temp.content.getElementById("text_rentacar").innerHTML = rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv;
     temp.content.getElementById("rentacar_fil").innerHTML = fil_string;
     temp.content.getElementById("rating_rentacar").innerHTML = rentacar.prosecna_ocena;
     temp.content.getElementById("dugme_view_details_rentacar").innerHTML = '<a href="single_listing_rentacar.html?id=' + rentacar.id +'">view details</a>';
@@ -179,6 +179,22 @@ function addRentacar(rentacar) {
     
 }
 
+function initMap()
+{
+	var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([19.851044, 45.246496]),
+          zoom: 17
+        })
+      });
+}
+
 $(document).ready(function()
 {
 	$.ajaxSetup({
@@ -186,6 +202,8 @@ $(document).ready(function()
 	        'Authorization': 'Bearer ' + localStorage.token
 	    }
 	});
+	
+	initMap();
 	
 	console.log('[search.js: showContentHotelSearch()]: document.ready()');
 	var search = window.location.search;

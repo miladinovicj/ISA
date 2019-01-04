@@ -14,8 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.persistence.OneToOne;
 
 @Entity
 public class RentacarServis {
@@ -28,8 +27,8 @@ public class RentacarServis {
 	@Column(nullable = false)
 	private String naziv;
 	
-	@Column(nullable = false)
-	private String adresa;
+	@OneToOne
+	private Adresa adresa;
 	
 	@Column
 	private String promotivni_opis;
@@ -71,11 +70,11 @@ public class RentacarServis {
 		this.naziv = naziv;
 	}
 
-	public String getAdresa() {
+	public Adresa getAdresa() {
 		return adresa;
 	}
 
-	public void setAdresa(String adresa) {
+	public void setAdresa(Adresa adresa) {
 		this.adresa = adresa;
 	}
 

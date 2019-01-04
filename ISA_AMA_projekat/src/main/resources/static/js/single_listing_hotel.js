@@ -8,15 +8,17 @@ $(document).ready(function()
     $.ajax({
         type: 'GET',
         url: 'api/hotels/' + id_presented,
-        contentType: 'application/json',
-        dataType: "json",
-        complete: function (data)
+        success: function (hotel)
 		{
-            var hotel = data.responseJSON;
+        	longitude = hotel.adresa.longitude;
+        	latitude = hotel.adresa.latitude;
             console.log(hotel);
-            showHotel(hotel)
+            showHotel(hotel);
+            initMap();
 		}
     });
+    
+    
 	
 });
 
@@ -26,7 +28,7 @@ function showHotel(hotel)
     $("#title_hotel").text(hotel.naziv);
     $("#hotel_name").text(hotel.naziv);
     $('#hotel_info_text').text(hotel.promotivni_opis);
-    $('#adresa_hotel').text(hotel.adresa);
+    $('#adresa_hotel').text(hotel.adresa.ulica + ' ' + hotel.adresa.broj + ', ' + hotel.adresa.grad.naziv);
     
     if(hotel.sobe.length == 0)
 	{
@@ -48,6 +50,8 @@ function showHotel(hotel)
     	    	{
     	    		addSoba(soba);
     	    	}
+    			
+    			getSpecialPrice();
     		}
     	});
     	
@@ -56,7 +60,7 @@ function showHotel(hotel)
     
     if(hotel.usluge.length == 0)
 	{
-    	$("#text_no_services").text("There are no additional services this hotel.");
+    	$("#text_no_services").text("There are no additional services for this hotel.");
 	}
     else
 	{
@@ -145,8 +149,16 @@ function addSoba(soba)
 	broj_soba = broj_soba + 1;
 	temp.content.getElementById("broj_kreveta").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
 	
-	cena_rez = number_of_days * soba.cena_nocenja;
-	temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night\r\nTotal: $' + cena_rez;
+	if(number_of_days != 0)
+	{
+		cena_rez = number_of_days * soba.cena_nocenja;
+		temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night\r\nTotal: $' + cena_rez;
+	}
+	else
+	{
+		temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night';
+	}
+	
 	temp.content.getElementById("prosecna_ocena").innerHTML = soba.prosecna_ocena;
 	
 	a = document.importNode(div, true);
@@ -177,4 +189,138 @@ function bookRoom(id)
 		});
 	};
 	
+}
+
+function getSpecialPrice(){
+    $.ajax({
+        type: 'GET',
+        url: 'api/hotels/specialPrice/' + id_presented,
+        success: function (sobe)
+		{
+            if(sobe.length != 0)
+            {
+            	document.getElementById("special_price").style.display = 'block';
+            	
+            	broj_sobasp = 1;
+            	for(let soba of sobe)
+            	{
+            		addSpecialPrice(soba);
+            	}
+            }
+		}
+    });
+}
+
+function addSpecialPrice(soba)
+{
+	var temp, div, a;
+	temp = document.getElementById("template_special_price");
+	div = temp.content.querySelector("div#ubaci_special_price");
+	
+	var broj_kreveta_string;
+	if(soba.broj_kreveta == 1)
+	{
+		broj_kreveta_string = "Jednokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 2)
+	{
+		broj_kreveta_string = "Dvokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 3)
+	{
+		broj_kreveta_string = "Trokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 4)
+	{
+		broj_kreveta_string = "Četvorokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 5)
+	{
+		broj_kreveta_string = "Petokrevetna soba. ";
+	}
+	
+	temp.content.getElementById("nazivsp").innerHTML = 'Soba ' + broj_sobasp;
+	broj_sobasp = broj_sobasp + 1;
+	temp.content.getElementById("broj_krevetasp").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
+	
+	temp.content.getElementById("cena_nocenjasp").innerHTML = 'Regular price: $' + soba.cena_nocenja + '/night\r\nPrice with discount: $' + soba.cena_popust + '/night';
+	
+	
+	temp.content.getElementById("prosecna_ocenasp").innerHTML = soba.prosecna_ocena;
+	
+	
+	for (let popust of soba.popusti) 
+	{	
+		let li = document.createElement("li");
+		li.innerHTML =	'<span>' + popust.pocetak_vazenja.substring(0, 10) + '  -  ' + popust.kraj_vazenja.substring(0, 10) + '  -  ' + popust.popust + '%</span>';
+		temp.content.getElementById("discount_list").appendChild(li);
+	}
+	
+	a = document.importNode(div, true);
+    document.getElementById("special_price_div").appendChild(a);
+    
+
+	$(".button_book_roomsp").addClass('soba_id_' + soba.id);
+	var elements = document.getElementsByClassName('button_book_roomsp');
+	for(element of elements)
+	{
+		$(element).removeClass('button_book_roomsp');
+		$(element).click(bookRoomSpecial(soba.id));
+	}
+	
+}
+
+function bookRoomSpecial(id)
+{
+	return function(){
+		console.log('rezervacija brze sobe');
+		alert('uspesna brza rezervacija sobe sa id_sobe: ' + id);
+		window.location.href = 'index.html';
+	};
+	
+}
+
+function clickSpecialPrice()
+{
+	if(document.getElementById('special_price_div').style.display == 'none')
+	{
+		document.getElementById('special_price_div').style.display = 'block';
+		document.getElementById('ubaci_sobe_template').style.display = 'none';
+		document.getElementById('additional_services').style.display = 'none';
+		document.getElementById('special_price_a').innerHTML = 'Special prices:';
+		document.getElementById('button_back_roomsp').style.display = 'block';
+	}
+	else
+	{
+		document.getElementById('special_price_div').style.display = 'none';
+		document.getElementById('ubaci_sobe_template').style.display = 'block';
+		document.getElementById('additional_services').style.display = 'block';
+		document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
+		document.getElementById('button_back_roomsp').style.display = 'none';
+	}
+}
+
+function hideSpecialPrice()
+{
+	document.getElementById('special_price_div').style.display = 'none';
+	document.getElementById('ubaci_sobe_template').style.display = 'block';
+	document.getElementById('additional_services').style.display = 'block';
+	document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
+	document.getElementById('button_back_roomsp').style.display = 'none';
+}
+
+function initMap()
+{
+	var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([longitude, latitude]),
+          zoom: 17
+        })
+      });
 }

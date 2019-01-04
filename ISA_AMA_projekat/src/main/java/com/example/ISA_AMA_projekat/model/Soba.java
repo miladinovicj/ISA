@@ -33,27 +33,26 @@ public class Soba {
 	private int broj_kreveta;
 	
 	@Column
-	private boolean brza_soba;
-	
-	@Column
-	private double popust;
-	
-	@Column
 	private boolean zauzeta;
 	
 	@Column
 	private String opis;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Column
+	private double cena_popust;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonBackReference
 	private Hotel hotel;
 	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	private Set<Popust> popusti = new HashSet<Popust>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="soba")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="soba")
 	@JsonManagedReference
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
 	
 	public Soba() {
@@ -94,22 +93,6 @@ public class Soba {
 		this.broj_kreveta = broj_kreveta;
 	}
 
-	public boolean isBrza_soba() {
-		return brza_soba;
-	}
-
-	public void setBrza_soba(boolean brza_soba) {
-		this.brza_soba = brza_soba;
-	}
-
-	public double getPopust() {
-		return popust;
-	}
-
-	public void setPopust(double popust) {
-		this.popust = popust;
-	}
-
 	public Hotel getHotel() {
 		return hotel;
 	}
@@ -148,6 +131,24 @@ public class Soba {
 
 	public void setOpis(String opis) {
 		this.opis = opis;
+	}
+	
+	public Set<Popust> getPopusti() {
+		return popusti;
+	}
+	
+	public void setPopusti(Set<Popust> popusti) {
+		this.popusti = popusti;
+	}
+
+
+	public double getCena_popust() {
+		return cena_popust;
+	}
+
+
+	public void setCena_popust(double cena_popust) {
+		this.cena_popust = cena_popust;
 	}
 	
 }
