@@ -61,7 +61,7 @@ function addHotelLi(hotel) {
 	div = temp.content.querySelector("div#ubaci");
 	
     temp.content.getElementById("name_hotel").innerHTML = hotel.naziv;
-    temp.content.getElementById("text_hotel").innerHTML = hotel.adresa;
+    temp.content.getElementById("text_hotel").innerHTML = hotel.adresa.ulica + ' ' + hotel.adresa.broj + ', ' + hotel.adresa.grad.naziv;
     temp.content.getElementById("rating_hotel").innerHTML = hotel.prosecna_ocena;
     temp.content.getElementById("dugme_view_details").innerHTML = '<a href="single_listing_hotel.html?id=' + hotel.id +'">view details</a>';
     
@@ -165,11 +165,11 @@ function addRentacar(rentacar) {
 		{
 			fil_string= "Branches:<br/>";
 				for (let fil of rentacar.filijale)
-				fil_string+= fil.adresa + "<br/>";
+				fil_string+= fil.adresa.ulica + ' ' + fil.adresa.broj + ', ' + fil.adresa.grad.naziv + "<br/>";
 		}
 	
     temp.content.getElementById("name_rentacar").innerHTML = rentacar.naziv;
-    temp.content.getElementById("text_rentacar").innerHTML = rentacar.adresa;
+    temp.content.getElementById("text_rentacar").innerHTML = rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv;
     temp.content.getElementById("rentacar_fil").innerHTML = fil_string;
     temp.content.getElementById("rating_rentacar").innerHTML = rentacar.prosecna_ocena;
     temp.content.getElementById("dugme_view_details_rentacar").innerHTML = '<a href="single_listing_rentacar.html?id=' + rentacar.id +'">view details</a>';

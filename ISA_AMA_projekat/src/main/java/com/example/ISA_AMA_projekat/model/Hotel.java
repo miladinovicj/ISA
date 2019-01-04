@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -27,8 +28,8 @@ public class Hotel {
 	@Column(unique = true, nullable = false)
 	private String naziv;
 	
-	@Column(nullable = false)
-	private String adresa;
+	@OneToOne
+	private Adresa adresa;
 	
 	@Column(nullable = true)
 	private String promotivni_opis;
@@ -71,11 +72,11 @@ public class Hotel {
 		this.naziv = naziv;
 	}
 
-	public String getAdresa() {
+	public Adresa getAdresa() {
 		return adresa;
 	}
 
-	public void setAdresa(String adresa) {
+	public void setAdresa(Adresa adresa) {
 		this.adresa = adresa;
 	}
 

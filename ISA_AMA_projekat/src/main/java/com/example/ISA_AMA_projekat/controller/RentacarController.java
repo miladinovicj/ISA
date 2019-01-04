@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
-import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.RentacarService;
@@ -123,7 +122,7 @@ public class RentacarController {
 		for(int j=0; j<rents.size(); j++) {
 			System.out.println("[RentacarController: pretraga]: naziv servisa: " + rents.get(j).getNaziv() + ", adresa servisa: " + rents.get(j).getAdresa());
 			for(int i=0; i<search.length; i++) {
-				if(!(rents.get(j).getAdresa().toLowerCase().contains(search[i]) || rents.get(j).getNaziv().toLowerCase().contains(search[i]))) {
+				if(!(rents.get(j).getAdresa().getGrad().getNaziv().toLowerCase().contains(search[i]) || rents.get(j).getAdresa().getUlica().toLowerCase().contains(search[i]) || rents.get(j).getAdresa().getBroj().toLowerCase().contains(search[i]) || rents.get(j).getNaziv().toLowerCase().contains(search[i]))) {
 					result.remove(rents.get(j));
 					System.out.println("[RentacarController: pretraga]: obrisan rentacar sa nazivom - " + rents.get(j).getNaziv());
 				}

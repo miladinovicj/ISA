@@ -38,18 +38,21 @@ public class Soba {
 	@Column
 	private String opis;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Column
+	private double cena_popust;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonBackReference
 	private Hotel hotel;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Popust> popusti = new HashSet<Popust>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="soba")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="soba")
 	@JsonManagedReference
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
 	
 	public Soba() {
@@ -136,6 +139,16 @@ public class Soba {
 	
 	public void setPopusti(Set<Popust> popusti) {
 		this.popusti = popusti;
+	}
+
+
+	public double getCena_popust() {
+		return cena_popust;
+	}
+
+
+	public void setCena_popust(double cena_popust) {
+		this.cena_popust = cena_popust;
 	}
 	
 }

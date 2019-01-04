@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,7 @@ public class HotelController {
 			value = "/search/{name_location}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Hotel>> getHotelsSearch(HttpServletRequest request, @PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException{
+	public ResponseEntity<List<Hotel>> getHotelsSearch(HttpSession session, HttpServletRequest request, @PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException{
 		
 		System.out.println("[HotelController: getHotelsSearch]: name_location-" + name_location + ", check_in-" + check_in + ", check_out-" + check_out + ", adults-" + adults);
 		name_location = name_location.toLowerCase();
@@ -87,7 +88,7 @@ public class HotelController {
 		
 		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
 		
-		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out, adults);
+		List<Hotel> hoteli = pretraga(session, hotels, search, date_check_in, date_check_out, adults);
 		
 		request.getSession().setAttribute("hoteliPretraga", hoteli);
 			
@@ -113,20 +114,53 @@ public class HotelController {
 			return null; 	
 		}*/
 		
+		@SuppressWarnings("unchecked")
 		List<Hotel> hoteliPretraga = (List<Hotel>) request.getSession().getAttribute("hoteliPretraga");
 		Hotel result = null;
 		
 		if(hoteliPretraga != null) {
+			System.out.println("[HotelController: getHotel]: hoteliPretraga nije null");
 			for(int i=0; i<hoteliPretraga.size(); i++) {
 				if(hoteliPretraga.get(i).getId() == id) {
 					result = hoteliPretraga.get(i);
+					break;
 				}
 			}
 		}else {
+			System.out.println("[HotelController: getHotel]: hoteliPretraga jeste null");
 			result = hotelService.findById(id).get();
 		}
 		
+		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
+		
 		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "specialPrice/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Soba>> getHotelSpecialPrice(HttpSession session, @PathVariable("id") Integer id)
+	{
+		System.out.println("usao u metodu api/hotels/specialPrice/{id}, id: " + id);
+		
+		//List<Hotel> hoteliPretraga = (List<Hotel>) request.getSession().getAttribute("hoteliPretraga");
+		@SuppressWarnings("unchecked")
+		List<Soba> specialPrice = (List<Soba>) session.getAttribute("specialPrice");
+		List<Soba> result = new ArrayList<Soba>();
+		
+		if(specialPrice != null) {
+			System.out.println("[HotelController: getHotelSpecialPrice]: specialPrice nije null");
+			for(int i=0; i<specialPrice.size(); i++) {
+				System.out.println("[HotelController: getHotelSpecialPrice]: u specialPrice se nalazi soba sa id: " + specialPrice.get(i).getId() + ", hotel id: " + specialPrice.get(i).getHotel().getId());
+				if(specialPrice.get(i).getHotel().getId() == id) {
+					System.out.println("[HotelController: getHotelSpecialPrice]: id hotela je isti kao prosledjeni id");
+					result.add(specialPrice.get(i));
+				}
+			}
+		}
+		
+		return new ResponseEntity<Collection<Soba>>(result, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -248,8 +282,9 @@ public class HotelController {
 		return new ResponseEntity<Soba>(soba, HttpStatus.OK);
 	}
 	
-	public List<Hotel> pretraga(List<Hotel> hoteli, String[] search, Date check_in, Date check_out, int adults){
+	public List<Hotel> pretraga(HttpSession session, List<Hotel> hoteli, String[] search, Date check_in, Date check_out, int adults){
 		List<Hotel> result = new ArrayList<Hotel>();
+		List<Soba> specialPrice = new ArrayList<Soba>();
 		
 		for(int i=0; i<hoteli.size(); i++) {
 			result.add(hoteli.get(i));
@@ -258,7 +293,7 @@ public class HotelController {
 		for(int j=0; j<hoteli.size(); j++) {
 			System.out.println("[HotelController: pretraga]: naziv hotela: " + hoteli.get(j).getNaziv() + ", adresa hotela: " + hoteli.get(j).getAdresa());
 			for(int i=0; i<search.length; i++) {
-				if(!(hoteli.get(j).getAdresa().toLowerCase().contains(search[i]) || hoteli.get(j).getNaziv().toLowerCase().contains(search[i]))) {
+				if(!(hoteli.get(j).getAdresa().getGrad().getNaziv().toLowerCase().contains(search[i]) || hoteli.get(j).getAdresa().getUlica().toLowerCase().contains(search[i]) || hoteli.get(j).getAdresa().getBroj().toLowerCase().contains(search[i]) || hoteli.get(j).getNaziv().toLowerCase().contains(search[i]))) {
 					result.remove(hoteli.get(j));
 					System.out.println("[HotelController: pretraga]: obrisan hotel sa nazivom - " + hoteli.get(j).getNaziv());
 				}
@@ -279,6 +314,7 @@ public class HotelController {
 				
 				if(isBrzaSoba(soba, check_in, check_out)) {
 					System.out.println("[HotelController: pretraga]: soba sa id: " + soba.getId() + " je brza soba.");
+					specialPrice.add(soba);
 					iteratorSoba.remove();
 					//TODO ovu sobu ubaciti u neku listu brzih soba pa nju prikazivati u onom posebnom linku
 				}else {
@@ -323,6 +359,8 @@ public class HotelController {
 			}
 		}
 		
+		session.setAttribute("specialPrice", specialPrice);
+		
 		if(adults != 0) {
 			boolean postoji;
 			
@@ -364,6 +402,7 @@ public class HotelController {
 			if(check_in.equals(popust.getPocetak_vazenja()) || check_in.equals(popust.getKraj_vazenja()) || check_out.equals(popust.getPocetak_vazenja()) || ((popust.getPocetak_vazenja()).after(check_in) && (popust.getPocetak_vazenja()).before(check_out)) || (check_in.after(popust.getPocetak_vazenja()) && check_in.before(popust.getKraj_vazenja())) || (check_out.after(popust.getPocetak_vazenja()) && check_out.before(popust.getKraj_vazenja()))) {
 
 				System.out.println("[HotelController: isBrzaSoba]: soba je na popustu u trazenom periodu.");
+				soba.setCena_popust(soba.getCena_nocenja() * 0.01 * (100 - popust.getPopust()));
 				result = true;
 				break;
 			}else {

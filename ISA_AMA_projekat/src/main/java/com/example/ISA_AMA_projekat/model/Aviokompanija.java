@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -32,9 +33,6 @@ public class Aviokompanija implements Serializable {
 	private String naziv;
 	
 	@Column(nullable = false)
-	private String adresa;
-	
-	@Column(nullable = false)
 	private String opis;
 	
 	@Column(nullable = true)
@@ -45,6 +43,9 @@ public class Aviokompanija implements Serializable {
 	
 	@Column(nullable = false)
 	private int maxKapacitet;
+	
+	@OneToOne
+	private Adresa adresa;
 	
 	//SLOZENI ATRIBUTI:
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="aviokompanija")
@@ -100,12 +101,12 @@ public class Aviokompanija implements Serializable {
 	}
 
 
-	public String getAdresa() {
+	public Adresa getAdresa() {
 		return adresa;
 	}
 
 
-	public void setAdresa(String adresa) {
+	public void setAdresa(Adresa adresa) {
 		this.adresa = adresa;
 	}
 
