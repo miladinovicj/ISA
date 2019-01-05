@@ -137,7 +137,9 @@ function addSoba(soba)
 	var temp, div, a;
 	temp = document.getElementById("template_room");
 	div = temp.content.querySelector("div#ubaci_sobu");
-	
+	var token = localStorage.getItem('jwtToken');
+	if(token!=null)
+		temp.content.getElementById("button_book_room").removeAttribute("hidden");
 	var broj_kreveta_string;
 	if(soba.broj_kreveta == 1)
 	{
@@ -350,4 +352,9 @@ function initMap()
           zoom: 17
         })
       });
+}
+
+function odjava()
+{
+	localStorage.clear();
 }

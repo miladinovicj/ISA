@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -70,11 +71,11 @@ public class Korisnik implements Serializable, UserDetails
 	@Column(name = "last_password_reset_date")
 	private Timestamp lastPasswordResetDate;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
+    private Authority authority;
 	
 	//SLOZENI ATRIBUTI:
 
@@ -92,7 +93,6 @@ public class Korisnik implements Serializable, UserDetails
 		super();
 		this.prijateljstva=new ArrayList<FriendRequest>();
 		this.pozivi=new ArrayList<Poziv>();
-		this.authorities = new ArrayList<Authority>();
 		this.bonuspoeni=0;
 	}
 	
@@ -106,7 +106,6 @@ public class Korisnik implements Serializable, UserDetails
 		this.telefon=telefon;
 		this.prijateljstva=new ArrayList<FriendRequest>();
 		this.pozivi=new ArrayList<Poziv>();
-		this.authorities = new ArrayList<Authority>();
 		this.bonuspoeni=0;
 	}
 	
@@ -229,16 +228,16 @@ public class Korisnik implements Serializable, UserDetails
 		this.pozivi = poziviZaRezervacije;
 	}
 	
-	 public void setAuthorities(List<Authority> authorities) {
-	        this.authorities = authorities;
-	    }
+	
+	    public Authority getAuthority() {
+		return authority;
+	}
 
-	    @Override
-	    public Collection<? extends GrantedAuthority> getAuthorities() {
-	        return this.authorities;
-	    }
-	    
-	    @JsonIgnore
+	public void setAuthority(Authority authority) {
+		this.authority = authority;
+	}
+
+		@JsonIgnore
 	    @Override
 	    public boolean isAccountNonExpired() {
 	        return true;
@@ -309,6 +308,12 @@ public class Korisnik implements Serializable, UserDetails
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return aktiviran;
+	}
+//ne znam da li ce ova metoda negde trebati, morala sam da je dodam, ali vraca null
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
     

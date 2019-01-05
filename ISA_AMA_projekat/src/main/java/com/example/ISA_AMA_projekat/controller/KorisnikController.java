@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ISA_AMA_projekat.model.Authority;
 import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Poziv;
+import com.example.ISA_AMA_projekat.service.AuthorityService;
 import com.example.ISA_AMA_projekat.service.EmailService;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
+
 
 @RestController
 @RequestMapping(value="api/users")
@@ -30,6 +33,9 @@ public class KorisnikController {
 	
 	@Autowired
 	private KorisnikService korisnikService; 
+	
+	@Autowired
+	private AuthorityService authorityService; 
 	
 	@Autowired
 	private EmailService emailService;
@@ -117,6 +123,11 @@ public class KorisnikController {
 		else
 		{
 			potvrda.setAktiviran(true);
+			Authority uloga = new Authority();
+			uloga.setName("ROLE_USER");
+			potvrda.setAuthority(uloga);
+			authorityService.save(uloga);
+			//authorityService.updateUserAuthority(potvrda.getId(), uloga.getId());
 			korisnikService.updateAkt(true, potvrda.getId());
 			response.sendRedirect("http://localhost:8080/prijava.html");
 			System.out.println("USPESNO AKTIVIRAN");
