@@ -1,5 +1,6 @@
 $(document).ready(function()	
 {
+	
     var id_presented = window.location.search.substring(4);
     console.log('[single_listing_rentacar: document.ready()]: id rentacara: ' + id_presented);
 
@@ -88,7 +89,9 @@ function addVozilo(car)
 	var temp, div, a;
 	temp = document.getElementById("template_auto");
 	div = temp.content.querySelector("div#ubaci_auto");
-	
+	var token = localStorage.getItem('jwtToken');
+	if(token!=null)
+		temp.content.getElementById("dugme_book").removeAttribute("hidden");
 	var broj_sedista_string = "Number of seats: " + car.broj_sedista;
 	var god_proizvodnje_string = "The year of production: " + car.godina_proizvodnje;
 	var naziv_vozila= car.marka + " " + car.model + " " + car.naziv + " " + car.tip;
@@ -99,7 +102,6 @@ function addVozilo(car)
 	temp.content.getElementById("broj_sedista").innerHTML = broj_sedista_string;
 	temp.content.getElementById("cena_auta").innerHTML = '$' + car.cena_dan + '/day';
 	temp.content.getElementById("prosecna_ocena").innerHTML = car.prosecna_ocena;
-	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_auto_template").appendChild(a);
 }
@@ -118,4 +120,9 @@ function initMap()
           zoom: 17
         })
       });
+}
+
+function odjava()
+{
+	localStorage.clear();
 }

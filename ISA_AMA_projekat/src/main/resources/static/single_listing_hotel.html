@@ -33,8 +33,10 @@
 				<div class="row">
 					<div class="col d-flex flex-row">
 						<div class="user_box ml-auto">
-							<div class="user_box_login user_box_link"><a href="prijava.html">login</a></div>
-							<div class="user_box_register user_box_link"><a href="registration.html">register</a></div>
+							<div id="prijava" class="user_box_login user_box_link"><a href="prijava.html">login</a></div>
+							<div id="reg" class="user_box_register user_box_link"><a href="registration.html">register</a></div>
+							<div id="odjava" class="user_box_login user_box_link" onclick="javascript:odjava()" ><a href="index.html">logout</a></div>
+							<div id="profilKorisnika" class="user_box_register user_box_link" ><a href="profil.html">profile</a></div>
 						</div>
 					</div>
 				</div>
@@ -199,7 +201,7 @@
 												<span class="span_room room_price" id="broj_kreveta" style="margin-top: -10px; white-space: pre; width: 30%; float: left; font-size: 10pt"></span>
 												<span class="span_room room_price" id="cena_nocenja" style="margin-top: -10px; float: left; white-space: pre; font-size: 12pt"></span>
 												<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 15px; width: 65px; position: relative"></span>
-												<span class="span_room button book_button trans_200" id="button_book_room" style="margin-right:10%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_book_room" style="cursor: pointer; color: white;">book<span></span><span></span><span></span></a></span>
+												<span hidden="true" class="span_room button book_button trans_200" id="button_book_room" style="margin-right:10%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_book_room" style="cursor: pointer; color: white;">book<span></span><span></span><span></span></a></span>
 											</div>
 										</div>	
 									</div>

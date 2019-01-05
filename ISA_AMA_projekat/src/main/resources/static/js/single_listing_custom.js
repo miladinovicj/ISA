@@ -19,6 +19,26 @@
 
 $(document).ready(function()
 {
+var token = localStorage.getItem('jwtToken');
+	
+	if(token==null)
+		{
+		$('#prijava').show();
+		$('#reg').show();
+		$('#odjava').hide();
+		$('#profilKorisnika').hide();
+		
+		}
+	else
+		{
+		$('#prijava').hide();
+		$('#reg').hide();
+		$('#odjava').show();
+		$('#profilKorisnika').show();
+		
+		
+		}
+	
 	"use strict";
 
 	/* 
@@ -298,6 +318,7 @@ $(document).ready(function()
 	9. Init Search Form
 
 	*/
+
 
 	function initSearchForm()
 	{
