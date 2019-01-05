@@ -63,11 +63,33 @@ function addHotelLi(hotel) {
     temp.content.getElementById("name_hotel").innerHTML = hotel.naziv;
     temp.content.getElementById("text_hotel").innerHTML = hotel.adresa.ulica + ' ' + hotel.adresa.broj + ', ' + hotel.adresa.grad.naziv;
     temp.content.getElementById("rating_hotel").innerHTML = hotel.prosecna_ocena;
-    temp.content.getElementById("dugme_view_details").innerHTML = '<a href="single_listing_hotel.html?id=' + hotel.id +'">view details</a>';
+    temp.content.getElementById("dugme_view_details").innerHTML = '<a style="color: white;  cursor: pointer;" onclick="javascript:singleListingHotel(' + hotel.id + ')">view details</a>';
     
     a = document.importNode(div, true);
     document.getElementById("ubaci_hotele_template").appendChild(a);
     
+}
+
+function singleListingHotel(hotel_id)
+{
+	var search = window.location.search;
+	var splitted = search.split('&');
+	
+	if(splitted != "")
+	{
+		var check_in_fake = splitted[1].substring(15);
+		var check_out_fake = splitted[2].substring(16);
+		
+		var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
+		var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+		
+		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=' + check_in + '&check_out=' + check_out;
+	}
+	else
+	{
+		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=0001-01-01&check_out=0001-01-01';
+	}
+		
 }
 
 function showContentAvio() {
@@ -179,21 +201,6 @@ function addRentacar(rentacar) {
     
 }
 
-function initMap()
-{
-	var map = new ol.Map({
-        target: 'map',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([19.851044, 45.246496]),
-          zoom: 17
-        })
-      });
-}
 
 $(document).ready(function()
 {
@@ -203,7 +210,6 @@ $(document).ready(function()
 	    }
 	});
 	
-	initMap();
 	
 	console.log('[search.js: showContentHotelSearch()]: document.ready()');
 	var search = window.location.search;
@@ -291,6 +297,8 @@ $(document).ready(function()
 					document.getElementById('hotel_title').innerHTML = '';
 				}
 			});
+			
+			
 		}
 	}
 	else if(search.indexOf('rentacar') !== -1)

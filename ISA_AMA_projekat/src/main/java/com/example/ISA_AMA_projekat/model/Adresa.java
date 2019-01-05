@@ -14,19 +14,19 @@ public class Adresa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Grad grad;
 	
-	@Column
+	@Column(nullable = false)
 	private String ulica;
 	
-	@Column
+	@Column(nullable = false)
 	private String broj;
 	
-	@Column
+	@Column(nullable = false)
 	private double longitude;
 	
-	@Column
+	@Column(nullable = false)
 	private double latitude;
 	
 	public Adresa() {

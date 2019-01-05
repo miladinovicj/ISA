@@ -1,5 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,9 @@ public class RezervacijaHotelService {
 	
 	public void updateSoba(Integer id_soba, boolean aktivirana, double cena_rez, Integer id_rezervacijaHotel) {
 		rezervacijaHotelRepository.updateSoba(id_soba, aktivirana, cena_rez, id_rezervacijaHotel);
+	}
+	
+	public Optional<RezervacijaHotel> findById(Integer id) {
+		return rezervacijaHotelRepository.findById(id);
 	}
 }
