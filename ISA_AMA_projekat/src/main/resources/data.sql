@@ -130,3 +130,7 @@ insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (2, '2019-
 insert into soba_popusti (soba_id, popusti_id) values (1, 1);
 insert into soba_popusti (soba_id, popusti_id) values (1, 2);
 
+insert into popust_usluge (popust_id, usluge_id) values (2, 1);
+insert into popust_usluge (popust_id, usluge_id) values (2, 3);
+insert into popust_usluge (popust_id, usluge_id) values (2, 4);
+

@@ -10,7 +10,7 @@ $(document).ready(function()
 
     $.ajax({
         type: 'GET',
-        url: 'api/hotels/' + id_presented,
+        url: 'api/hotels/' + id_presented + '/' + check_in + '/' + check_out,
         success: function (hotel)
 		{
         	longitude = hotel.adresa.longitude;
@@ -82,9 +82,12 @@ function showHotel(hotel)
     	{
     		let li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span></li>');
     		
-    		let buttonAdd = $('<span class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
-    		buttonAdd.click(clickAddUsluga(usluga));
-    		li.append(buttonAdd);
+    		if(!(check_in == '0001-01-01' || check_out == '0001-01-01'))
+    		{
+    			let buttonAdd = $('<span class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
+        		buttonAdd.click(clickAddUsluga(usluga));
+        		li.append(buttonAdd);
+    		}
     		
     		$('#usluge_hotela').append(li);
     	}
@@ -223,7 +226,7 @@ function bookRoom(id)
 function getSpecialPrice(){
     $.ajax({
         type: 'GET',
-        url: 'api/hotels/specialPrice/' + id_presented,
+        url: 'api/hotels/specialPrice/' + id_presented + '/' + check_in + '/' + check_out,
         success: function (sobe)
 		{
             if(sobe.length != 0)
@@ -285,6 +288,33 @@ function addSpecialPrice(soba)
 		temp.content.getElementById("discount_list").appendChild(li);
 	}
 	
+	
+	//temp.content.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/popust/' + soba.id + '/' + check_in + '/' + check_out,
+        success: function (popust)
+		{
+        	if(popust == null || popust.usluge.length == 0)
+        	{
+        		var element = document.getElementById("text_services_included_list");
+        		element.innerHTML = 'There are no additional services included.';
+        	}
+        	else
+            {
+            	for (let usluga of popust.usluge) 
+        		{	
+            		document.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+            			
+        			let li = document.createElement("li");
+        			li.innerHTML =	'<span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span>';
+        			document.getElementById("services_included_list").appendChild(li);
+        		}
+            }
+		}
+    });
+		
 	a = document.importNode(div, true);
     document.getElementById("special_price_div").appendChild(a);
     

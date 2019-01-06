@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -89,7 +90,7 @@ public class HotelController {
 		*/
 		
 		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
-		List<Hotel> hoteli = pretraga(session, hotels, search, date_check_in, date_check_out, adults);
+		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out, adults);
 		
 		request.getSession().setAttribute("hoteliPretraga", hoteli);
 			
@@ -120,40 +121,35 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "/{id}",
+			value = "/{id}/{check_in}/{check_out}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hotel> getHotel(HttpServletRequest request, @PathVariable("id") Integer id)
+	public ResponseEntity<Hotel> getHotel(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
 	{
 		System.out.println("usao u metodu api/hotels/{id}");
-		/*try
-		{
-			Hotel found = hotelService.findById(id).get();
-			System.out.println("Nasao hotel sa id:" + found.getId());
-			return new ResponseEntity<Hotel>(found, HttpStatus.OK);
-		}
-		catch(NoSuchElementException e)
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date_check_in = format.parse(check_in);
+		Date date_check_out = format.parse(check_out);
+		
+		Hotel result = null;
+		
+		try{
+			result = hotelService.findById(id).get();
+			System.out.println("Nasao hotel sa id:" + result.getId());
+		}catch(NoSuchElementException e)
 		{
 			System.out.println("Ne postoji hotel sa id: " + id);
 			return null; 	
-		}*/
-		
-		@SuppressWarnings("unchecked")
-		List<Hotel> hoteliPretraga = (List<Hotel>) request.getSession().getAttribute("hoteliPretraga");
-		Hotel result = null;
-		
-		if(hoteliPretraga != null) {
-			System.out.println("[HotelController: getHotel]: hoteliPretraga nije null");
-			for(int i=0; i<hoteliPretraga.size(); i++) {
-				if(hoteliPretraga.get(i).getId() == id) {
-					result = hoteliPretraga.get(i);
-					break;
-				}
-			}
-		}else {
-			System.out.println("[HotelController: getHotel]: hoteliPretraga jeste null");
-			result = hotelService.findById(id).get();
 		}
+		
+		List<Hotel> hoteli = new ArrayList<Hotel>();
+		hoteli.add(result);
+		String[] search = new String[1];
+		search[0] = "";
+		
+		List<Hotel> hotels = pretraga(hoteli, search, date_check_in, date_check_out, 0);
+		result = hotels.get(0);
 		
 		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
 		
@@ -161,28 +157,43 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "specialPrice/{id}",
+			value = "specialPrice/{id}/{check_in}/{check_out}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Soba>> getHotelSpecialPrice(HttpSession session, @PathVariable("id") Integer id)
+	public ResponseEntity<Collection<Soba>> getHotelSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
 	{
 		System.out.println("usao u metodu api/hotels/specialPrice/{id}, id: " + id);
 		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date_check_in = format.parse(check_in);
+		Date date_check_out = format.parse(check_out);
+		
 		//List<Hotel> hoteliPretraga = (List<Hotel>) request.getSession().getAttribute("hoteliPretraga");
-		@SuppressWarnings("unchecked")
-		List<Soba> specialPrice = (List<Soba>) session.getAttribute("specialPrice");
+		//List<Soba> specialPrice = (List<Soba>) session.getAttribute("specialPrice");
+		
+		Hotel hotel = null;
+		
+		try{
+			hotel = hotelService.findById(id).get();
+			System.out.println("[HotelController: getHotelSpecialPrice]: Nasao hotel sa id:" + hotel.getId());
+		}catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji hotel sa id: " + id);
+			return null; 	
+		}
+		
 		List<Soba> result = new ArrayList<Soba>();
 		
-		if(specialPrice != null) {
-			System.out.println("[HotelController: getHotelSpecialPrice]: specialPrice nije null");
-			for(int i=0; i<specialPrice.size(); i++) {
-				System.out.println("[HotelController: getHotelSpecialPrice]: u specialPrice se nalazi soba sa id: " + specialPrice.get(i).getId() + ", hotel id: " + specialPrice.get(i).getHotel().getId());
-				if(specialPrice.get(i).getHotel().getId() == id) {
-					System.out.println("[HotelController: getHotelSpecialPrice]: id hotela je isti kao prosledjeni id");
-					result.add(specialPrice.get(i));
-				}
+		for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
+			System.out.println("[HotelController: getHotelSpecialPrice]: usao u for za prolazak kroz sobe; ima " + hotel.getSobe().size() + " soba.");
+			Soba soba = (Soba) iteratorSoba.next();
+			
+			if(isBrzaSoba(soba, date_check_in, date_check_out)) {
+				System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id: " + soba.getId() + " je brza soba.");
+				result.add(soba);
 			}
 		}
+		
 		
 		return new ResponseEntity<Collection<Soba>>(result, HttpStatus.OK);
 	}
@@ -312,7 +323,39 @@ public class HotelController {
 		return new ResponseEntity<Soba>(soba, HttpStatus.OK);
 	}
 	
-	public List<Hotel> pretraga(HttpSession session, List<Hotel> hoteli, String[] search, Date check_in, Date check_out, int adults){
+	@RequestMapping(
+			value = "/popust/{soba_id}/{check_in}/{check_out}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Popust> getPopust(@PathVariable("soba_id") Integer soba_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string) throws ParseException
+	{
+		System.out.println("[HotelController: getPopust]: usao u metodu getPopust");
+		//RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
+		
+		Soba soba =  sobaService.findById(soba_id).get();
+		Popust result = null;
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date check_in = format.parse(check_in_string);
+		Date check_out = format.parse(check_out_string);
+		
+		for(Iterator<Popust> iteratorPopusta = soba.getPopusti().iterator(); iteratorPopusta.hasNext();) {
+			Popust popust = iteratorPopusta.next();
+			if(check_in.equals(popust.getPocetak_vazenja()) || check_in.equals(popust.getKraj_vazenja()) || check_out.equals(popust.getPocetak_vazenja()) || ((popust.getPocetak_vazenja()).after(check_in) && (popust.getPocetak_vazenja()).before(check_out)) || (check_in.after(popust.getPocetak_vazenja()) && check_in.before(popust.getKraj_vazenja())) || (check_out.after(popust.getPocetak_vazenja()) && check_out.before(popust.getKraj_vazenja()))) {
+				result = popust;
+				System.out.println("[HotelController: getPopust]: soba je na popustu u trazenom periodu.");
+				break;
+			}else {
+				System.out.println("[HotelController: isBrzaSoba]: soba nije na popustu u trazenom periodu.");
+			}
+		}
+
+		
+		return new ResponseEntity<Popust>(result, HttpStatus.OK);
+		
+	}
+	
+	public List<Hotel> pretraga(List<Hotel> hoteli, String[] search, Date check_in, Date check_out, int adults){
 		List<Hotel> result = new ArrayList<Hotel>();
 		List<Soba> specialPrice = new ArrayList<Soba>();
 		
@@ -366,7 +409,8 @@ public class HotelController {
 							if(rezervacijaHotel.isAktivirana() && (check_in.equals(rezervacijaHotel.getDatum_dolaska()) || check_in.equals(rezervacijaHotel.getDatum_odlaska()) || check_out.equals(rezervacijaHotel.getDatum_dolaska()) || ((rezervacijaHotel.getDatum_dolaska()).after(check_in) && (rezervacijaHotel.getDatum_dolaska()).before(check_out)) || (check_in.after(rezervacijaHotel.getDatum_dolaska()) && check_in.before(rezervacijaHotel.getDatum_odlaska())) || (check_out.after(rezervacijaHotel.getDatum_dolaska()) && check_out.before(rezervacijaHotel.getDatum_odlaska())))) {
 
 								System.out.println("[HotelController: pretraga]: soba je zauzeta u trazenom periodu.");
-								hotel.getSobe().remove(soba);
+								//hotel.getSobe().remove(soba);
+								iteratorSoba.remove();
 								postojiTerminSoba = false;
 								//break;
 							}else {
@@ -389,7 +433,7 @@ public class HotelController {
 			}
 		}
 		
-		session.setAttribute("specialPrice", specialPrice);
+		//session.setAttribute("specialPrice", specialPrice);
 		
 		if(adults != 0) {
 			boolean postoji;

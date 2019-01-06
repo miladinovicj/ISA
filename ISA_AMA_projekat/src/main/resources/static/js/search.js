@@ -236,11 +236,32 @@ $(document).ready(function()
 		
 		var date_check_in = new Date(check_in_fake);
 		var date_check_out = new Date(check_out_fake);
+		var date_now = new Date();
+		date_now.setHours(0);
+		date_now.setMinutes(0);
+		date_now.setSeconds(0);
+		
+		console.log('Date now: ' + date_now + '; date_check_in: ' + date_check_in + '; date_check_out: ' + date_check_out);
 		
 		if(date_check_in > date_check_out)
 		{
 			//alert('datum dolaska je nakon datuma polaska');
 			document.getElementById("error_date").style.display='block';
+			document.getElementById("error_date").innerHTML = 'Check in date is after check out date.';
+			
+			name_location = name_location.split('+').join(' ');
+			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
+			var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+			
+			$('input[name="name_location_hotel"]').val(name_location);
+			$('input[name="check_in_hotel"]').val(check_in_fake);
+			$('input[name="check_out_hotel"]').val(check_out_fake);
+			$('input[name="adults_hotel"]').val(adults);
+		}
+		else if(date_check_in < date_now || date_check_out < date_now)
+		{
+			document.getElementById("error_date").style.display='block';
+			document.getElementById("error_date").innerHTML = 'Check in and check out date must be in the future.';
 			
 			name_location = name_location.split('+').join(' ');
 			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
