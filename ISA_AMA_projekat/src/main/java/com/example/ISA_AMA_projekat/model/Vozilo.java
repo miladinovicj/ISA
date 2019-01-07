@@ -60,15 +60,63 @@ public class Vozilo {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
 	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	private Set<Popust> popusti = new HashSet<Popust>();
+	
 	@Column
-	private boolean na_popustu;
-
+	private boolean zauzeto; 
+	
+	@Column
+	private double cena_popust;
+	
 	public Vozilo() {
 		super();
 	}
 
 	
 	
+
+	public Set<Popust> getPopusti() {
+		return popusti;
+	}
+
+
+
+
+	public void setPopusti(Set<Popust> popusti) {
+		this.popusti = popusti;
+	}
+
+
+
+
+	public boolean isZauzeto() {
+		return zauzeto;
+	}
+
+
+
+
+	public void setZauzeto(boolean zauzeto) {
+		this.zauzeto = zauzeto;
+	}
+
+
+
+
+	public double getCena_popust() {
+		return cena_popust;
+	}
+
+
+
+
+	public void setCena_popust(double cena_popust) {
+		this.cena_popust = cena_popust;
+	}
+
+
+
 
 	public Set<RezervacijaVozila> getRezervacije() {
 		return rezervacije;
@@ -93,18 +141,6 @@ public class Vozilo {
 
 	public void setOcene(Set<Rating> ocene) {
 		this.ocene = ocene;
-	}
-
-
-
-
-	public boolean isNa_popustu() {
-		return na_popustu;
-	}
-
-
-	public void setNa_popustu(boolean na_popustu) {
-		this.na_popustu = na_popustu;
 	}
 
 
