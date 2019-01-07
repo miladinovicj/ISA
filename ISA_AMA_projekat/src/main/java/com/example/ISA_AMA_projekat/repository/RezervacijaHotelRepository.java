@@ -1,5 +1,7 @@
 package com.example.ISA_AMA_projekat.repository;
 
+import java.util.Collection;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +25,14 @@ public interface RezervacijaHotelRepository extends JpaRepository<RezervacijaHot
 	@Transactional
 	@Query(value = "update rezervacija_hotel rez set rez.soba_id = ?1, rez.aktivirana = ?2, rez.ukupna_cena = ?3 where rez.id = ?4", nativeQuery = true)
 	void updateSoba(Integer id_soba, boolean aktivirana, double cena_rez, Integer id_rezervacijaHotel);
+	
+	@Modifying
+	@Transactional
+	@Query("select rezervacija_hotel from RezervacijaHotel rezervacija_hotel where rezervacija_hotel.soba.hotel.id = ?1 and rezervacija_hotel.brza = ?2")
+	Collection<RezervacijaHotel> findBrzeRez(Integer hotel_id, boolean brza);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update rezervacija_hotel rez set rez.aktivirana = ?2 where rez.id = ?1", nativeQuery = true)
+	void updateAktivirana(Integer id, boolean aktivirana);
 }

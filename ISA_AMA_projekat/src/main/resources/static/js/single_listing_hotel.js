@@ -238,23 +238,23 @@ function getSpecialPrice(){
     $.ajax({
         type: 'GET',
         url: 'api/hotels/specialPrice/' + id_presented + '/' + check_in + '/' + check_out,
-        success: function (sobe)
+        success: function (rezervacije)
 		{
-            if(sobe.length != 0)
+            if(rezervacije.length != 0)
             {
             	document.getElementById("special_price").style.display = 'block';
             	
             	broj_sobasp = 1;
-            	for(let soba of sobe)
+            	for(let rezervacija of rezervacije)
             	{
-            		addSpecialPrice(soba);
+            		addSpecialPrice(rezervacija);
             	}
             }
 		}
     });
 }
 
-function addSpecialPrice(soba)
+function addSpecialPrice(rezervacija)
 {
 	var temp, div, a;
 	temp = document.getElementById("template_special_price");
@@ -264,6 +264,9 @@ function addSpecialPrice(soba)
 		{
 		temp.content.getElementById("button_book_roomsp").removeAttribute("hidden");
 		}
+	var soba = rezervacija.soba;
+
+	
 	var broj_kreveta_string;
 	if(soba.broj_kreveta == 1)
 	{
@@ -290,12 +293,14 @@ function addSpecialPrice(soba)
 	broj_sobasp = broj_sobasp + 1;
 	temp.content.getElementById("broj_krevetasp").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
 	
-	temp.content.getElementById("cena_nocenjasp").innerHTML = 'Regular price: $' + soba.cena_nocenja + '/night\r\nPrice with discount: $' + soba.cena_popust + '/night';
+	var popust = soba.cena_nocenja * 0.01 * (100 - rezervacija.popust);
+	
+	temp.content.getElementById("cena_nocenjasp").innerHTML = 'Regular price: $' + soba.cena_nocenja + '/night\r\nPrice with discount: $' + popust + '/night';
 	
 	
 	temp.content.getElementById("prosecna_ocenasp").innerHTML = soba.prosecna_ocena;
 	
-	
+	/*
 	for (let popust of soba.popusti) 
 	{	
 		let li = document.createElement("li");
@@ -329,7 +334,17 @@ function addSpecialPrice(soba)
             }
 		}
     });
-		
+	*/
+	
+	for (let usluga of rezervacija.usluge) 
+	{	
+		temp.content.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+			
+		let li = document.createElement("li");
+		li.innerHTML =	'<span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span>';
+		temp.content.getElementById("services_included_list").appendChild(li);
+	}
+	
 	a = document.importNode(div, true);
     document.getElementById("special_price_div").appendChild(a);
     
@@ -339,7 +354,7 @@ function addSpecialPrice(soba)
 	for(element of elements)
 	{
 		$(element).removeClass('button_book_roomsp');
-		$(element).click(bookRoomSpecial(soba.id));
+		$(element).click(bookRoomSpecial(rezervacija.id));
 	}
 	
 }
@@ -348,14 +363,13 @@ function bookRoomSpecial(id)
 {
 	return function(){
 		
+		console.log('book room special, id rez: ' + id);
 		$.ajax({
 			url: 'api/hotels/book_room_special/' + id,
 			type: 'PUT',
-			data: JSON.stringify(rezervacijaHotela),
-			contentType: 'application/json; charset=utf-8',
-			success: function(soba) {
-				console.log("uspesna rezervacija brze sobe sa id_sobe: " + soba.id);
-				alert('uspesna rezervacija brze sobe sa id_sobe: ' + soba.id);
+			success: function(rezervacija) {
+				console.log("uspesna rezervacija brze sobe sa id_sobe: " + rezervacija.soba.id);
+				alert('uspesna rezervacija brze sobe sa id_sobe: ' + rezervacija.soba.id);
 				window.location.href = 'index.html';
 			}
 		});

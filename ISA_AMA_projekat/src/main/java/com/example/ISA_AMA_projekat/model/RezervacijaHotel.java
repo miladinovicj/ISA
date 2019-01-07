@@ -13,10 +13,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class RezervacijaHotel {
@@ -44,13 +44,16 @@ public class RezervacijaHotel {
 	private boolean brza;
 	
 	@Column
+	private double popust;
+	
+	@Column
 	private boolean aktivirana;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonManagedReference
 	private Soba soba;
 	
 	public RezervacijaHotel() {
@@ -143,6 +146,14 @@ public class RezervacijaHotel {
 				this.usluge.remove(iteratorUsluga.next());
 			}
 		}
+	}
+
+	public double getPopust() {
+		return popust;
+	}
+
+	public void setPopust(double popust) {
+		this.popust = popust;
 	}
 
 	@Override

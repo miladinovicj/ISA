@@ -10,9 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -66,7 +63,7 @@ public class HotelController {
 			value = "/search/{name_location}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Hotel>> getHotelsSearch(HttpSession session, HttpServletRequest request, @PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException{
+	public ResponseEntity<List<Hotel>> getHotelsSearch(@PathVariable("name_location") String name_location, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException{
 		
 		System.out.println("[HotelController: getHotelsSearch]: name_location-" + name_location + ", check_in-" + check_in + ", check_out-" + check_out + ", adults-" + adults);
 		name_location = name_location.toLowerCase();
@@ -92,7 +89,6 @@ public class HotelController {
 		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
 		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out, adults);
 		
-		request.getSession().setAttribute("hoteliPretraga", hoteli);
 			
 		return new ResponseEntity<List<Hotel>>(hoteli, HttpStatus.OK);
 	}
@@ -160,7 +156,7 @@ public class HotelController {
 			value = "specialPrice/{id}/{check_in}/{check_out}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Soba>> getHotelSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
+	public ResponseEntity<Collection<RezervacijaHotel>> getHotelSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
 	{
 		System.out.println("usao u metodu api/hotels/specialPrice/{id}, id: " + id);
 		
@@ -182,6 +178,22 @@ public class HotelController {
 			return null; 	
 		}
 		
+		Collection<RezervacijaHotel> brzeRez = rezervacijaHotelService.findBrzeRez(id, true);
+		Collection<RezervacijaHotel> result = new ArrayList<RezervacijaHotel>();
+		
+		for(Iterator<RezervacijaHotel> iteratorRez = brzeRez.iterator(); iteratorRez.hasNext();) {
+			RezervacijaHotel rezervacijaHotel = iteratorRez.next();
+			
+			if((date_check_in.equals(rezervacijaHotel.getDatum_dolaska()) || date_check_in.after(rezervacijaHotel.getDatum_dolaska())) && (date_check_out.equals(rezervacijaHotel.getDatum_odlaska()) || date_check_out.before(rezervacijaHotel.getDatum_odlaska())) ) {
+
+				System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id: " + rezervacijaHotel.getSoba().getId() + " je brza soba.");
+				result.add(rezervacijaHotel);
+			}else {
+				System.out.println("[HotelController: isBrzaSoba]: soba nije na popustu u trazenom periodu.");
+			}
+		}
+		
+		/*
 		List<Soba> result = new ArrayList<Soba>();
 		
 		for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
@@ -193,9 +205,9 @@ public class HotelController {
 				result.add(soba);
 			}
 		}
+		*/
 		
-		
-		return new ResponseEntity<Collection<Soba>>(result, HttpStatus.OK);
+		return new ResponseEntity<Collection<RezervacijaHotel>>(result, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -291,6 +303,20 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
+			value = "/get_soba/{soba_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> getSoba(@PathVariable("soba_id") Integer soba_id)
+	{
+		System.out.println("[HotelController: get_soba]: usao u metodu get_soba");
+		Soba result = sobaService.findById(soba_id).get();
+		
+		
+		return new ResponseEntity<Soba>(result, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(
 			value = "/book_room/{soba_id}",
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
@@ -321,6 +347,20 @@ public class HotelController {
 		rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 		
 		return new ResponseEntity<Soba>(soba, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/book_room_special/{rezervacija_id}",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<RezervacijaHotel> bookRoomSpecial(@PathVariable("rezervacija_id") Integer rezervacija_id){
+		
+		RezervacijaHotel rezervacijaHotel = rezervacijaHotelService.findById(rezervacija_id).get();
+		
+		rezervacijaHotelService.updateAktivirana(rezervacija_id, true);
+		
+		return new ResponseEntity<RezervacijaHotel>(rezervacijaHotel, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
