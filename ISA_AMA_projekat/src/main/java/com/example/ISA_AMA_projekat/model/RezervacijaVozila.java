@@ -1,13 +1,18 @@
 package com.example.ISA_AMA_projekat.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -23,6 +28,8 @@ public class RezervacijaVozila {
 	@JsonBackReference
 	private Vozilo vozilo;
 	
+	@Column
+	private Date datum_rezervacije;
 	
 	@Column
 	private Date datum_preuzimanja;
@@ -45,10 +52,47 @@ public class RezervacijaVozila {
 	@Column
 	private boolean brza;
 
+	@Column
+	private boolean aktivirana;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	private Set<Usluga> usluge = new HashSet<Usluga>();
+	
 	public RezervacijaVozila() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+	
+	public Date getDatum_rezervacije() {
+		return datum_rezervacije;
+	}
+
+
+	public void setDatum_rezervacije(Date datum_rezervacije) {
+		this.datum_rezervacije = datum_rezervacije;
+	}
+
+
+	public boolean isAktivirana() {
+		return aktivirana;
+	}
+
+
+	public void setAktivirana(boolean aktivirana) {
+		this.aktivirana = aktivirana;
+	}
+
+
+	public Set<Usluga> getUsluge() {
+		return usluge;
+	}
+
+
+	public void setUsluge(Set<Usluga> usluge) {
+		this.usluge = usluge;
+	}
+
 
 	public Long getId() {
 		return id;
