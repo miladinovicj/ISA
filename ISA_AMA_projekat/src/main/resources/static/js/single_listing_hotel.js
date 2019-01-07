@@ -332,9 +332,18 @@ function addSpecialPrice(soba)
 function bookRoomSpecial(id)
 {
 	return function(){
-		console.log('rezervacija brze sobe');
-		alert('uspesna brza rezervacija sobe sa id_sobe: ' + id);
-		window.location.href = 'index.html';
+		
+		$.ajax({
+			url: 'api/hotels/book_room_special/' + id,
+			type: 'PUT',
+			data: JSON.stringify(rezervacijaHotela),
+			contentType: 'application/json; charset=utf-8',
+			success: function(soba) {
+				console.log("uspesna rezervacija brze sobe sa id_sobe: " + soba.id);
+				alert('uspesna rezervacija brze sobe sa id_sobe: ' + soba.id);
+				window.location.href = 'index.html';
+			}
+		});
 	};
 	
 }

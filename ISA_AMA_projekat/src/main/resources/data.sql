@@ -15,8 +15,9 @@ delete from rentacar_servis;
 delete from rezervacija_hotel_usluge;
 delete from rezervacija_hotel;
 delete from hotel_usluge;
-delete from usluga;
 delete from soba_popusti;
+delete from popust_usluge;
+delete from usluga;
 delete from popust;
 delete from soba;
 delete from hotel;
@@ -133,4 +134,3 @@ insert into soba_popusti (soba_id, popusti_id) values (1, 2);
 insert into popust_usluge (popust_id, usluge_id) values (2, 1);
 insert into popust_usluge (popust_id, usluge_id) values (2, 3);
 insert into popust_usluge (popust_id, usluge_id) values (2, 4);
-
