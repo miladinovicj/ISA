@@ -7,8 +7,10 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +21,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -29,7 +30,9 @@ import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
@@ -55,8 +58,8 @@ public class Korisnik implements Serializable, UserDetails
 	@Column(nullable = false)
 	private String prezime;
 	
-	@Column(nullable = false)
-	private String grad;
+	@OneToOne
+	private Grad grad;
 	
 	@Column(nullable = false)
 	private String telefon;
@@ -79,24 +82,24 @@ public class Korisnik implements Serializable, UserDetails
 	
 	//SLOZENI ATRIBUTI:
 
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="prima")
-	private List<FriendRequest> prijateljstva = new ArrayList<FriendRequest>();
+	/*@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="prima")
+	@JsonBackReference
+	private Set<FriendRequest> prijateljstva = new HashSet<FriendRequest>();
 	
 	
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnik")
-	private List<Poziv> pozivi = new ArrayList<Poziv>();
+	@JsonBackReference
+	private Set<Poziv> pozivi = new HashSet<Poziv>();
 
-	
+	*/
 	
 	
 	public Korisnik() {
 		super();
-		this.prijateljstva=new ArrayList<FriendRequest>();
-		this.pozivi=new ArrayList<Poziv>();
 		this.bonuspoeni=0;
 	}
 	
-	public Korisnik(String email, String lozinka, String ime, String prezime, String grad, String telefon)
+	public Korisnik(String email, String lozinka, String ime, String prezime, Grad grad, String telefon)
 	{
 		this.email=email;
 		this.lozinka=lozinka;
@@ -104,11 +107,21 @@ public class Korisnik implements Serializable, UserDetails
 		this.prezime=prezime;
 		this.grad=grad;
 		this.telefon=telefon;
-		this.prijateljstva=new ArrayList<FriendRequest>();
-		this.pozivi=new ArrayList<Poziv>();
 		this.bonuspoeni=0;
 	}
 	
+	
+	public Korisnik(String email, String lozinka, String ime, String prezime, String grad, String telefon)
+	{
+		this.email=email;
+		this.lozinka=lozinka;
+		this.ime=ime;
+		this.prezime=prezime;
+		this.grad.setNaziv(grad);
+		this.telefon=telefon;
+		this.bonuspoeni=0;
+	}
+	 
 	public Korisnik(String email, String lozinka)
 	{
 		this.email=email;
@@ -179,12 +192,12 @@ public class Korisnik implements Serializable, UserDetails
 	}
 
 
-	public String getGrad() {
+	public Grad getGrad() {
 		return grad;
 	}
 
 
-	public void setGrad(String grad) {
+	public void setGrad(Grad grad) {
 		this.grad = grad;
 	}
 
@@ -208,27 +221,27 @@ public class Korisnik implements Serializable, UserDetails
 		this.bonuspoeni = bonus_poeni;
 	}
 
-
-	public List<FriendRequest> getPrijateljstva() {
+/*
+	public Set<FriendRequest> getPrijateljstva() {
 		return prijateljstva;
 	}
 
 
-	public void setPrijateljstva(List<FriendRequest> prijateljstva) {
+	public void setPrijateljstva(Set<FriendRequest> prijateljstva) {
 		this.prijateljstva = prijateljstva;
 	}
 
 
-	public List<Poziv> getPozivi() {
+	public Set<Poziv> getPozivi() {
 		return pozivi;
 	}
 
 
-	public void setPozivi(List<Poziv> poziviZaRezervacije) {
+	public void setPozivi(Set<Poziv> poziviZaRezervacije) {
 		this.pozivi = poziviZaRezervacije;
 	}
-	
-	
+*/	
+
 	    public Authority getAuthority() {
 		return authority;
 	}

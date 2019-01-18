@@ -194,14 +194,34 @@ function addRentacar(rentacar) {
     temp.content.getElementById("text_rentacar").innerHTML = rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv;
     temp.content.getElementById("rentacar_fil").innerHTML = fil_string;
     temp.content.getElementById("rating_rentacar").innerHTML = rentacar.prosecna_ocena;
-    temp.content.getElementById("dugme_view_details_rentacar").innerHTML = '<a href="single_listing_rentacar.html?id=' + rentacar.id +'">view details</a>';
+    temp.content.getElementById("dugme_view_details_rentacar").innerHTML = '<a style="color: white;  cursor: pointer;" onclick="javascript:singleListingRentacar(' + rentacar.id + ')">view details</a>';
     
     a = document.importNode(div, true);
     document.getElementById("ubaci_rentacar_template").appendChild(a);
     
 }
 
-
+function singleListingRentacar(rentacar_id)
+{
+	var search = window.location.search;
+	var splitted = search.split('&');
+	
+	if(splitted != "")
+	{
+		var check_in_fake = splitted[1].substring(13);
+		var check_out_fake = splitted[3].substring(14);
+		
+		var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
+		var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+		
+		window.location.href='single_listing_rentacar.html?id=' + rentacar_id +'&check_in=' + check_in + '&check_out=' + check_out;
+	}
+	else
+	{
+		window.location.href='single_listing_rentacar.html?id=' + rentacar_id +'&check_in=0001-01-01&check_out=0001-01-01';
+	}
+		
+}
 $(document).ready(function()
 {
 	$.ajaxSetup({
@@ -333,23 +353,57 @@ $(document).ready(function()
 		
 		var name_location = splitted[0].substring(24);
 		var check_in_fake = splitted[1].substring(13);
-		var check_out_fake = splitted[2].substring(14);
+		var check_in_town=splitted[2].substring(14);
+		var check_out_fake = splitted[3].substring(14);
+		var check_out_town=splitted[4].substring(15);
+		var passengers=0;
 		
+		if(splitted[5].length > 16)
+		{
+			passengers = splitted[5].substring(16);
+		}
 		var date_check_in = new Date(check_in_fake);
 		var date_check_out = new Date(check_out_fake);
+		var date_now = new Date();
+		date_now.setHours(0);
+		date_now.setMinutes(0);
+		date_now.setSeconds(0);
 		
 		if(date_check_in > date_check_out)
 		{
-			//alert('datum dolaska je nakon datuma polaska');
-			document.getElementById("error_date_rentacar").style.display='block';
+			document.getElementById("error_date").style.display='block';
+			document.getElementById("error_date").innerHTML = 'Check in date is after check out date.';
 			
 			name_location = name_location.split('+').join(' ');
 			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
 			var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+			check_in_town=check_in_town.split('+').join(' ');
+			check_out_town=check_out_town.split('+').join(' ');
 			
 			$('input[name="name_location_rentacar"]').val(name_location);
 			$('input[name="check_in_car"]').val(check_in_fake);
 			$('input[name="check_out_car"]').val(check_out_fake);
+			$('input[name="check_in_town"]').val(check_in_town);
+			$('input[name="check_out_town"]').val(check_out_town);
+			$('input[name="passengers_rent"]').val(passengers);
+		}
+		else if(date_check_in < date_now || date_check_out < date_now)
+		{
+			document.getElementById("error_date").style.display='block';
+			document.getElementById("error_date").innerHTML = 'Check in and check out date must be in the future.';
+			
+			name_location = name_location.split('+').join(' ');
+			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
+			var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+			check_in_town=check_in_town.split('+').join(' ');
+			check_out_town=check_out_town.split('+').join(' ');
+			
+			$('input[name="name_location_rentacar"]').val(name_location);
+			$('input[name="check_in_car"]').val(check_in_fake);
+			$('input[name="check_out_car"]').val(check_out_fake);
+			$('input[name="check_in_town"]').val(check_in_town);
+			$('input[name="check_out_town"]').val(check_out_town);
+			$('input[name="passengers_rent"]').val(passengers);
 		}
 		else
 		{
@@ -358,10 +412,15 @@ $(document).ready(function()
 			name_location = name_location.split('+').join(' ');
 			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
 			var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
+			check_in_town=check_in_town.split('+').join(' ');
+			check_out_town=check_out_town.split('+').join(' ');
 			
 			$('input[name="name_location_rentacar"]').val(name_location);
 			$('input[name="check_in_car"]').val(check_in_fake);
 			$('input[name="check_out_car"]').val(check_out_fake);
+			$('input[name="check_in_town"]').val(check_in_town);
+			$('input[name="check_out_town"]').val(check_out_town);
+			$('input[name="passengers_rent"]').val(passengers);
 			
 			if(check_in == "--")
 				check_in = "0001-01-01";
@@ -369,7 +428,7 @@ $(document).ready(function()
 				check_out = "0001-01-01";
 			
 			$.get({
-				url: '/api/rents/search/' + name_location + '/' + check_in + '/' + check_out,
+				url: '/api/rents/search/' + name_location + '/' + check_in + '/' + check_out + '/' + check_in_town + '/' + check_out_town  + '/' + passengers,
 				success: function(rents) {
 					
 					if(rents == null || rents.length == 0){

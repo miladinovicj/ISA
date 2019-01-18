@@ -2,7 +2,6 @@ package com.example.ISA_AMA_projekat.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Authority;
-import com.example.ISA_AMA_projekat.model.FriendRequest;
+import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
-import com.example.ISA_AMA_projekat.model.Poziv;
 import com.example.ISA_AMA_projekat.service.AuthorityService;
 import com.example.ISA_AMA_projekat.service.EmailService;
+import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
 
 
@@ -36,6 +35,9 @@ public class KorisnikController {
 	
 	@Autowired
 	private AuthorityService authorityService; 
+
+	@Autowired
+	private GradService gradService; 
 	
 	@Autowired
 	private EmailService emailService;
@@ -59,8 +61,10 @@ public class KorisnikController {
 		}
 		else
 		{
+			
+			Grad grad = gradService.findByNaziv(korisnik.getGrad().getNaziv());
 		System.out.println("KORISNIK " + korisnik.getEmail() + " " + korisnik.getLozinka() + " " + korisnik.getIme() + " " + korisnik.getPrezime() + " " +
-				korisnik.getGrad() + " " + korisnik.getTelefon());
+				korisnik.getGrad().getNaziv() + " " + korisnik.getTelefon());
 		
 		String poslatMejl= signUpAsync(korisnik);
 		
@@ -74,11 +78,19 @@ public class KorisnikController {
 				
 				novi_korisnik.setIme(korisnik.getIme());
 				novi_korisnik.setPrezime(korisnik.getPrezime());
-				novi_korisnik.setGrad(korisnik.getGrad());
+				if(grad!=null)
+				{
+					novi_korisnik.setGrad(grad);
+				}
+				else
+				{
+					Grad novi_gr = new Grad();
+					novi_gr.setNaziv(korisnik.getGrad().getNaziv());
+					gradService.save(novi_gr);
+					novi_korisnik.setGrad(novi_gr);
+				}
 				novi_korisnik.setTelefon(korisnik.getTelefon());
 				novi_korisnik.setBonus_poeni(0);
-				novi_korisnik.setPozivi(new ArrayList<Poziv>());
-				novi_korisnik.setPrijateljstva(new ArrayList<FriendRequest>());
 				novi_korisnik.setAktiviran(false);
 		
 	
