@@ -13,6 +13,6 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Long>{
 		RentacarServis findOneByNaziv(String naziv);
 		
 		@Modifying
-		@Query("select rentacar_servis from RentacarServis rentacar_servis where rentacar_servis.adresa like ?1 or rentacar_servis.naziv like ?1")
+		@Query("select rentacar_servis from RentacarServis rentacar_servis where rentacar_servis.adresa.grad.naziv like ?1 or rentacar_servis.adresa.ulica like ?1 or rentacar_servis.adresa.broj like ?1 or rentacar_servis.naziv like ?1")
 		List<RentacarServis> search(String name_location);
 }

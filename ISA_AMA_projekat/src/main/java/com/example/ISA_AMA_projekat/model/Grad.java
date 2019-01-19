@@ -20,6 +20,11 @@ public class Grad {
 		super();
 	}
 
+	
+	public Grad(String naziv) {
+		this.naziv=naziv;
+	}
+
 	public Integer getId() {
 		return id;
 	}

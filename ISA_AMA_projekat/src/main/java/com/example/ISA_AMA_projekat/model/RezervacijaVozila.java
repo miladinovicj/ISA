@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -37,11 +38,11 @@ public class RezervacijaVozila {
 	@Column
 	private Date datum_vracanja;
 	
-	@Column
-	private String mesto_preuzimanja;
+	@OneToOne
+	private Grad mesto_preuzimanja;
 	
-	@Column
-	private String mesto_vracanja;
+	@OneToOne
+	private Grad mesto_vracanja;
 	
 	@Column
 	private double ukupna_cena;
@@ -54,9 +55,6 @@ public class RezervacijaVozila {
 
 	@Column
 	private boolean aktivirana;
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	public RezervacijaVozila() {
 		super();
@@ -81,16 +79,6 @@ public class RezervacijaVozila {
 
 	public void setAktivirana(boolean aktivirana) {
 		this.aktivirana = aktivirana;
-	}
-
-
-	public Set<Usluga> getUsluge() {
-		return usluge;
-	}
-
-
-	public void setUsluge(Set<Usluga> usluge) {
-		this.usluge = usluge;
 	}
 
 
@@ -127,19 +115,19 @@ public class RezervacijaVozila {
 		this.datum_vracanja = datum_vracanja;
 	}
 
-	public String getMesto_preuzimanja() {
+	public Grad getMesto_preuzimanja() {
 		return mesto_preuzimanja;
 	}
 
-	public void setMesto_preuzimanja(String mesto_preuzimanja) {
+	public void setMesto_preuzimanja(Grad mesto_preuzimanja) {
 		this.mesto_preuzimanja = mesto_preuzimanja;
 	}
 
-	public String getMesto_vracanja() {
+	public Grad getMesto_vracanja() {
 		return mesto_vracanja;
 	}
 
-	public void setMesto_vracanja(String mesto_vracanja) {
+	public void setMesto_vracanja(Grad mesto_vracanja) {
 		this.mesto_vracanja = mesto_vracanja;
 	}
 
