@@ -83,11 +83,18 @@ function singleListingHotel(hotel_id)
 		var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
 		var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
 		
-		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=' + check_in + '&check_out=' + check_out;
+		var adults = 0;
+		
+		if(splitted[3].length > 13)
+	    {
+	    	adults = splitted[3].substring(13);
+	    }
+		
+		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=' + check_in + '&check_out=' + check_out + '&adults=' + adults;
 	}
 	else
 	{
-		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=0001-01-01&check_out=0001-01-01';
+		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=0001-01-01&check_out=0001-01-01&adults=0';
 	}
 		
 }

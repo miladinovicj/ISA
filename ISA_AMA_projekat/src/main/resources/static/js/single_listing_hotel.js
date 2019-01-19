@@ -6,11 +6,13 @@ $(document).ready(function()
     id_presented = splitted[0].substring(4);
     check_in = splitted[1].substring(9);
     check_out = splitted[2].substring(10);
+    adults = splitted[3].substring(7);
+    
     console.log('[single_listing_hotel: document.ready()]: id hotela: ' + id_presented);
 
     $.ajax({
         type: 'GET',
-        url: 'api/hotels/' + id_presented + '/' + check_in + '/' + check_out,
+        url: 'api/hotels/' + id_presented + '/' + check_in + '/' + check_out + '/' + adults,
         success: function (hotel)
 		{
         	longitude = hotel.adresa.longitude;
@@ -46,6 +48,17 @@ function showHotel(hotel)
     if(hotel.sobe.length == 0)
 	{
     	$("#text_no_rooms").text("There are no rooms in this hotel.");
+    	
+    	$.ajax({
+    		url: 'api/hotels/get_number_of_days/' + check_in + '/' + check_out,
+    		type: 'POST',
+    		success: function(number) {
+    			console.log("number of days: " + number);
+    			number_of_days = number;
+    			
+    			getSpecialPrice();
+    		}
+    	});
 	}
     else
 	{
@@ -362,7 +375,7 @@ function addSpecialPrice(rezervacija)
 function getSpecialPrice(){
     $.ajax({
         type: 'GET',
-        url: 'api/hotels/specialPrice/' + id_presented + '/' + check_in + '/' + check_out,
+        url: 'api/hotels/specialPrice/' + id_presented + '/' + check_in + '/' + check_out + '/' + adults,
         success: function (sobe)
 		{
             if(sobe.length != 0)

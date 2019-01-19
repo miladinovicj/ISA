@@ -117,12 +117,12 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "/{id}/{check_in}/{check_out}",
+			value = "/{id}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hotel> getHotel(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
+	public ResponseEntity<Hotel> getHotel(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException
 	{
-		System.out.println("usao u metodu api/hotels/{id}");
+		System.out.println("usao u metodu api/hotels/{id}; adults: " + adults);
 		
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date date_check_in = format.parse(check_in);
@@ -139,13 +139,7 @@ public class HotelController {
 			return null; 	
 		}
 		
-		List<Hotel> hoteli = new ArrayList<Hotel>();
-		hoteli.add(result);
-		String[] search = new String[1];
-		search[0] = "";
-		
-		List<Hotel> hotels = pretraga(hoteli, search, date_check_in, date_check_out, 0);
-		result = hotels.get(0);
+		result = pretraga_hotel(result, date_check_in, date_check_out, adults);
 		
 		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
 		
@@ -153,10 +147,10 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "specialPrice/{id}/{check_in}/{check_out}",
+			value = "specialPrice/{id}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Soba>> getHotelSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
+	public ResponseEntity<Collection<Soba>> getHotelSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out, @PathVariable("adults") int adults) throws ParseException
 	{
 		System.out.println("usao u metodu api/hotels/specialPrice/{id}, id: " + id);
 		
@@ -175,7 +169,6 @@ public class HotelController {
 			return null; 	
 		}
 		
-		//Collection<RezervacijaHotel> brzeRez = rezervacijaHotelService.findBrzeRez(id, true);
 		Collection<Soba> result = new ArrayList<Soba>();
 		boolean postojiPopust, postojiTerminSoba;
 		
@@ -187,7 +180,6 @@ public class HotelController {
 				Popust popust = iteratorPopust.next();
 				if((date_check_in.equals(popust.getPocetak_vazenja()) || date_check_in.after(popust.getPocetak_vazenja())) && (date_check_out.equals(popust.getKraj_vazenja()) || date_check_out.before(popust.getKraj_vazenja()))) {
 					System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id: " + soba.getId() + " je na popustu u trazenom periodu.");
-					//result.add(soba);
 					postojiPopust = true;
 					break;
 				}else {
@@ -210,8 +202,13 @@ public class HotelController {
 				}
 				
 				if(postojiTerminSoba) {
-					System.out.println("[HotelController: getHotelSpecialPrice]: dodata soba sa id:" + soba.getId());
-					result.add(soba);
+					if(soba.getBroj_kreveta() <= adults) {
+						System.out.println("[HotelController: getHotelSpecialPrice]: odgovara zbog broja osoba; dodata soba sa id:" + soba.getId());
+						result.add(soba);
+					}else {
+						System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id:" + soba.getId() + " ne odgovara zbog broja osoba");
+					}
+					
 				}
 			}
 		}
@@ -550,11 +547,11 @@ public class HotelController {
 					System.out.println("[HotelController: pretraga]: usao u for za prolazak kroz sobe; ima " + hotel.getSobe().size() + " soba.");
 					Soba soba = (Soba) iteratorSoba.next();
 					postojiTerminSoba = true;
-					
+					/*
 					if(isBrzaSoba(soba, check_in, check_out)) {
 						System.out.println("[HotelController: pretraga]: soba sa id: " + soba.getId() + " je brza soba.");
 						iteratorSoba.remove();
-					}else {
+					}else {*/
 						if(soba.getRezervacije().isEmpty()) {
 							System.out.println("[HotelController: pretraga]: soba nema rezervacija.");
 							postojiTerminSoba = true;
@@ -580,7 +577,7 @@ public class HotelController {
 								postojiSoba = true;
 							}
 						}
-					}
+					//}
 					
 				}
 				
@@ -602,20 +599,70 @@ public class HotelController {
 				System.out.println("[HotelController: pretraga]: hotel " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
 				for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
 					Soba soba = (Soba) iteratorSoba.next();
-						System.out.println("[HotelController: pretraga]: iteratorSoba.next() nije null.");
-						if(soba.getBroj_kreveta() <= adults) {
-							postoji = true;
-							System.out.println("[HotelController: pretraga]: soba.getBroj_kreveta() <= adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
-							//break;
-						}else {
-							iteratorSoba.remove();
-							System.out.println("[HotelController: pretraga]: uklanjanje sobe.");
-							System.out.println("[HotelController: pretraga]: soba.getBroj_kreveta() > adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
-						}
+					if(soba.getBroj_kreveta() <= adults) {
+						postoji = true;
+						System.out.println("[HotelController: pretraga]: soba.getBroj_kreveta() <= adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
+						//break;
+					}else {
+						iteratorSoba.remove();
+						System.out.println("[HotelController: pretraga]: uklanjanje sobe.");
+						System.out.println("[HotelController: pretraga]: soba.getBroj_kreveta() > adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
+					}
 				}
 				if(!postoji) {
 					result.remove(hotel);
 					i--;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public Hotel pretraga_hotel(Hotel hotel, Date check_in, Date check_out, int adults){
+		Hotel result = hotel;
+		
+		System.out.println("[HotelController: pretraga_hotel]: iteracija pomocu iteratora; naziv hotela: " + hotel.getNaziv());
+		
+		for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
+			System.out.println("[HotelController: pretraga_hotel]: usao u for za prolazak kroz sobe; ima " + hotel.getSobe().size() + " soba.");
+			Soba soba = (Soba) iteratorSoba.next();
+			
+			if(isBrzaSoba(soba, check_in, check_out)) {
+				System.out.println("[HotelController: pretraga_hotel]: soba sa id: " + soba.getId() + " je brza soba.");
+				iteratorSoba.remove();
+			}else {
+				if(soba.getRezervacije().isEmpty()) {
+					System.out.println("[HotelController: pretraga_hotel]: soba nema rezervacija.");
+				}else {
+					System.out.println("[HotelController: pretraga_hotel]: postoje rezervacije za sobu; ima ih " + soba.getRezervacije().size() + ".");
+					for(Iterator<RezervacijaHotel> iteratorRezervacija = soba.getRezervacije().iterator(); iteratorRezervacija.hasNext();) {
+						RezervacijaHotel rezervacijaHotel = iteratorRezervacija.next();
+						System.out.println("[HotelController: pretraga_hotel]: zahtev:  datum dolaska: " + check_in + ", datum odlaska: " + check_out + ".");
+						System.out.println("[HotelController: pretraga_hotel]: rezervacija: " + rezervacijaHotel.getId() + ", datum dolaska: " + rezervacijaHotel.getDatum_dolaska() + ", datum odlaska: " + rezervacijaHotel.getDatum_odlaska() + ".");
+
+						if(rezervacijaHotel.isAktivirana() && (check_in.equals(rezervacijaHotel.getDatum_dolaska()) || check_in.equals(rezervacijaHotel.getDatum_odlaska()) || check_out.equals(rezervacijaHotel.getDatum_dolaska()) || ((rezervacijaHotel.getDatum_dolaska()).after(check_in) && (rezervacijaHotel.getDatum_dolaska()).before(check_out)) || (check_in.after(rezervacijaHotel.getDatum_dolaska()) && check_in.before(rezervacijaHotel.getDatum_odlaska())) || (check_out.after(rezervacijaHotel.getDatum_dolaska()) && check_out.before(rezervacijaHotel.getDatum_odlaska())))) {
+							System.out.println("[HotelController: pretraga_hotel]: soba je zauzeta u trazenom periodu.");
+							iteratorSoba.remove();
+						}else {
+							System.out.println("[HotelController: pretraga_hotel]: soba je slobodna u trazenom periodu.");
+						}
+					}
+				}
+			}
+		}
+		
+		if(adults != 0) {
+			System.out.println("[HotelController: pretraga_hotel]: hotel " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
+			
+			for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
+				Soba soba = (Soba) iteratorSoba.next();
+				if(soba.getBroj_kreveta() <= adults) {
+					System.out.println("[HotelController: pretraga_hotel]: soba.getBroj_kreveta() <= adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
+				}else {
+					iteratorSoba.remove();
+					System.out.println("[HotelController: pretraga_hotel]: uklanjanje sobe.");
+					System.out.println("[HotelController: pretraga_hotel]: soba.getBroj_kreveta() > adults; soba.getBroj_kreveta(): " + soba.getBroj_kreveta() + ".");
 				}
 			}
 		}
