@@ -44,11 +44,6 @@ public class Hotel {
 	@JsonManagedReference(value = "Hotel-Soba")
 	private Set<Soba> sobe = new HashSet<Soba>();
 	
-	/*
-	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RezervacijaHotel> rezervacije_hotela = new HashSet<RezervacijaHotel>();
-	*/
-	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
 	
@@ -111,16 +106,6 @@ public class Hotel {
 	public void setSobe(Set<Soba> sobe) {
 		this.sobe = sobe;
 	}
-
-	/*
-	public Set<RezervacijaHotel> getRezervacije_hotela() {
-		return rezervacije_hotela;
-	}
-
-	public void setRezervacije_hotela(Set<RezervacijaHotel> rezervacije_hotela) {
-		this.rezervacije_hotela = rezervacije_hotela;
-	}
-	*/
 
 	public Set<Rating> getOcene() {
 		return ocene;

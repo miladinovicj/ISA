@@ -12,6 +12,7 @@ delete from vozilo;
 delete from filijala;
 delete from rentacar_servis;
 
+delete from soba_rezervacije;
 delete from rezervacija_hotel_usluge;
 delete from rezervacija_hotel;
 delete from hotel_usluge;
@@ -99,6 +100,12 @@ insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_n
 
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (4, '2019-01-20', '2019-01-21', 1, 3, true, 10, false, 20);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (5, '2019-01-25', '2019-01-27', 1, 3, true, 10, false, 30);
+
+insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 1);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (3, 2);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (3, 3);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 4);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 5);
 
 insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Angel', 8, 'Mlada firma sa velikom vizijom. Iznajmljivanje automobila sa i bez vozaca.', 3.2);
 insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Cartize Company', 9, 'Najpovoljnije cene rentiranja automobila u Novom Sadu', 4.8);

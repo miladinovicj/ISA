@@ -49,7 +49,7 @@ public class Soba {
 	private Set<Popust> popusti = new HashSet<Popust>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	//@JsonManagedReference(value = "RezervacijaHotel-Soba")
+	@JsonManagedReference(value = "RezervacijaHotel-Soba")
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

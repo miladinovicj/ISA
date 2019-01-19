@@ -42,4 +42,8 @@ public class RezervacijaHotelService {
 	public void updateAktivirana(Integer id, boolean aktivirana) {
 		rezervacijaHotelRepository.updateAktivirana(id, aktivirana);
 	}
+	
+	public void insertRezervacijaSoba(Integer rezervacija_id, Integer soba_id) {
+		rezervacijaHotelRepository.insertRezervacijaSoba(rezervacija_id, soba_id);
+	}
 }

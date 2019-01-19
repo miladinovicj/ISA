@@ -53,7 +53,7 @@ public class RezervacijaHotel {
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@ManyToOne
-	//@JsonBackReference(value = "RezervacijaHotel-Soba")
+	@JsonBackReference(value = "RezervacijaHotel-Soba")
 	private Soba soba;
 	
 	public RezervacijaHotel() {

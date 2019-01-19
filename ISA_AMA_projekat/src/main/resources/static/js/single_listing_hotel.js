@@ -233,7 +233,7 @@ function bookRoom(id)
 	};
 	
 }
-
+/*
 function getSpecialPrice(){
     $.ajax({
         type: 'GET',
@@ -334,7 +334,7 @@ function addSpecialPrice(rezervacija)
             }
 		}
     });
-	*/
+	
 	
 	for (let usluga of rezervacija.usluge) 
 	{	
@@ -357,19 +357,134 @@ function addSpecialPrice(rezervacija)
 		$(element).click(bookRoomSpecial(rezervacija.id));
 	}
 	
+}*/
+
+function getSpecialPrice(){
+    $.ajax({
+        type: 'GET',
+        url: 'api/hotels/specialPrice/' + id_presented + '/' + check_in + '/' + check_out,
+        success: function (sobe)
+		{
+            if(sobe.length != 0)
+            {
+            	document.getElementById("special_price").style.display = 'block';
+            	
+            	broj_sobasp = 1;
+            	for(let soba of sobe)
+            	{
+            		addSpecialPrice(soba);
+            	}
+            }
+		}
+    });
 }
 
-function bookRoomSpecial(id)
+function addSpecialPrice(soba)
+{
+	var temp, div, a;
+	temp = document.getElementById("template_special_price");
+	div = temp.content.querySelector("div#ubaci_special_price");
+	var token = localStorage.getItem('jwtToken');
+	if(token!=null)
+	{
+		temp.content.getElementById("button_book_roomsp").removeAttribute("hidden");
+	}
+	
+	var broj_kreveta_string;
+	if(soba.broj_kreveta == 1)
+	{
+		broj_kreveta_string = "Jednokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 2)
+	{
+		broj_kreveta_string = "Dvokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 3)
+	{
+		broj_kreveta_string = "Trokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 4)
+	{
+		broj_kreveta_string = "Četvorokrevetna soba. ";
+	}
+	else if(soba.broj_kreveta == 5)
+	{
+		broj_kreveta_string = "Petokrevetna soba. ";
+	}
+	
+	temp.content.getElementById("nazivsp").innerHTML = 'Soba ' + broj_sobasp;
+	broj_sobasp = broj_sobasp + 1;
+	temp.content.getElementById("broj_krevetasp").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
+	
+	temp.content.getElementById("prosecna_ocenasp").innerHTML = soba.prosecna_ocena;
+	
+	/*
+	for (let popust of soba.popusti) 
+	{	
+		let li = document.createElement("li");
+		li.innerHTML =	'<span>' + popust.pocetak_vazenja.substring(0, 10) + '  -  ' + popust.kraj_vazenja.substring(0, 10) + '  -  ' + popust.popust + '%</span>';
+		temp.content.getElementById("discount_list").appendChild(li);
+	}
+	*/
+	
+	temp.content.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+	var pronadjen_popust;
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/popust/' + soba.id + '/' + check_in + '/' + check_out,
+        success: function (popust)
+		{
+        	pronadjen_popust = popust;
+        	
+        	if(popust.usluge.length == 0)
+        	{
+        		var element = document.getElementById("text_services_included_list");
+        		element.innerHTML = 'There are no additional services included.';
+        	}
+        	else
+            {
+            	for (let usluga of popust.usluge) 
+        		{	
+            		document.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+            			
+        			let li = document.createElement("li");
+        			li.innerHTML =	'<span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span>';
+        			document.getElementById("services_included_list").appendChild(li);
+        		}
+         
+            }
+        	var popust_cena = soba.cena_nocenja * 0.01 * (100 - popust.popust);
+        	document.getElementById("cena_nocenjasp").innerHTML = 'Regular price: $' + soba.cena_nocenja + '/night\r\nPrice with discount: $' + popust_cena + '/night';
+        	
+        	$(".button_book_roomsp").addClass('soba_id_' + soba.id);
+        	var elements = document.getElementsByClassName('button_book_roomsp');
+        	for(element of elements)
+        	{
+        		$(element).removeClass('button_book_roomsp');
+        		$(element).click(bookRoomSpecial(check_in, check_out, pronadjen_popust, soba.id));
+        	}
+		}
+    });
+	
+	a = document.importNode(div, true);
+    document.getElementById("special_price_div").appendChild(a);
+	
+}
+
+function bookRoomSpecial(check_in, check_out, pronadjen_popust, soba_id)
 {
 	return function(){
 		
-		console.log('book room special, id rez: ' + id);
+		console.log('book room special, id sobe: ' + soba_id + '; popust id: ' + pronadjen_popust.id);
 		$.ajax({
-			url: 'api/hotels/book_room_special/' + id,
+			url: 'api/hotels/book_room_special/' + soba_id + '/' + check_in + '/' + check_out,
 			type: 'PUT',
-			success: function(rezervacija) {
-				console.log("uspesna rezervacija brze sobe sa id_sobe: " + rezervacija.soba.id);
-				alert('uspesna rezervacija brze sobe sa id_sobe: ' + rezervacija.soba.id);
+			data: JSON.stringify(pronadjen_popust),
+			contentType: 'application/json; charset=utf-8',
+			success: function(soba) {
+				console.log("uspesna rezervacija brze sobe sa id_sobe: " + soba.id);
+				alert('uspesna rezervacija brze sobe sa id_sobe: ' + soba.id);
 				window.location.href = 'index.html';
 			}
 		});
