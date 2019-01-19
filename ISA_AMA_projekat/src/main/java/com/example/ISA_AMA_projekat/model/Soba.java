@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Soba {
@@ -41,14 +42,14 @@ public class Soba {
 	private double cena_popust;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonBackReference
+	@JsonBackReference(value = "Hotel-Soba")
 	private Hotel hotel;
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Popust> popusti = new HashSet<Popust>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JsonBackReference
+	//@JsonManagedReference(value = "RezervacijaHotel-Soba")
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

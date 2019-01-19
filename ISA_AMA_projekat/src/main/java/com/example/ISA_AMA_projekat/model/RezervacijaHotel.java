@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class RezervacijaHotel {
@@ -53,7 +53,7 @@ public class RezervacijaHotel {
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@ManyToOne
-	@JsonManagedReference
+	//@JsonBackReference(value = "RezervacijaHotel-Soba")
 	private Soba soba;
 	
 	public RezervacijaHotel() {

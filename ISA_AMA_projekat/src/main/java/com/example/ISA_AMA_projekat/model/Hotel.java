@@ -41,7 +41,7 @@ public class Hotel {
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference(value = "Hotel-Soba")
 	private Set<Soba> sobe = new HashSet<Soba>();
 	
 	/*
