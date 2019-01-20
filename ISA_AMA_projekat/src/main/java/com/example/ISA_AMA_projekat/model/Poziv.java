@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -32,6 +33,7 @@ public class Poziv implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="osoba_id", referencedColumnName="id", nullable=false)
+	@JsonBackReference
 	private Korisnik korisnik;
 
 	public Poziv() {

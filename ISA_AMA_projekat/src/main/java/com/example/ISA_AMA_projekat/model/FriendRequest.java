@@ -37,7 +37,7 @@ public class FriendRequest implements Serializable
 	private Korisnik salje;
 	
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Korisnik prima;
 
 	

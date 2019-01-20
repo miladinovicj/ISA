@@ -48,7 +48,6 @@ public class Korisnik implements Serializable, UserDetails
 	@Column(unique = true, nullable = false)
 	private String email;
 	
-
 	@Column(nullable = false)
 	private String lozinka;
 	
@@ -82,16 +81,16 @@ public class Korisnik implements Serializable, UserDetails
 	
 	//SLOZENI ATRIBUTI:
 
-	/*@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="prima")
-	@JsonBackReference
+	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="prima")
+	@JsonManagedReference
 	private Set<FriendRequest> prijateljstva = new HashSet<FriendRequest>();
 	
 	
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnik")
-	@JsonBackReference
+	@JsonManagedReference
 	private Set<Poziv> pozivi = new HashSet<Poziv>();
 
-	*/
+	
 	
 	
 	public Korisnik() {
@@ -221,7 +220,7 @@ public class Korisnik implements Serializable, UserDetails
 		this.bonuspoeni = bonus_poeni;
 	}
 
-/*
+
 	public Set<FriendRequest> getPrijateljstva() {
 		return prijateljstva;
 	}
@@ -240,7 +239,7 @@ public class Korisnik implements Serializable, UserDetails
 	public void setPozivi(Set<Poziv> poziviZaRezervacije) {
 		this.pozivi = poziviZaRezervacije;
 	}
-*/	
+
 
 	    public Authority getAuthority() {
 		return authority;
