@@ -53,8 +53,8 @@ public class Vozilo {
 	@JsonBackReference
 	private Filijala filijala;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="vozilo")
-	@JsonManagedReference
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@JsonManagedReference(value = "RezervacijaVozila-Vozilo")
 	private Set<RezervacijaVozila> rezervacije = new HashSet<RezervacijaVozila>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

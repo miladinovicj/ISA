@@ -216,16 +216,24 @@ function singleListingRentacar(rentacar_id)
 	if(splitted != "")
 	{
 		var check_in_fake = splitted[1].substring(13);
+		var check_in_town=splitted[2].substring(14);
 		var check_out_fake = splitted[3].substring(14);
+		var check_out_town=splitted[4].substring(15);
+		var passengers=0;
+		
+		if(splitted[5].length > 16)
+		{
+			passengers = splitted[5].substring(16);
+		}
 		
 		var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
 		var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
 		
-		window.location.href='single_listing_rentacar.html?id=' + rentacar_id +'&check_in=' + check_in + '&check_out=' + check_out;
+		window.location.href='single_listing_rentacar.html?id=' + rentacar_id +'&check_in=' + check_in +'&check_in_town=' + check_in_town + '&check_out=' + check_out + '&check_out_town=' + check_out_town + '&passengers=' + passengers;
 	}
 	else
 	{
-		window.location.href='single_listing_rentacar.html?id=' + rentacar_id +'&check_in=0001-01-01&check_out=0001-01-01';
+		window.location.href='single_listing_rentacar.html?id=' + rentacar_id +'&check_in=0001-01-01&check_in_town=prazan&check_out=0001-01-01&check_out_town=prazan&passengers=0';
 	}
 		
 }

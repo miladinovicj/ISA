@@ -6,6 +6,7 @@ delete from aviokompanija_brzi_letovi;
 delete from let;
 delete from aviokompanija;
 
+delete from vozilo_rezervacije;
 delete from rezervacija_vozila;
 delete from rentacar_servis_usluge;
 delete from vozilo;
@@ -111,9 +112,13 @@ insert into filijala (id, adresa_id, rentacar_id) values (2, 12, 1);
 insert into filijala (id, adresa_id, rentacar_id) values (3, 13, 1);
 insert into filijala (id, adresa_id, rentacar_id) values (4, 14, 3);
 
-insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (3, 'Comfortline', 'Volkswagen', 'Polo', 2015, 5, 'City car', 300,4.7, 1 , 0, false);
 insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (1, 'SportTourer', 'Opel', 'Astra', 2011, 5, 'Executive car', 400,4.5, 1 , 0, false);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (3, 'Comfortline', 'Volkswagen', 'Polo', 2015, 5, 'City car', 300,4.7, 1 , 0, false);
 insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (2, '70 Trend', 'Ford', 'Fiesta', 2018, 5, 'Supermini', 280, 4, 4 , 0, false);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (4, 'S', 'Porche', 'Macan', 2019, 5, 'City car', 500, 4.8, 2 , 0, false);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (5, 'C 1.4', 'Opel', 'Corsa', 1999, 5, 'Comfort', 210, 3, 3 , 0, false);
+
+
 
 insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 6);
 insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (1, 7);

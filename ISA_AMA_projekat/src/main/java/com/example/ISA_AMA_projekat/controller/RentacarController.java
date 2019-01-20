@@ -25,9 +25,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Filijala;
+import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
 import com.example.ISA_AMA_projekat.model.Vozilo;
+import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
 import com.example.ISA_AMA_projekat.service.RezervacijaVozilaService;
 import com.example.ISA_AMA_projekat.service.VoziloService;
@@ -41,6 +43,9 @@ public class RentacarController {
 	
 	@Autowired
 	private VoziloService voziloService;
+	
+	@Autowired
+	private GradService gradService; 
 	
 	@Autowired
 	private RezervacijaVozilaService rezervacijaVozilaService;
@@ -284,10 +289,10 @@ public class RentacarController {
 	}
 	
 	@RequestMapping(
-			value = "/{id}/{check_in}/{check_out}",
+			value = "/{id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentacarServis> getHotel(@PathVariable("id") Long id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
+	public ResponseEntity<RentacarServis> getHotel(@PathVariable("id") Long id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town,  @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
 	{
 		System.out.println("usao u metodu api/rents/{id}/checkin/checkout");
 		
@@ -311,8 +316,12 @@ public class RentacarController {
 		String[] search = new String[1];
 		search[0] = "";
 		
-		
-		List<RentacarServis> rents = pretragaServisa(servisi, search, date_check_in, date_check_out, result.getAdresa().getGrad().getNaziv(), result.getAdresa().getGrad().getNaziv(), 0);
+		if(check_in_town.equals("prazan") && check_out_town.equals("prazan"))
+		{
+			check_in_town=result.getAdresa().getGrad().getNaziv();
+			check_out_town=result.getAdresa().getGrad().getNaziv();
+		}
+		List<RentacarServis> rents = pretragaServisa(servisi, search, date_check_in, date_check_out,check_in_town, check_out_town, passengers);
 		result = rents.get(0);
 		
 		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
@@ -324,13 +333,14 @@ public class RentacarController {
 			value = "/get_number_of_days/{check_in}/{check_out}",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Integer> getNumberOfDays(@PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
+	public ResponseEntity<Integer> getNumberOfDaysCar(@PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
 	{
 		System.out.println("RentacarController: getNumberOfDays]: usao u metodu getnumberOfDays");
 		//RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
 		int result;
 		
 		if(check_in.equals("0001-01-01") || check_out.equals("0001-01-01")) {
+			System.out.println("REZULTAT JE NULA");
 			result = 0;
 		}else {
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -350,28 +360,56 @@ public class RentacarController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Vozilo> bookCar(@PathVariable("vozilo_id") Long vozilo_id, @RequestBody RezervacijaVozila rezervacijaVozila){
+	public ResponseEntity<Vozilo> bookCar(@PathVariable("vozilo_id") Long vozilo_id, @RequestBody RezervacijaVozila rezervacijaVozila) throws ParseException{
 		
 		//RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
-		rezervacijaVozila.setVozilo(vozilo);;
+		rezervacijaVozila.setVozilo(vozilo);
+		
 		rezervacijaVozila.setAktivirana(true);
 		
 		Date date_check_in = rezervacijaVozila.getDatum_preuzimanja();
 		Date date_check_out = rezervacijaVozila.getDatum_vracanja();
 		int broj_dana = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
-		
 		double cena_rez = broj_dana * vozilo.getCena_dan();
 		
 		rezervacijaVozila.setUkupna_cena(cena_rez);
-		//request.getSession().setAttribute("rezervacijaHotel", rezervacijaHotel);
+		System.out.println("REZ: " + rezervacijaVozila.getId() + " " + rezervacijaVozila.getBroj_putnika() + " " + rezervacijaVozila.getUkupna_cena()
+				+ " " + rezervacijaVozila.getDatum_preuzimanja() + " " + rezervacijaVozila.getDatum_rezervacije() + 
+				" " + rezervacijaVozila.getDatum_vracanja() + " " + rezervacijaVozila.getMesto_preuzimanja().getNaziv() + " "
+				+ rezervacijaVozila.getMesto_vracanja().getNaziv() + " " + rezervacijaVozila.getVozilo().getModel());
 		
-		//rezervacijaHotelService.updateSoba(soba.getId(), true, cena_rez, rezervacijaHotel.getId());
-		
-		//request.getSession().removeAttribute("rezervacijaHotel");
 		rezervacijaVozila = rezervacijaVozilaService.save(rezervacijaVozila);
-		
+		rezervacijaVozilaService.insertRezervacijaVozila(rezervacijaVozila.getId(), vozilo.getId());
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/rezervacija/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RezervacijaVozila> getRezervacija(@PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town,@PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException{
+		if(passengers <= 0)
+			passengers=1;
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date_check_in = format.parse(check_in);
+		Date date_check_out = format.parse(check_out);
+		
+		RezervacijaVozila rezervacijavozila = new RezervacijaVozila();
+		rezervacijavozila.setDatum_preuzimanja(date_check_in);;
+		rezervacijavozila.setDatum_vracanja(date_check_out);;
+		rezervacijavozila.setBrza(false);
+		Grad grad_preuzimanja = gradService.findByNaziv(check_in_town);
+		Grad grad_vracanja = gradService.findByNaziv(check_out_town);
+		
+		rezervacijavozila.setMesto_preuzimanja(grad_preuzimanja);
+		rezervacijavozila.setMesto_vracanja(grad_vracanja);
+		rezervacijavozila.setBroj_putnika(passengers);
+		
+		rezervacijavozila.setAktivirana(false);
+		
+		//rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
+			
+		return new ResponseEntity<RezervacijaVozila>(rezervacijavozila, HttpStatus.OK);
+	}
 }

@@ -2,6 +2,7 @@ package com.example.ISA_AMA_projekat.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,7 +27,7 @@ public class RezervacijaVozila {
 	
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference(value = "RezervacijaVozila-Vozilo")
 	private Vozilo vozilo;
 	
 	@Column
@@ -156,7 +157,30 @@ public class RezervacijaVozila {
 	}
 	
 	
-	
+	@Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RezervacijaVozila rh = (RezervacijaVozila) o;
+        if(rh.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, rh.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+	@Override
+	public String toString() {
+		return "RezervacijaVozila [id=" + id  + ", ukupna_cena=" + ukupna_cena + "]";
+	}
 	
 
 }

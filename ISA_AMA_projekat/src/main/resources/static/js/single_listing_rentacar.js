@@ -6,13 +6,29 @@ $(document).ready(function()
 	
     id_presented = splitted[0].substring(4);
     check_in = splitted[1].substring(9);
-    check_out = splitted[2].substring(10);
+    check_in_town = splitted[2].substring(14);
+    check_in_town=check_in_town.split('+').join(' ');
+    check_out = splitted[3].substring(10);
+    check_out_town = splitted[4].substring(15);
+    check_out_town=check_out_town.split('+').join(' ');
+    passengers = splitted[5].substring(11);
     console.log('[single_listing_rent: document.ready()]: id hotela: ' + id_presented);
 
+	$.ajax({
+		url: 'api/rents/get_number_of_days/' + check_in + '/' + check_out,
+		type: 'POST',
+		success: function(number) {
+			console.log("number of days: " + number);
+			number_of_days = number;
+			
+		}
+	});
+	
+	
     $.ajax({
         type: 'GET',
-        url: 'api/rents/' + id_presented + '/' + check_in + '/' + check_out,
-        complete: function (rentacar)
+        url: 'api/rents/' + id_presented + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers,
+        success: function (rentacar)
 		{
             longitude = rentacar.adresa.longitude;
         	latitude = rentacar.adresa.latitude;
@@ -21,6 +37,21 @@ $(document).ready(function()
             initMap();
 		}
     });
+    
+    if(check_in_town!="prazan" && check_out_town!="prazan")
+    	{
+    $.get({
+		url: '/api/rents/rezervacija/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers,
+		success: function(rezervacija) {
+			rezervacijaVozila = rezervacija;
+			console.log('rezervacija uspesno vracena');
+
+		},
+		error : function(data){
+			alert('Greska prilikom rezervacije.');
+		}
+	});
+    	}
 	
 });
 
@@ -70,34 +101,46 @@ function addFilijala(filijala)
 	
 	temp.content.getElementById("adresa_filijale").innerHTML =  filijala.adresa.ulica + ' ' + filijala.adresa.broj + ', ' + filijala.adresa.grad.naziv; ;
 	
-	a = document.importNode(div, true);
-    document.getElementById("ubaci_filijale_template").appendChild(a);
+	
     if(filijala.vozila.length == 0)
 	{
-    	$("#text_no_cars").text("There are no cars in this branch of rentacar service.");
+    	//$("#text_no_cars").text("There are no cars in this branch of rentacar service.");
+    	 temp.content.getElementById("vozila_u_ponudi").innerHTML = "";
+    	 
 	}
     else
 	{
-    	$("#text_no_cars").text("");
-    	
-    	$.ajax({
-    		url: 'api/rents/get_number_of_days/' + check_in + '/' + check_out,
-    		type: 'POST',
-    		success: function(number) {
-    			console.log("number of days: " + number);
-    			number_of_days = number;
-    			
-    			for (let vozilo of filijala.vozila) 
-    	    	{
-    	    		addVozilo(vozilo);
-    	    	}
-    			
-    			
-    		}
-    	});
+    	temp.content.getElementById("vozila_u_ponudi").innerHTML = '<a id="vozila_dugme'+filijala.id + '" style="cursor:pointer; color:white;" onclick="javascript:izlistajVozila(' + filijala.id + ')">Cars on offer</a>';
+    
 	}
+    
+   
+    a = document.importNode(div, true);
+    document.getElementById("ubaci_filijale_template").appendChild(a);
 }
 
+function izlistajVozila(filijala_id)
+{
+	$("#vozila_dugme" + filijala_id).hide();
+	$.get({
+		url: '/api/filijale/' + filijala_id,
+		success: function(filijala) {
+			console.log('filijala_uspesno_vracena ' + filijala.id);
+			for(let vozilo of filijala.vozila)
+				{
+				addVozilo(vozilo);
+				}
+
+		},
+		error : function(data){
+			alert('Greska prilikom vracanja filijale.');
+		}
+	});
+
+
+
+
+}
 function addVozilo(car)
 {
 	var temp, div, a;
@@ -129,12 +172,12 @@ function addVozilo(car)
     
     if(number_of_days != 0)
 	{
-		$(".button_book_car").addClass('auto_id_' + vozilo.id);
+		$(".button_book_car").addClass('auto_id_' + car.id);
 		var elements = document.getElementsByClassName('button_book_car');
 		for(element of elements)
 		{
 			$(element).removeClass('button_book_car');
-			$(element).click(bookCar(vozilo.id));
+			$(element).click(bookCar(car.id));
 		}
 	}
     else
