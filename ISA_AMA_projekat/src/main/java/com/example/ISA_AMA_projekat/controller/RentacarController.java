@@ -26,8 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.model.Hotel;
+import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
+import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
+import com.example.ISA_AMA_projekat.model.Soba;
+import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
@@ -307,28 +312,112 @@ public class RentacarController {
 			System.out.println("Nasao rentacar sa id:" + result.getId());
 		}catch(NoSuchElementException e)
 		{
-			System.out.println("Ne postoji hotel sa id: " + id);
+			System.out.println("Ne postoji rentacar sa id: " + id);
 			return null; 	
 		}
 		
-		List<RentacarServis> servisi = new ArrayList<RentacarServis>();
-		servisi.add(result);
-		String[] search = new String[1];
-		search[0] = "";
 		
 		if(check_in_town.equals("prazan") && check_out_town.equals("prazan"))
 		{
 			check_in_town=result.getAdresa().getGrad().getNaziv();
 			check_out_town=result.getAdresa().getGrad().getNaziv();
 		}
-		List<RentacarServis> rents = pretragaServisa(servisi, search, date_check_in, date_check_out,check_in_town, check_out_town, passengers);
-		result = rents.get(0);
+		result = pretraga_servisa(result, date_check_in, date_check_out,check_in_town, check_out_town, passengers);
 		
-		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
+		
+		System.out.println("[RentacarController: getRentacar]: id pronadjenog servisa: " + result.getId());
 		
 		return new ResponseEntity<RentacarServis>(result, HttpStatus.OK);
 	}
 	
+	public RentacarServis pretraga_servisa(RentacarServis servis,
+			Date check_in, Date check_out, String check_in_town,
+			String check_out_town, int passengers) {
+		RentacarServis result = servis;
+		check_in_town=check_in_town.toLowerCase();
+		check_out_town=check_out_town.toLowerCase();
+		
+		System.out.println("[RentacarController: pretraga_servisa]: iteracija pomocu iteratora; naziv servisa: " + servis.getNaziv());
+		boolean adresaPreuzimanja = false;
+		boolean adresaVracanja = false;
+		
+			for (Iterator<Filijala> iteratorFilijala = servis.getFilijale().iterator(); iteratorFilijala.hasNext();)
+			{
+				Filijala filijala = (Filijala) iteratorFilijala.next();
+				System.out.println("[RentacarController: pretraga] MESTO FILIJALE: " + filijala.getAdresa().getGrad().getNaziv());
+				if(filijala.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_in_town) ||
+						servis.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_in_town)  )
+				{
+					adresaPreuzimanja=true;
+					break;
+				}
+			}
+		
+		
+		
+			for (Iterator<Filijala> iteratorFilijala = servis.getFilijale().iterator(); iteratorFilijala.hasNext();)
+			{
+				Filijala filijala = (Filijala) iteratorFilijala.next();
+				System.out.println("[RentacarController: pretraga] MESTO FILIJALE: " + filijala.getAdresa().getGrad().getNaziv());
+				if(filijala.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_out_town) ||
+						servis.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_out_town) )
+				{
+					adresaVracanja=true;
+					break;
+				}
+			}
+			
+	if(adresaPreuzimanja==true && adresaVracanja==true)
+	{
+		for(Iterator<Filijala> iteratorFil = servis.getFilijale().iterator(); iteratorFil.hasNext();)
+		{
+			Filijala filijala = iteratorFil.next();
+		for(Iterator<Vozilo> iteratorVozilo = filijala.getVozila().iterator(); iteratorVozilo.hasNext();) {
+			System.out.println("[RentacarController: pretraga_servisa]: usao u for za prolazak kroz vozila; ima " + filijala.getVozila().size() + " vozila.");
+			Vozilo vozilo = iteratorVozilo.next();
+			
+			if(isBrzaVozilo(vozilo, check_in, check_out)) {
+				System.out.println("[RentacarController: pretraga_servisa]: vozilo sa id: " + vozilo.getId() + " je brza rez.");
+				iteratorVozilo.remove();
+			}else {
+				if(vozilo.getRezervacije().isEmpty()) {
+					System.out.println("[RentacarController: pretraga_servisa]: vozilo nema rezervacija.");
+				}else {
+					System.out.println("[RentacarController: pretraga_servisa]: postoje rezervacije za vozilo; ima ih " + vozilo.getRezervacije().size() + ".");
+					for(Iterator<RezervacijaVozila> iteratorRezervacija = vozilo.getRezervacije().iterator(); iteratorRezervacija.hasNext();) {
+						RezervacijaVozila rezervacijaVozila = iteratorRezervacija.next();
+						System.out.println("RentacarController: pretraga_servisa]: zahtev:  datum dolaska: " + check_in + ", datum odlaska: " + check_out + ".");
+						
+						if(rezervacijaVozila.isAktivirana() && (check_in.equals(rezervacijaVozila.getDatum_preuzimanja()) || check_in.equals(rezervacijaVozila.getDatum_vracanja()) || check_out.equals(rezervacijaVozila.getDatum_preuzimanja()) || ((rezervacijaVozila.getDatum_preuzimanja()).after(check_in) && (rezervacijaVozila.getDatum_preuzimanja()).before(check_out)) || (check_in.after(rezervacijaVozila.getDatum_preuzimanja()) && check_in.before(rezervacijaVozila.getDatum_vracanja())) || (check_out.after(rezervacijaVozila.getDatum_preuzimanja()) && check_out.before(rezervacijaVozila.getDatum_vracanja())))) {
+							System.out.println("[RentacarController: pretraga_servisa]: vozilo je zauzeto u trazenom periodu.");
+							iteratorVozilo.remove();
+						}else {
+							System.out.println("[RentacarController: pretraga_servisa]: vozilo je slobodno u trazenom periodu.");
+						}
+					}
+				}
+			}
+		}
+		
+		if(passengers != 0) {
+			
+			for(Iterator<Vozilo> iteratorVozilo = filijala.getVozila().iterator(); iteratorVozilo.hasNext();) {
+				Vozilo vozilo = (Vozilo) iteratorVozilo.next();
+				if(vozilo.getBroj_sedista() >= passengers) {
+					System.out.println("[RentacarController: pretraga_servisa]: broj sedista: " + vozilo.getBroj_sedista() + ".");
+				}else {
+					iteratorVozilo.remove();
+					System.out.println("[RentacarController: pretraga_servisa]: uklanjanje vozila.");
+					}
+			}
+		}
+		}
+		
+	}	
+		
+		return result;
+	}
+
 	@RequestMapping(
 			value = "/get_number_of_days/{check_in}/{check_out}",
 			method = RequestMethod.POST,
@@ -411,5 +500,215 @@ public class RentacarController {
 		//rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 			
 		return new ResponseEntity<RezervacijaVozila>(rezervacijavozila, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "specialPrice/{id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Vozilo>> getVoziloSpecialPrice(@PathVariable("id") Long id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
+	{
+		System.out.println("usao u metodu api/rents/specialPrice/{id}, id: " + id + "mesto : " + check_in_town + " " + check_out_town );
+		if(passengers <= 0)
+			passengers=1;
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date_check_in = format.parse(check_in);
+		Date date_check_out = format.parse(check_out);
+		
+		RentacarServis servis = null;
+		
+		try{
+			servis = rentService.findById(id).get();
+			System.out.println("[RentacarController: getVoziloSpecialPrice]: Nasao servis sa id:" + servis.getId());
+		}catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji hotel sa id: " + id);
+			return null; 	
+		}
+		
+		check_in_town=check_in_town.toLowerCase();
+		check_out_town=check_out_town.toLowerCase();
+		
+		boolean adresaPreuzimanja = false;
+		boolean adresaVracanja = false;
+		
+			for (Iterator<Filijala> iteratorFilijala = servis.getFilijale().iterator(); iteratorFilijala.hasNext();)
+			{
+				Filijala filijala = (Filijala) iteratorFilijala.next();
+				System.out.println("[RentacarController: pretraga] MESTO FILIJALE: " + filijala.getAdresa().getGrad().getNaziv());
+				if(filijala.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_in_town) ||
+						servis.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_in_town)  )
+				{
+					adresaPreuzimanja=true;
+					break;
+				}
+			}
+		
+		
+		
+			for (Iterator<Filijala> iteratorFilijala = servis.getFilijale().iterator(); iteratorFilijala.hasNext();)
+			{
+				Filijala filijala = (Filijala) iteratorFilijala.next();
+				System.out.println("[RentacarController: pretraga] MESTO FILIJALE: " + filijala.getAdresa().getGrad().getNaziv());
+				if(filijala.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_out_town) ||
+						servis.getAdresa().getGrad().getNaziv().toLowerCase().equals(check_out_town) )
+				{
+					adresaVracanja=true;
+					break;
+				}
+			}
+		
+		
+		System.out.println("[RentacarController: pretraga] mesto preuzimanja: " + adresaPreuzimanja + " mesto vracanja: " + adresaVracanja);
+		
+		Collection<Vozilo> result = new ArrayList<Vozilo>();
+		boolean postojiPopust, postojiTerminVozilo;
+		if(adresaPreuzimanja==true && adresaVracanja== true)
+		{
+			
+				for(Iterator<Filijala> iteratorFil = servis.getFilijale().iterator(); iteratorFil.hasNext();)
+				{
+					Filijala filijala = iteratorFil.next();
+					for(Iterator<Vozilo> iteratorVozilo = filijala.getVozila().iterator(); iteratorVozilo.hasNext();) {
+					postojiPopust = false;
+					postojiTerminVozilo = true;
+					Vozilo vozilo = iteratorVozilo.next();
+					for(Iterator<Popust> iteratorPopust = vozilo.getPopusti().iterator(); iteratorPopust.hasNext();) {
+						Popust popust = iteratorPopust.next();
+						if((date_check_in.equals(popust.getPocetak_vazenja()) || date_check_in.after(popust.getPocetak_vazenja())) && (date_check_out.equals(popust.getKraj_vazenja()) || date_check_out.before(popust.getKraj_vazenja()))) {
+							System.out.println("[RentacarController: getVoziloSpecialPrice]: vozilo sa id: " + vozilo.getId() + " je na popustu u trazenom periodu.");
+							postojiPopust = true;
+							break;
+						}else {
+							System.out.println("[RentacarController: getVoziloSpecialPrice]: vozilo sa id: " + vozilo.getId() + " nije na popustu u trazenom periodu.");
+						}
+					}
+					if(postojiPopust) {
+						for(Iterator<RezervacijaVozila> iteratorRezervacija = vozilo.getRezervacije().iterator(); iteratorRezervacija.hasNext();) {
+							RezervacijaVozila rezervacijaVozila = iteratorRezervacija.next();
+							System.out.println("[RentacarController: getVoziloSpecialPrice]: zahtev:  datum dolaska: " + check_in + ", datum odlaska: " + check_out + ".");
+							
+							if(rezervacijaVozila.isAktivirana() && (date_check_in.equals(rezervacijaVozila.getDatum_preuzimanja()) || date_check_in.equals(rezervacijaVozila.getDatum_vracanja()) || date_check_out.equals(rezervacijaVozila.getDatum_preuzimanja()) || ((rezervacijaVozila.getDatum_preuzimanja()).after(date_check_in) && (rezervacijaVozila.getDatum_preuzimanja()).before(date_check_out)) || (date_check_in.after(rezervacijaVozila.getDatum_preuzimanja()) && date_check_in.before(rezervacijaVozila.getDatum_vracanja())) || (date_check_out.after(rezervacijaVozila.getDatum_preuzimanja()) && date_check_out.before(rezervacijaVozila.getDatum_vracanja())))) {
+								System.out.println("[RentacarController: getVoziloSpecialPrice]: vozilo je zauzeto u trazenom periodu.");
+								postojiTerminVozilo = false;
+								break;
+							}else {
+								System.out.println("[RentacarController: getVoziloSpecialPrice]: vozilo je slobodno u trazenom periodu.");
+							}
+						}
+						
+						if(postojiTerminVozilo) {
+							if(vozilo.getBroj_sedista() >= passengers) {
+								System.out.println("[RentacarController: getVoziloSpecialPrice]: odgovara zbog broja osoba; dodato vozilo sa id:" + vozilo.getId());
+								result.add(vozilo);
+							}else {
+								System.out.println("[RentacarController: getVoziloSpecialPrice]: vozilo sa id:" + vozilo.getId() + " ne odgovara zbog broja osoba");
+							}
+							
+						}
+					}
+				}
+				
+				}
+		}
+		
+		return new ResponseEntity<Collection<Vozilo>>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/popust/{vozilo_id}/{check_in}/{check_out}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Popust> getPopustVozilo(@PathVariable("vozilo_id") Long vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string) throws ParseException {
+		System.out.println("[RentacarController: getPopust]: usao u metodu getPopust");
+		
+		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
+		Popust result = null;
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date check_in = format.parse(check_in_string);
+		Date check_out = format.parse(check_out_string);
+		
+		for(Iterator<Popust> iteratorPopusta = vozilo.getPopusti().iterator(); iteratorPopusta.hasNext();) {
+			Popust popust = iteratorPopusta.next();
+			if((check_in.equals(popust.getPocetak_vazenja()) || check_in.after(popust.getPocetak_vazenja())) && (check_out.equals(popust.getKraj_vazenja()) || check_out.before(popust.getKraj_vazenja()))) {
+			//if(check_in.equals(popust.getPocetak_vazenja()) || check_in.equals(popust.getKraj_vazenja()) || check_out.equals(popust.getPocetak_vazenja()) || ((popust.getPocetak_vazenja()).after(check_in) && (popust.getPocetak_vazenja()).before(check_out)) || (check_in.after(popust.getPocetak_vazenja()) && check_in.before(popust.getKraj_vazenja())) || (check_out.after(popust.getPocetak_vazenja()) && check_out.before(popust.getKraj_vazenja()))) {
+				result = popust;
+				System.out.println("[RentacarController: getPopust]: vozilo je na popustu u trazenom periodu, popust id: " + popust.getId());
+				break;
+			}else {
+				System.out.println("[RentacarController: isBrzaVozilo]: vozilo nije na popustu u trazenom periodu.");
+			}
+		}
+
+		
+		return new ResponseEntity<Popust>(result, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(
+			value = "/book_car_special/{vozilo_id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Vozilo> bookRoomSpecial(@PathVariable("vozilo_id") Long vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out_string,@PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers, @RequestBody Popust popust) throws ParseException {
+		
+		
+		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
+		
+		System.out.println("[RentacarController: bookCarSpecial]: popust id: " + popust.getId());
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date check_in = format.parse(check_in_string);
+		Date check_out = format.parse(check_out_string);
+		
+		RezervacijaVozila rezervacijaVozila = new RezervacijaVozila();
+		rezervacijaVozila.setDatum_preuzimanja(check_in);;
+		rezervacijaVozila.setDatum_vracanja(check_out);;
+		int broj_dana = (int) Math.round((check_out.getTime() - check_in.getTime()) / (double) 86400000) + 1;
+		Grad grad_preuzimanja = gradService.findByNaziv(check_in_town);
+		Grad grad_vracanja = gradService.findByNaziv(check_out_town);
+		
+		rezervacijaVozila.setMesto_preuzimanja(grad_preuzimanja);
+		rezervacijaVozila.setMesto_vracanja(grad_vracanja);
+		rezervacijaVozila.setBroj_putnika(passengers);
+		rezervacijaVozila.setBrza(true);
+		rezervacijaVozila.setPopust(popust.getPopust());
+		rezervacijaVozila.setAktivirana(true);
+		rezervacijaVozila.setVozilo(vozilo);
+		double cena_rez = broj_dana * (vozilo.getCena_dan() * 0.01 * (100 - popust.getPopust()));
+		
+		System.out.println("[HotelController: bookRoomSpecial]: U popustu se nalaze sledece usluge: ");
+		
+		
+		rezervacijaVozila.setUkupna_cena(cena_rez);
+		rezervacijaVozila = rezervacijaVozilaService.save(rezervacijaVozila);
+		rezervacijaVozilaService.insertRezervacijaVozila(rezervacijaVozila.getId(), vozilo.getId());
+		
+		
+		
+		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);
+	}
+
+	public boolean isBrzaVozilo(Vozilo vozilo, Date check_in, Date check_out) {
+		
+		boolean result = false;
+		
+		System.out.println("[RentacarController: isBrzaVozilo]: postoje popusti za vozilo; ima ih " + vozilo.getPopusti().size() + ".");
+		for(Iterator<Popust> iteratorPopusta = vozilo.getPopusti().iterator(); iteratorPopusta.hasNext();) {
+			Popust popust = iteratorPopusta.next();
+
+			if(check_in.equals(popust.getPocetak_vazenja()) || check_in.equals(popust.getKraj_vazenja()) || check_out.equals(popust.getPocetak_vazenja()) || ((popust.getPocetak_vazenja()).after(check_in) && (popust.getPocetak_vazenja()).before(check_out)) || (check_in.after(popust.getPocetak_vazenja()) && check_in.before(popust.getKraj_vazenja())) || (check_out.after(popust.getPocetak_vazenja()) && check_out.before(popust.getKraj_vazenja()))) {
+
+				System.out.println("[RentacarController: isBrzaVozilo]: vozilo je na popustu u trazenom periodu.");
+				result = true;
+				break;
+			}else {
+				System.out.println("[RentacarController: isBrzaVozilo]: vozilo nije na popustu u trazenom periodu.");
+			}
+		}
+		
+		return result;
 	}
 }

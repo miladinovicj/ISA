@@ -151,6 +151,40 @@
 									</div>
 								</div>
 							</div>
+							
+										<div id="special_price" style="display: none; margin-top: 40px;">
+								<a id="special_price_a" onclick="javascript:clickSpecialPrice()" style="margin-top: 20px; font-size: 25px; font-weight: bold; color: #4d0066; cursor: pointer;">Special prices (click to see)</a>
+								<div id="special_price_div" style="display: none;">
+									<template id="template_special_price">
+									<div id="ubaci_special_price">
+										
+										<div class="row">
+											<div style="text-align: center; width: 100%;">
+												<span class="span_room room_name" id="naziv_autasp" style="font-size: 12pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+												<span class="span_room room_name" id="godina_proizvodnjesp" style="font-size: 10pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+												<span class="span_room room_name" id="broj_sedistasp" style="font-size: 10pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>													
+												<span class="span_room room_price" id="cena_autasp" style="margin-top: 0px; margin-bottom: 15px; float: left; font-size: 12pt"></span>
+												<span class="span_room room_rating review_rating" id="prosecna_ocenasp" style="float: left; bottom: 15px; width: 65px; margin-top: 10px; position: relative"></span>
+												<span hidden="true" class="span_room button book_button trans_200" id="button_book_carsp" style="margin-right:10%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_book_carsp" style="cursor: pointer; color: white;">book<span></span><span></span><span></span></a></span>
+											</div>
+											<!-- 
+											<div style="width: 100%;"">
+												<p id="text_discount_list" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Discount list: </p>
+												<ul id="discount_list" style="margin-left: 60px; font-size: 15px; list-style-type: disc; margin-top: 10px;">
+												</ul>
+											</div>
+											 -->
+											<div>
+												<p id="text_services_included_list" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Additional services included: </p>
+												<ul id="services_included_list" style="margin-left: 60px; font-size: 15px; list-style-type: disc; margin-top: 10px;">
+												</ul>
+											</div>
+										</div>	
+									</div>
+								</template>
+								</div>
+								<span class="span_room button book_button trans_200" id="button_back_carsp" style="display: none; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a onclick="javascript:hideSpecialPrice()" style="cursor: pointer; color: white;">back</a></span>
+							</div>
 							<!-- Hotel Info Tags -->
 							<!-- OVDE NAPRAVITI TABELU SA USLUGAMA -->
 							<div class="rentacar_info_tags" >

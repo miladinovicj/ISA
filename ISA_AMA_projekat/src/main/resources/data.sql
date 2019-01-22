@@ -8,6 +8,7 @@ delete from aviokompanija;
 
 delete from vozilo_rezervacije;
 delete from rezervacija_vozila;
+delete from vozilo_popusti;
 delete from rentacar_servis_usluge;
 delete from vozilo;
 delete from filijala;
@@ -19,6 +20,7 @@ delete from rezervacija_hotel;
 delete from hotel_usluge;
 delete from popust_usluge;
 delete from usluga;
+
 delete from soba_popusti;
 delete from popust_usluge;
 delete from usluga;
@@ -136,9 +138,11 @@ insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 9)
 
 insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (2, '2019-01-25', '2019-01-27', 30);
 insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (1, '2019-01-06', '2019-01-08', 20);
+insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (3, '2019-01-24', '2019-01-30', 25);
 
 insert into soba_popusti (soba_id, popusti_id) values (1, 1);
 insert into soba_popusti (soba_id, popusti_id) values (1, 2);
+insert into vozilo_popusti (vozilo_id, popusti_id) values (3, 3);
 
 insert into popust_usluge (popust_id, usluge_id) values (2, 1);
 insert into popust_usluge (popust_id, usluge_id) values (2, 3);
@@ -147,3 +151,6 @@ insert into popust_usluge (popust_id, usluge_id) values (1, 1);
 insert into popust_usluge (popust_id, usluge_id) values (1, 2);
 insert into popust_usluge (popust_id, usluge_id) values (1, 4);
 insert into popust_usluge (popust_id, usluge_id) values (1, 5);
+
+insert into popust_usluge (popust_id, usluge_id) values (3, 8);
+insert into popust_usluge (popust_id, usluge_id) values (3, 10);

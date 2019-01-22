@@ -24,7 +24,7 @@ $(document).ready(function()
 		}
 	});
 	
-	
+	getSpecialPrice();
     $.ajax({
         type: 'GET',
         url: 'api/rents/' + id_presented + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers,
@@ -74,6 +74,8 @@ function showRentacar(rentacar)
     	{
     		addFilijala(filijala);
     	}
+    	
+    	
 	}
     
     if(rentacar.usluge.length == 0)
@@ -91,6 +93,144 @@ function showRentacar(rentacar)
 	}
 
 }
+
+function getSpecialPrice(){
+    $.ajax({
+        type: 'GET',
+        url: 'api/rents/specialPrice/' + id_presented + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers,
+        success: function (vozila)
+		{
+            if(vozila.length != 0)
+            {
+            	document.getElementById("special_price").style.display = 'block';
+            	
+            	
+            	for(let vozilo of vozila)
+            	{
+            		addSpecialPrice(vozilo);
+            	}
+            }
+		}
+    });
+}
+
+function addSpecialPrice(vozilo)
+{
+	var temp, div, a;
+	temp = document.getElementById("template_special_price");
+	div = temp.content.querySelector("div#ubaci_special_price");
+	var token = localStorage.getItem('jwtToken');
+	if(token!=null)
+	{
+		temp.content.getElementById("button_book_carsp").removeAttribute("hidden");
+	}
+	
+	var broj_sedista_string = "Number of seats: " + vozilo.broj_sedista;
+	var god_proizvodnje_string = "The year of production: " + vozilo.godina_proizvodnje;
+	var naziv_vozila= vozilo.marka + " " + vozilo.model + " " + vozilo.naziv + " " + vozilo.tip;
+	
+	
+	temp.content.getElementById("naziv_autasp").innerHTML = naziv_vozila;
+	temp.content.getElementById("godina_proizvodnjesp").innerHTML = god_proizvodnje_string;
+	
+	temp.content.getElementById("broj_sedistasp").innerHTML = broj_sedista_string;
+	
+	temp.content.getElementById("prosecna_ocenasp").innerHTML = vozilo.prosecna_ocena;
+	
+	
+	temp.content.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+	var pronadjen_popust;
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/popust/' + vozilo.id + '/' + check_in + '/' + check_out,
+        success: function (popust)
+		{
+        	pronadjen_popust = popust;
+        	if(popust.usluge.length == 0)
+        	{
+        		var element = document.getElementById("text_services_included_list");
+        		element.innerHTML = 'There are no additional services included.';
+        	}
+        	else
+            {
+            	for (let usluga of popust.usluge) 
+        		{	
+            		document.getElementById("text_services_included_list").innerHTML = 'Additional services included:';
+            			
+        			let li = document.createElement("li");
+        			li.innerHTML =	'<span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span>';
+        			document.getElementById("services_included_list").appendChild(li);
+        		}
+         
+            }
+        	var popust_cena = vozilo.cena_dan * 0.01 * (100 - popust.popust);
+        	document.getElementById("cena_autasp").innerHTML = 'Regular price: $' + vozilo.cena_dan + '/day\r\nPrice with discount: $' + popust_cena + '/day';
+        	
+        	$(".button_book_carrsp").addClass('vozilo_id_' + vozilo.id);
+        	var elements = document.getElementsByClassName('button_book_carsp');
+        	for(element of elements)
+        	{
+        		$(element).removeClass('button_book_carsp');
+        		$(element).click(bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo.id));
+        	}
+		}
+    });
+	
+	a = document.importNode(div, true);
+    document.getElementById("special_price_div").appendChild(a);
+	
+}
+
+function bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo_id)
+{
+	return function(){
+		
+		console.log('book car special, id vozila: ' + vozilo_id + '; popust id: ' + pronadjen_popust.id);
+		$.ajax({
+			url: 'api/rents/book_car_special/' + vozilo_id + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers,
+			type: 'PUT',
+			data: JSON.stringify(pronadjen_popust),
+			contentType: 'application/json; charset=utf-8',
+			success: function(vozilo) {
+				console.log("uspesna brza rezervacija vozila sa id: " + vozilo.id);
+				alert('uspesna brza rezervacija vozila sa id: ' + vozilo.id);
+				window.location.href = 'index.html';
+			}
+		});
+	};
+	
+}
+
+function clickSpecialPrice()
+{
+	if(document.getElementById('special_price_div').style.display == 'none')
+	{
+		document.getElementById('special_price_div').style.display = 'block';
+		//document.getElementById('ubaci_auto_template').style.display = 'none';
+		//document.getElementById('additional_services').style.display = 'none';
+		document.getElementById('special_price_a').innerHTML = 'Special prices:';
+		document.getElementById('button_back_carsp').style.display = 'block';
+	}
+	else
+	{
+		document.getElementById('special_price_div').style.display = 'none';
+		//document.getElementById('ubaci_auto_template').style.display = 'block';
+		//document.getElementById('additional_services').style.display = 'block';
+		document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
+		document.getElementById('button_back_carsp').style.display = 'none';
+	}
+}
+
+function hideSpecialPrice()
+{
+	document.getElementById('special_price_div').style.display = 'none';
+	//document.getElementById('ubaci_auto_template').style.display = 'block';
+	//document.getElementById('additional_services').style.display = 'block';
+	document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
+	document.getElementById('button_back_carsp').style.display = 'none';
+}
+
 
 function addFilijala(filijala)
 {
@@ -111,7 +251,7 @@ function addFilijala(filijala)
     else
 	{
     	temp.content.getElementById("vozila_u_ponudi").innerHTML = '<a id="vozila_dugme'+filijala.id + '" style="cursor:pointer; color:white;" onclick="javascript:izlistajVozila(' + filijala.id + ')">Cars on offer</a>';
-    
+    	
 	}
     
    
@@ -130,7 +270,7 @@ function izlistajVozila(filijala_id)
 				{
 				addVozilo(vozilo);
 				}
-
+			
 		},
 		error : function(data){
 			alert('Greska prilikom vracanja filijale.');
@@ -229,3 +369,4 @@ function odjava()
 {
 	localStorage.clear();
 }
+

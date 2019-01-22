@@ -57,6 +57,9 @@ public class RezervacijaVozila {
 	@Column
 	private boolean aktivirana;
 	
+	@Column
+	private double popust;
+	
 	public RezervacijaVozila() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -157,6 +160,16 @@ public class RezervacijaVozila {
 	}
 	
 	
+	public double getPopust() {
+		return popust;
+	}
+
+
+	public void setPopust(double popust) {
+		this.popust = popust;
+	}
+
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {
