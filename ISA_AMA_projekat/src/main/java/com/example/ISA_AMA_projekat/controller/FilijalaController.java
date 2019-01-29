@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Filijala;
-import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.service.FilijalaService;
 
 @RestController

@@ -26,13 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
-import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
-import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
-import com.example.ISA_AMA_projekat.model.Soba;
-import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
