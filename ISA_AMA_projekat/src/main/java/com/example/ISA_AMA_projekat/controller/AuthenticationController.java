@@ -143,6 +143,7 @@ public class AuthenticationController {
 		
 		System.out.println("USERNAME: " + email);
 	    Korisnik user = (Korisnik) this.userDetailsService.loadUserByUsername(email);
+	    
 	    System.out.println("Korisnik: " + user.getEmail());
 		
 			return  new ResponseEntity<Korisnik>(user, HttpStatus.OK);

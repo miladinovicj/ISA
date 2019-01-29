@@ -52,6 +52,16 @@ public class RentacarServis {
 	public RentacarServis() {
 		super();
 	}
+	
+	public RentacarServis(Long id, String naziv, String adresa, String broj, String grad, String opis) {
+	
+		this.id=id;
+		this.naziv=naziv;
+		this.adresa.setUlica(adresa);
+		this.adresa.setBroj(broj);
+		this.adresa.getGrad().setNaziv(grad);
+		this.promotivni_opis=opis;
+	}
 
 
 	public Long getId() {

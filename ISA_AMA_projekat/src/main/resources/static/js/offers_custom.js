@@ -25,13 +25,39 @@ $(document).ready(function()
 		$('#reg').show();
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
+		$('#rentacarS').hide();
 		}
 	else
 		{
+		
 		$('#prijava').hide();
 		$('#reg').hide();
 		$('#odjava').show();
 		$('#profilKorisnika').show();
+		
+		$.post({
+			url: "/auth/userprofile",
+			headers: 'Authorization',
+			contentType: 'application/json',
+			data : token,
+			  
+			success: function(user) {
+				if(user.authority.authority =="ROLE_RENTADMIN")
+					{
+					var prosledi = "rentAdmin.html?id="+user.servis.id;
+					$("#linkServis").attr("href", prosledi);
+					$('#rentacarS').show();
+					
+					}
+				else
+					$('#rentacarS').hide();
+			},
+			
+			error: function() {
+				alert('Error');
+		}
+		
+				});
 		}
 	"use strict";
 
@@ -314,5 +340,10 @@ $(document).ready(function()
 				}
 			});	
 		}
+	}
+	
+	function adminRentacar(servis_id)
+	{
+		alert('Hocu da vidim svoj servis!');
 	}
 });

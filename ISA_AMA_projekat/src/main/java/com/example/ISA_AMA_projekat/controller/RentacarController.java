@@ -26,13 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
-import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
-import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
-import com.example.ISA_AMA_projekat.model.Soba;
-import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
@@ -710,5 +706,24 @@ public class RentacarController {
 		}
 		
 		return result;
+	}
+	
+	@RequestMapping(
+			value = "/admin/izmenaRent",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RentacarServis> editServis(@RequestBody RentacarServis servis)
+	{
+		RentacarServis ser = rentService.findById(servis.getId()).get();
+		Grad grad = null;
+		grad = gradService.findByNaziv(servis.getAdresa().getGrad().getNaziv());
+		if(grad==null)
+		{
+			grad=new Grad();
+			grad.setNaziv(servis.getAdresa().getGrad().getNaziv());
+			gradService.save(grad);
+		}
+		return new ResponseEntity<RentacarServis>(ser, HttpStatus.OK);
 	}
 }
