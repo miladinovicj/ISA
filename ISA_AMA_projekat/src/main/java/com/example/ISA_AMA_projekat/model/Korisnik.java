@@ -88,6 +88,8 @@ public class Korisnik implements Serializable, UserDetails
 	private Set<Poziv> pozivi = new HashSet<Poziv>();
 
 	
+	@Column(nullable=true)
+	private Integer admin_id;
 	
 	
 	public Korisnik() {
@@ -105,8 +107,7 @@ public class Korisnik implements Serializable, UserDetails
 		this.telefon=telefon;
 		this.bonuspoeni=0;
 	}
-	
-	
+
 	public Korisnik(String email, String lozinka, String ime, String prezime, String grad, String telefon)
 	{
 		this.email=email;
@@ -299,6 +300,16 @@ public class Korisnik implements Serializable, UserDetails
 
 	public void setAktiviran(boolean aktiviran) {
 		this.aktiviran = aktiviran;
+	}
+
+	
+
+	public Integer getAdmin_id() {
+		return admin_id;
+	}
+
+	public void setAdmin_id(Integer admin_id) {
+		this.admin_id = admin_id;
 	}
 
 	@Override

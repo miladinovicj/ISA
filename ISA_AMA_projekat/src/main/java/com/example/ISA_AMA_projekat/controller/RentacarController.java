@@ -707,4 +707,23 @@ public class RentacarController {
 		
 		return result;
 	}
+	
+	@RequestMapping(
+			value = "/admin/izmenaRent",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RentacarServis> editServis(@RequestBody RentacarServis servis)
+	{
+		RentacarServis ser = rentService.findById(servis.getId()).get();
+		Grad grad = null;
+		grad = gradService.findByNaziv(servis.getAdresa().getGrad().getNaziv());
+		if(grad==null)
+		{
+			grad=new Grad();
+			grad.setNaziv(servis.getAdresa().getGrad().getNaziv());
+			gradService.save(grad);
+		}
+		return new ResponseEntity<RentacarServis>(ser, HttpStatus.OK);
+	}
 }

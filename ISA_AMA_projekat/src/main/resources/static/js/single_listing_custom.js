@@ -27,6 +27,7 @@ var token = localStorage.getItem('jwtToken');
 		$('#reg').show();
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
+		$('#rentacarS').hide();
 		
 		}
 	else
@@ -35,7 +36,29 @@ var token = localStorage.getItem('jwtToken');
 		$('#reg').hide();
 		$('#odjava').show();
 		$('#profilKorisnika').show();
+		$.post({
+			url: "/auth/userprofile",
+			headers: 'Authorization',
+			contentType: 'application/json',
+			data : token,
+			  
+			success: function(user) {
+				if(user.authority.authority == 'ROLE_RENTADMIN')
+					{
+					var prosledi = "rentAdmin.html?id="+user.servis.id;
+					$("#linkServis").attr("href", prosledi);
+					$('#rentacarS').show();
+					
+					}
+				else
+					$('#rentacarS').hide();
+			},
+			
+			error: function() {
+				alert('Error');
+		}
 		
+				});
 		
 		}
 	

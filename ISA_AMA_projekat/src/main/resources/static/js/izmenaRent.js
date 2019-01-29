@@ -220,34 +220,55 @@ $(document).ready(function()
 		}
 	}
 	
+	
+	var search = window.location.search;
+	var splitted = search.split('&');
+	
+    let id = splitted[0].substring(4);
+    
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/' + id,
+        success: function (rentacar)
+		{
+            let servis=rentacar;
+            $('input[name="rent_naziv"]').val(servis.naziv);
+        	$('input[name="rent_adresa"]').val(servis.adresa.ulica);
+        	$('input[name="rent_broj"]').val(servis.adresa.broj);
+        	$('input[name="rent_grad"]').val(servis.adresa.grad.naziv);
+        	$('input[name="rent_opis"]').val(servis.promotivni_opis);
+        	
+		}
+    });
+	
+	
+	
 	$('#forma').submit(function(event) {
 		event.preventDefault();
 		let ispravno=true;
-		let email = $('input[name="email"]').val();
-		let lozinka = $('input[name="lozinka"]').val();
-		let password2 = $('input[name="lozinkaPonovo"]').val();
-		let ime = $('input[name="ime"]').val();
-		let prezime = $('input[name="prezime"]').val();
-		let grad = $('input[name="grad"]').val();
-		let telefon = $('input[name="telefon"]').val();
-		$('#validacijaEmail').text("");
+		let naziv = $('input[name="rent_naziv"]').val();
+		let adresa = $('input[name="rent_adresa"]').val();
+		let broj = $('input[name="rent_broj"]').val();
+		let grad = $('input[name="rent_grad"]').val();
+		let opis = $('input[name="rent_opis"]').val();
+		
 		$('#uspesno').text("");
 		$('#neuspesno').text("");
 		
 		
 		
-		if(!email || !lozinka || !password2 || !ime || !prezime || !telefon || !grad){
+		if(!naziv || !adresa || !grad || !opis || !broj){
 			$('#neuspesno').text('All fields must be filled!');
 			ispravno=false;
 		}
 		else
 		{
-			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ]+$/.test(ime)))
+			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ0-9 ]+$/.test(naziv)))
 			{
-			$('#validacijaIme').text("First name must contains the letters!");
+			$('#validacijaIme').text("Name must contains the letters!");
 			ispravno=false;
 			}
-			else if(!(/[A-Z]/.test( ime[0])))
+			else if(!(/[A-Z]/.test( naziv[0])))
 				{
 				$('#validacijaIme').text("First letter of name must be capital!");
 				ispravno=false;
@@ -255,20 +276,6 @@ $(document).ready(function()
 				}
 			else
 				$('#validacijaIme').text("");
-		
-			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ]+$/.test(prezime)))
-			{
-			$('#validacijaPrezime').text("Last name must contains the letters!");
-			ispravno=false;
-			}
-			else if(!(/[A-Z]/.test( prezime[0])))
-			{
-			$('#validacijaPrezime').text("First letter of last name must be capital!");
-			ispravno=false;
-			
-			}
-		else
-			$('#validacijaPrezime').text("");
 		
 			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ ]+$/.test(grad)))
 			{
@@ -283,54 +290,37 @@ $(document).ready(function()
 			}
 		else
 			$('#validacijaGrad').text("");
-			
-			if(!(/^[0-9]+$/.test(telefon)))
-			{
-			$('#validacijaTelefon').text("Field Phone number must contains only numbers!");
-			ispravno=false;
-			}
-			else
-			$('#validacijaTelefon').text("");
 		
-			if(!(lozinka==password2))
-			{
-				$('#validacijaLozinka').text("The password must be the same!");
-				
-				ispravno=false;
-			}
-			else
-				$('#validacijaLozinka').text("");
-			
-			
 			}
 		
 		if(ispravno==true)
 			{
-		$.post({
-			url: "/api/users/registruj",
-			data: JSON.stringify({email: email, lozinka: lozinka, ime: ime, prezime: prezime, grad:grad, telefon: telefon}),
-			contentType: 'application/json',
-			success: function(data) {
-				if(data==null || data==""){
-					$('#validacijaEmail').text('User with this email already exists!');
+			$.post({
+				url: "/api/rents/admin/izmenaRent",
+				data: JSON.stringify({id:id, naziv: naziv, adresa: adresa, broj: broj, grad:grad, opis: opis}),
+				contentType: 'application/json',
+				success: function(data) {
+					if(data==null || data==""){
+						$('#validacijaEmail').text('User with this email already exists!');
+					}
+					else {
+						
+						$('#uspesno').text('Rentacar successfully edited!');
+						$('#forma').hide();
+						
+									window.location.href="rentAdmin.html?"+id;
+									
+									
+						
+						
+					}
 				}
-				else {
-					//sessionStorage.setItem('ulogovan',JSON.stringify(data));
-					$('#validacijaEmail').text("");
-					$('#uspesno').text('User successfully registred! In few seconds, you will recieve email with link to confirm your registration. Enjoy in travels!');
-					$('#forma').hide();
-					
-								//window.location.href="index.html";
-								
-								
-					
-					
-				}
+			
+				
+		});
 			}
 		
 			
 	});
-			}
+			});
 	
-});
-});
