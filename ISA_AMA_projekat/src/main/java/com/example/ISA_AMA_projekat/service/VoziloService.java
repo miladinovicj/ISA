@@ -14,7 +14,7 @@ public class VoziloService {
 	@Autowired
 	VoziloRepository voziloRepository;
 	
-	public Optional<Vozilo> findById(Long id){
+	public Optional<Vozilo> findById(Integer id){
 		return voziloRepository.findById(id);
 	}
 

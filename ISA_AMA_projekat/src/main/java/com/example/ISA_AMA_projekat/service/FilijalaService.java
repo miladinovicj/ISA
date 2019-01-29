@@ -14,7 +14,7 @@ public class FilijalaService {
 	@Autowired
 	private FilijalaRepository filijalaRepository;
 	
-	public Optional<Filijala> findById(Long id)
+	public Optional<Filijala> findById(Integer id)
 	{
 		return filijalaRepository.findById(id);
 	}

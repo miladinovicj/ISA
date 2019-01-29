@@ -23,7 +23,7 @@ public class RentacarService {
 		return rentRepository.findAll();
 	}
 	
-	public Optional<RentacarServis> findById(Long id){
+	public Optional<RentacarServis> findById(Integer id){
 		return rentRepository.findById(id);
 	}
 	

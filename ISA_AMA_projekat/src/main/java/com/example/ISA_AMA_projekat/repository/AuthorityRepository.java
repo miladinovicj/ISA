@@ -9,7 +9,7 @@ import com.example.ISA_AMA_projekat.model.Authority;
 
 
 
-public interface AuthorityRepository extends JpaRepository<Authority, Long>{
+public interface AuthorityRepository extends JpaRepository<Authority, Integer>{
 	
 
 	

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 
-public interface RentacarRepository extends JpaRepository<RentacarServis, Long>{
+public interface RentacarRepository extends JpaRepository<RentacarServis, Integer>{
 
 		RentacarServis findOneByNaziv(String naziv);
 		

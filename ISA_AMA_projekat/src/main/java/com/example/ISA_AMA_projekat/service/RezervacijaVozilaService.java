@@ -16,7 +16,7 @@ public class RezervacijaVozilaService {
 		return rezervacijaVozilaRepository.save(rezervacijaVozila);
 	}
 	
-	public void insertRezervacijaVozila(Long rezervacija_id, Long vozilo_id) {
+	public void insertRezervacijaVozila(Integer rezervacija_id, Integer vozilo_id) {
 		rezervacijaVozilaRepository.insertRezervacijaVozila(rezervacija_id, vozilo_id);
 	}
 }
