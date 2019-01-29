@@ -17,6 +17,11 @@ public class GradService {
 		return gradRepository.findOneByNaziv(naziv);
 	}
 	
+	public Grad findById(Integer id)
+	{
+		return gradRepository.findOneById(id);
+	}
+	
 	public Grad save(Grad grad)
 	{
 		return gradRepository.save(grad);

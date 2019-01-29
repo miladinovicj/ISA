@@ -65,7 +65,7 @@ insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (6, 'Rezidencija Makarica', 5, 'Luksuzna vila sa 4 apartmana. Svaki apartman poseduje tv, klima uredjaj, mini bar, terasu, kupatilo. Odlican Wi-Fi signal. Prostrano dvoriste i obezbedjen parking za goste. Najupecatljiviji utisak ostavljaju ljubaznost i gostoprimljivost domacina.', 4.99);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (7, 'Sole mio', 6, 'Hotel sa tradicijom dugom 78 godina.', 4.5);
 
-insert into aviokompanija(id, adresa_id, info, max_kapacitet, naziv, ocena, opis) values (1, 7,'Najjaci popusti najjace zezanje drugari',300, 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari');
+insert into aviokompanija(id, adresa_id, opis, max_kapacitet, naziv, ocena, info) values (1, 7,'Najjaci popusti najjace zezanje drugari',300, 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari');
 
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
