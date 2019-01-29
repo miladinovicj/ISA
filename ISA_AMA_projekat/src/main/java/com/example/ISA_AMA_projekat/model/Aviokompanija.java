@@ -32,16 +32,16 @@ public class Aviokompanija implements Serializable {
 	@Column(unique = true, nullable = false)
 	private String naziv;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String opis;
 	
 	@Column(nullable = true)
 	private Double ocena;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String info;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private int maxKapacitet;
 	
 	@OneToOne

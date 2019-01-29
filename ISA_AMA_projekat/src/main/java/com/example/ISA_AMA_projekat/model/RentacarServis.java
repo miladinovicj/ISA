@@ -22,7 +22,7 @@ public class RentacarServis {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	private Long id;
+	private Integer id;
 	
 	@Column(nullable = false)
 	private String naziv;
@@ -53,7 +53,7 @@ public class RentacarServis {
 		super();
 	}
 	
-	public RentacarServis(Long id, String naziv, String adresa, String broj, String grad, String opis) {
+	public RentacarServis(Integer id, String naziv, String adresa, String broj, String grad, String opis) {
 	
 		this.id=id;
 		this.naziv=naziv;
@@ -64,11 +64,11 @@ public class RentacarServis {
 	}
 
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

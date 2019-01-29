@@ -69,7 +69,7 @@ public class RentacarController {
 			value = "/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentacarServis> getRentacarServis(@PathVariable("id") Long id)
+	public ResponseEntity<RentacarServis> getRentacarServis(@PathVariable("id") Integer id)
 	{
 		try
 		{
@@ -293,7 +293,7 @@ public class RentacarController {
 			value = "/{id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentacarServis> getHotel(@PathVariable("id") Long id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town,  @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
+	public ResponseEntity<RentacarServis> getHotel(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town,  @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
 	{
 		System.out.println("usao u metodu api/rents/{id}/checkin/checkout");
 		
@@ -445,7 +445,7 @@ public class RentacarController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Vozilo> bookCar(@PathVariable("vozilo_id") Long vozilo_id, @RequestBody RezervacijaVozila rezervacijaVozila) throws ParseException{
+	public ResponseEntity<Vozilo> bookCar(@PathVariable("vozilo_id") Integer vozilo_id, @RequestBody RezervacijaVozila rezervacijaVozila) throws ParseException{
 		
 		//RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
@@ -502,7 +502,7 @@ public class RentacarController {
 			value = "specialPrice/{id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Vozilo>> getVoziloSpecialPrice(@PathVariable("id") Long id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
+	public ResponseEntity<Collection<Vozilo>> getVoziloSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
 	{
 		System.out.println("usao u metodu api/rents/specialPrice/{id}, id: " + id + "mesto : " + check_in_town + " " + check_out_town );
 		if(passengers <= 0)
@@ -616,7 +616,7 @@ public class RentacarController {
 			value = "/popust/{vozilo_id}/{check_in}/{check_out}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Popust> getPopustVozilo(@PathVariable("vozilo_id") Long vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string) throws ParseException {
+	public ResponseEntity<Popust> getPopustVozilo(@PathVariable("vozilo_id") Integer vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string) throws ParseException {
 		System.out.println("[RentacarController: getPopust]: usao u metodu getPopust");
 		
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
@@ -648,7 +648,7 @@ public class RentacarController {
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vozilo> bookRoomSpecial(@PathVariable("vozilo_id") Long vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out_string,@PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers, @RequestBody Popust popust) throws ParseException {
+	public ResponseEntity<Vozilo> bookRoomSpecial(@PathVariable("vozilo_id") Integer vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out_string,@PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers, @RequestBody Popust popust) throws ParseException {
 		
 		
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();

@@ -47,7 +47,7 @@ public class KorisnikService implements UserDetailsService{
 		return korisnikRepository.findAll();
 	}
 	
-	public Optional<Korisnik> findById(Long id)
+	public Optional<Korisnik> findById(Integer id)
 	{
 		return korisnikRepository.findById(id);
 	}
@@ -58,7 +58,7 @@ public class KorisnikService implements UserDetailsService{
 	}
 	
 	@Transactional
-	public void updateAkt(boolean aktiviran, Long id)
+	public void updateAkt(boolean aktiviran, Integer id)
 	{
 		korisnikRepository.updateAktiviran(aktiviran, id);
 	}

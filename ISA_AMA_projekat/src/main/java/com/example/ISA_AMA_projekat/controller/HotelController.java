@@ -289,7 +289,7 @@ public class HotelController {
 	@RequestMapping(
 			value = "/save",
 			method = RequestMethod.POST,
-			consumes=MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Hotel> saveHotel(@RequestBody Hotel hotel) throws Exception{
 		

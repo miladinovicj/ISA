@@ -26,7 +26,7 @@ public class FilijalaController {
 			value = "/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Filijala> getFilijala(@PathVariable("id") Long id)
+	public ResponseEntity<Filijala> getFilijala(@PathVariable("id") Integer id)
 	{
 		try
 		{

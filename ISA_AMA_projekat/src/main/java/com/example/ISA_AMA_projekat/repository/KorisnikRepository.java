@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 
 
-public interface KorisnikRepository extends JpaRepository<Korisnik, Long>{
+public interface KorisnikRepository extends JpaRepository<Korisnik, Integer>{
 	
 	Korisnik findOneByEmail(String email);
 	
 	@Modifying
 	@Query("update Korisnik u set u.aktiviran = ?1 where u.id = ?2")
-	public void updateAktiviran(boolean aktiviran,  Long id);
+	public void updateAktiviran(boolean aktiviran,  Integer id);
 	
 }
