@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -29,7 +30,11 @@ public class Filijala {
 	@JsonManagedReference
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
 	
-
+	@OneToOne
+	@JsonBackReference
+	private RentacarServis rentacar;
+	
+	
 	public Filijala() {
 		super();
 	}
@@ -56,5 +61,17 @@ public class Filijala {
 
 	public void setVozila(Set<Vozilo> vozila) {
 		this.vozila = vozila;
-	}	
+	}
+
+	public RentacarServis getRentacar() {
+		return rentacar;
+	}
+
+	public void setRentacar(RentacarServis rentacar) {
+		this.rentacar = rentacar;
+	}
+
+	
+	
+	
 }

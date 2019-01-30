@@ -21,4 +21,9 @@ public class AddressService {
 	public Adresa save(Adresa adresa) {
 		return addressRepozitory.save(adresa);
 	}
+	
+	public void updateAdresa(String ulica, String broj, Integer grad_id, Integer id)
+	{
+		addressRepozitory.updateAdresa(ulica, broj, grad_id, id);
+	}
 }

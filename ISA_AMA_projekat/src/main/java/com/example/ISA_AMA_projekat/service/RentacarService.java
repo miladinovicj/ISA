@@ -34,5 +34,10 @@ public class RentacarService {
 	public List<RentacarServis> search(String name_location) {
 		return rentRepository.search(name_location);
 	}
+	
+	public void updateServis(String naziv, Integer adresa_id, String promotivni_opis, Integer id)
+	{
+		 rentRepository.updateServis(naziv, adresa_id, promotivni_opis, id);
+	}
 
 }

@@ -16,6 +16,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class RentacarServis {
 
@@ -35,6 +38,7 @@ public class RentacarServis {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "rentacar_id", referencedColumnName = "id")
+	@JsonManagedReference
 	private Set<Filijala> filijale;
 	
 	
@@ -57,6 +61,7 @@ public class RentacarServis {
 	
 		this.id=id;
 		this.naziv=naziv;
+		this.adresa = new Adresa();
 		this.adresa.setUlica(adresa);
 		this.adresa.setBroj(broj);
 		this.adresa.getGrad().setNaziv(grad);

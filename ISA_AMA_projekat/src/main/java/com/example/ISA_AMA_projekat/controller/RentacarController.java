@@ -21,15 +21,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
 import com.example.ISA_AMA_projekat.model.Vozilo;
+import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
 import com.example.ISA_AMA_projekat.service.RezervacijaVozilaService;
@@ -49,6 +52,9 @@ public class RentacarController {
 	private GradService gradService; 
 	
 	@Autowired
+	private AddressService addressService; 
+	
+	@Autowired
 	private RezervacijaVozilaService rezervacijaVozilaService;
 	
 	@RequestMapping(
@@ -66,7 +72,7 @@ public class RentacarController {
 	}
 	
 	@RequestMapping(
-			value = "/{id}",
+			value = "admin/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentacarServis> getRentacarServis(@PathVariable("id") Integer id)
@@ -709,21 +715,43 @@ public class RentacarController {
 	}
 	
 	@RequestMapping(
-			value = "/admin/izmenaRent",
+			value = "/admin/izmenaRent/{id}/{naziv}/{ulica}/{broj}/{grad}/{opis}",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentacarServis> editServis(@RequestBody RentacarServis servis)
+	public RentacarServis editServis(@PathVariable("id") Integer id, @PathVariable("naziv") String naziv,
+			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("opis") String opis)
 	{
-		RentacarServis ser = rentService.findById(servis.getId()).get();
+		System.out.println("[RentacarControler]: editServis");
+		RentacarServis ser = rentService.findById(id).get();
+		System.out.println("[RentacarControler]: servis_id: " + ser.getId());
 		Grad grad = null;
-		grad = gradService.findByNaziv(servis.getAdresa().getGrad().getNaziv());
+		grad = gradService.findByNaziv(grad_str);
 		if(grad==null)
 		{
 			grad=new Grad();
-			grad.setNaziv(servis.getAdresa().getGrad().getNaziv());
+			grad.setNaziv(grad_str);
 			gradService.save(grad);
 		}
-		return new ResponseEntity<RentacarServis>(ser, HttpStatus.OK);
+		System.out.println("[RentacarControler]: grad: " + grad.getNaziv());
+		Adresa adr = null;
+		List<Adresa> adrese = addressService.checkAddress(grad.getId(), ulica, broj);
+		
+		if(adrese.isEmpty())
+		{
+			adr = new Adresa();
+			adr.setGrad(grad);
+			adr.setUlica(ulica);
+			adr.setBroj(broj);
+			addressService.save(adr);
+		}
+		else
+		{
+			adr = adrese.get(0);
+			addressService.updateAdresa(ulica, broj, grad.getId(), adr.getId());
+		}
+		System.out.println("[RentacarControler]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
+		rentService.updateServis(naziv, adr.getId(), opis, ser.getId());
+		return ser;
 	}
 }

@@ -44,7 +44,7 @@ $(document).ready(function()
 			success: function(user) {
 				if(user.authority.authority =="ROLE_RENTADMIN")
 					{
-					var prosledi = "rentAdmin.html?id="+user.servis.id;
+					var prosledi = "rentAdmin.html?id="+user.admin_id;
 					$("#linkServis").attr("href", prosledi);
 					$('#rentacarS').show();
 					

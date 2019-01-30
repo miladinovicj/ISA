@@ -155,6 +155,6 @@ insert into popust_usluge (popust_id, usluge_id) values (1, 5);
 insert into popust_usluge (popust_id, usluge_id) values (3, 8);
 insert into popust_usluge (popust_id, usluge_id) values (3, 10);
 
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, servis_id) values (2, 'mojmejl@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Endzi', 'Jeremic', 1, '062522006', 0, true, 1);
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (2, 'mojmejl@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Endzi', 'Jeremic', 1, '062522006', 0, true, 1);
 insert into AUTHORITY (id, name) values (2, 'ROLE_RENTADMIN');
 insert into user_authority (user_id, authority_id) values (2, 2);

@@ -33,6 +33,13 @@ public class Adresa {
 		super();
 	}
 
+	public Adresa(String ulica, String broj, String grad) {
+		this.ulica=ulica;
+		this.broj=broj;
+		this.grad= new Grad();
+		this.grad.setNaziv(grad);
+	}
+
 	public Integer getId() {
 		return id;
 	}
