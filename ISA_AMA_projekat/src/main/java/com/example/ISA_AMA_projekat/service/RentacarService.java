@@ -34,5 +34,9 @@ public class RentacarService {
 	public List<RentacarServis> search(String name_location) {
 		return rentRepository.search(name_location);
 	}
+	
+	public void updateAdmin(Integer rentalID, Integer adminID) {
+		rentRepository.updateAdmin(rentalID, adminID);
+	}
 
 }

@@ -37,6 +37,9 @@ public class Hotel {
 	@Column
 	private double prosecna_ocena;
 	
+	@Column(nullable = true)
+	private Integer id_admin;
+	
 	@ManyToMany
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
@@ -113,6 +116,15 @@ public class Hotel {
 
 	public void setOcene(Set<Rating> ocene) {
 		this.ocene = ocene;
+	}
+	
+
+	public Integer getId_admin() {
+		return id_admin;
+	}
+
+	public void setId_admin(Integer id_admin) {
+		this.id_admin = id_admin;
 	}
 
 	@Override

@@ -17,6 +17,10 @@ public class AuthorityService {
 		return authorityRepository.save(authority);
 	}
 	
+	public Authority findByName(String name) {
+		return authorityRepository.findOneByName(name);
+	}
+	
 	
 
 }

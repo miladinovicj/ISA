@@ -222,62 +222,137 @@
 							<button id="button_rental" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:newRental()">New car rental</button>
 						</div>
 						
-						<div style="margin-bottom: 60px; display: none;" id="div_new">
-							<form method="get" id="add_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-								<div style="width: 49%; margin-top: 5%" class="search_item">
+						<div style="margin-bottom: 60px; display: none; margin-bottom: 80px;" id="div_new">
+							<form action="#" id="add_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div style="height: 121px; width: 49%; margin-top: 5%" class="search_item">
 									<div style="margin: 0; color: #31124A;" >Name: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_name" class="search_input" required="required">
+									<p id="error_new_name" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
 									<br>
 								</div>
 					
-								<div style="width: 49%;  margin-top: 5%" class="search_item">
+								<div style="height: 121px; width: 49%;  margin-top: 5%" class="search_item">
 									<div style="margin: 0; color: #31124A;">City: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_city" class="search_input" required="required">
+									<p id="error_new_city" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
 									<br>
 								</div>
 								
-								<div style="width: 49%; margin-top: 5%" class="search_item">
+								<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #31124A;" >Street: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_street" class="search_input" required="required">
+									<p id="error_new_street" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
 									<br>
 								</div>
 					
-								<div style="width: 49%;  margin-top: 5%" class="search_item">
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #31124A;">Number in street: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_street_number" class="search_input" required="required">
 									<br>
 								</div>
 								
-								<div style="width: 100%; margin-top: 3%">
+								<div style="width: 100%; margin-top: 0%">
 									<a href="https://www.latlong.net/convert-address-to-lat-long.html">Click here to calculate latitude and longitude from address</a>
 								</div>
 								
-								<div style="width: 49%; margin-top: 0%" class="search_item">
+								<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #31124A;" >Latitude: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_latitude" class="search_input" required="required">
+									<p id="error_new_latitude" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
 									<br>
 								</div>
 				
-								<div style="width: 49%;  margin-top: 0%" class="search_item">
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #31124A;">Longitude: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_longitude" class="search_input" required="required">
+									<p id="error_new_longitude" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
 									<br>
 								</div>
 					
-								<div style="width: 74%; margin-top: 5%" class="search_item">
+								<div style="width: 74%; margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #31124A;">Description: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_description" class="search_input" required="required">
 									<br>
 								</div>
 								
-								<button id="button_add" style="width: 24%; float: right;" class="button search_button" onclick="javascript:add()">Add airline</button>
+								<!--  onclick="javascript:add()" -->
+								<input id="button_add" value="Add airline" type="submit" style="width: 24%; float: right; margin-top: 0%" class="button search_button">
 							</form>
+							<button id="button_back" style="width: 24%; float: right; margin-bottom: 15px; margin-top: 10px;" class="button search_button" onclick="javascript:back()">Back</button>
+						</div>
+						
+					</div>
+					
+					<div style="width: 100%; margin-top: 25px;">
+						<div id="div_buttons_admin">
+							<button id="button_airline_admin" style="margin-right: 3%; margin-left: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newAirlineAdmin()">New airline administrator</button>
+							<button id="button_hotel_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newHotelAdmin()">New hotel administrator</button>
+							<button id="button_rental_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newRentalAdmin()">New car rental administrator</button>
+						</div>
+						<div style="margin-top: 5%">
+							<p id="no_one" style="display: none; font-size: 20px; color: #31124A; height: 35px;">There are no airlines to add their administrators.</p>
+							<button id="button_back_admin2" style="display: none; width: 24%; float: right; margin-bottom: 10px;" class="button search_button" onclick="javascript:backAdmin()">Back</button>
+						</div>
+						<div style="margin-bottom: 60px; display: none;" id="div_new_admin">
+							<form action="#" id="add_form_admin" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div style="height: 121px; width: 49%; margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >First name: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="first_name_admin" class="search_input" required="required">
+									<p id="error_name" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">First name must contains only the letters.</p>
+									<br>
+								</div>
+								
+					
+								<div style="height: 121px; width: 49%;  margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Last name: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="last_name_admin" class="search_input" required="required">
+									<p id="error_last_name" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Last name must contains only the letters.</p>
+									<br>
+								</div>
+								
+								<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Email: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="email_admin" class="search_input" required="required">
+									<p id="error_email" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">User with this email already exists.</p>
+									<br>
+								</div>
+					
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Password: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="pass_admin" class="search_input" required="required">
+									<br>
+								</div>
+								
+								<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >City: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="city_admin" class="search_input" required="required">
+									<p id="error_city" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field City must contains only the letters.</p>
+									<br>
+								</div>
+				
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Phone number: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="phone_admin" class="search_input" required="required">
+									<p id="error_phone" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field Phone number must contains only numbers.</p>
+									<br>
+								</div>
+								
+								<div style="width: 100%;  margin-top: 0%" class="search_item">
+									<div id="admin_id" style="margin: 0; color: #31124A;">Airlines: </div>
+									<select name="admin_id" style="height: 46px; width: 100%; border-color: #31124A; border-style: solid; border-width: 2px;">
+									</select>
+									<br>
+								  </div>
+								
+								<input id="button_add_admin" value="Add airline administrator" type="submit" style="width: 30%; margin-left: 70%;" class="button search_button">
+							</form>
+							<button id="button_back_admin" style="width: 24%; float: right; margin-bottom: 10px;" class="button search_button" onclick="javascript:backAdmin()">Back</button>
 						</div>
 						
 					</div>
 
 						<!-- Zahtevi na cekanju -->
-						<h1 style="margin-bottom: 5%; margin-top: 5%;" class="hotel_title">Pending requests</h1>
+						<h1 style="margin-bottom: 5%; margin-top: 12%;" class="hotel_title">Pending requests</h1>
 						<div class="review">
 							<div class="row">
 								<div class="col-lg-1">

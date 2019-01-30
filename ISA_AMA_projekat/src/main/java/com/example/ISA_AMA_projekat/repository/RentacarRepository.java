@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 
@@ -17,6 +18,11 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		List<RentacarServis> search(String name_location);
 		
 		@Modifying
-		@Query("update RentacarServis rs set rs.naziv = ?1 and rs.adresa_id=?2 and rs.promotivni_opis=?3 where u.id = ?4")
-		public void updateAktiviran(String naziv, Long adresa_id, String promotivni_opis,  Long id);
+		@Query(value = "update RentacarServis rs set rs.naziv = ?1, rs.adresa_id=?2, rs.promotivni_opis=?3 where rs.id = ?4", nativeQuery = true)
+		public void updateAktiviran(String naziv, Integer adresa_id, String promotivni_opis, Integer id);
+		
+		@Modifying
+		@Transactional
+		@Query(value = "update RentacarServis rs set rs.id_admin = ?2 where rs.id = ?1", nativeQuery = true)
+		public void updateAdmin(Integer rentalID, Integer adminID);
 }

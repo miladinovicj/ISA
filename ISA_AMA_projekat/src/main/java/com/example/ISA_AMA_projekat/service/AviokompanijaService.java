@@ -1,6 +1,6 @@
 package com.example.ISA_AMA_projekat.service;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,15 @@ public class AviokompanijaService
 		return avioRepo.findOneByNaziv(naziv);
 	}
 	
-	public List<Aviokompanija> findAll() {
+	public Collection<Aviokompanija> findAll() {
 		return avioRepo.findAll();
 	}
 	
 	public Aviokompanija save(Aviokompanija aviokompanija) {
 		return avioRepo.save(aviokompanija);
+	}
+	
+	public void updateAdmin(Integer avioID, Integer adminID) {
+		avioRepo.updateAdmin(avioID, adminID);
 	}
 }

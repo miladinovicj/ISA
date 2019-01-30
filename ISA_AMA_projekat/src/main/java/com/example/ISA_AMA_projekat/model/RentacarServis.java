@@ -33,6 +33,9 @@ public class RentacarServis {
 	@Column
 	private String promotivni_opis;
 	
+	@Column(nullable = true)
+	private Integer id_admin;
+	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "rentacar_id", referencedColumnName = "id")
 	private Set<Filijala> filijale;
@@ -128,6 +131,15 @@ public class RentacarServis {
 	public void setOcene(Set<Rating> ocene) {
 		this.ocene = ocene;
 	}
+	
+	public Integer getId_admin() {
+		return id_admin;
+	}
+
+	public void setId_admin(Integer id_admin) {
+		this.id_admin = id_admin;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {

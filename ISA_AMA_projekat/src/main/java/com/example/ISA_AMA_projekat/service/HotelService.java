@@ -34,4 +34,8 @@ public class HotelService {
 	public List<Hotel> search(String name_location) {
 		return hotelRepository.search(name_location);
 	}
+	
+	public void updateAdmin(Integer hotelID, Integer adminID) {
+		hotelRepository.updateAdmin(hotelID, adminID);
+	}
 }

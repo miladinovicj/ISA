@@ -60,6 +60,25 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
+			value = "/all_admin",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Hotel>> getHotelsForAdmin(){
+		
+		Collection<Hotel> hotels = hotelService.findAll();
+		Collection<Hotel> result = new ArrayList<Hotel>();
+		
+		for(Iterator<Hotel> iteratorHotel = hotels.iterator(); iteratorHotel.hasNext();) {
+			Hotel hotel = iteratorHotel.next();
+			if(hotel.getId_admin() == null) {
+				result.add(hotel);
+			}
+		}
+		
+		return new ResponseEntity<Collection<Hotel>>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
 			value = "/search/{name_location}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)

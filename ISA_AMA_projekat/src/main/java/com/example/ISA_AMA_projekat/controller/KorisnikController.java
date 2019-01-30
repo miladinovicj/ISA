@@ -18,12 +18,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Authority;
+import com.example.ISA_AMA_projekat.model.Aviokompanija;
 import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
+import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.service.AuthorityService;
+import com.example.ISA_AMA_projekat.service.AviokompanijaService;
 import com.example.ISA_AMA_projekat.service.EmailService;
 import com.example.ISA_AMA_projekat.service.GradService;
+import com.example.ISA_AMA_projekat.service.HotelService;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
+import com.example.ISA_AMA_projekat.service.RentacarService;
 
 
 @RestController
@@ -43,12 +49,21 @@ public class KorisnikController {
 	private EmailService emailService;
 	
 	@Autowired
+	private AviokompanijaService aviokompanijaService;
+	
+	@Autowired
+	private HotelService hotelService;
+	
+	@Autowired
+	private RentacarService rentacarService;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@RequestMapping(
 			value = "/registruj",
 			method = RequestMethod.POST,
-			consumes=MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Korisnik> saveKorisnik(@RequestBody Korisnik korisnik)
 	{
@@ -63,7 +78,7 @@ public class KorisnikController {
 		{
 			
 			Grad grad = gradService.findByNaziv(korisnik.getGrad().getNaziv());
-		System.out.println("KORISNIK " + korisnik.getEmail() + " " + korisnik.getLozinka() + " " + korisnik.getIme() + " " + korisnik.getPrezime() + " " +
+			System.out.println("KORISNIK " + korisnik.getEmail() + " " + korisnik.getLozinka() + " " + korisnik.getIme() + " " + korisnik.getPrezime() + " " +
 				korisnik.getGrad().getNaziv() + " " + korisnik.getTelefon());
 		
 		String poslatMejl= signUpAsync(korisnik);
@@ -135,10 +150,16 @@ public class KorisnikController {
 		else
 		{
 			potvrda.setAktiviran(true);
-			Authority uloga = new Authority();
-			uloga.setName("ROLE_USER");
+			Authority uloga = null;
+			uloga = authorityService.findByName("ROLE_USER");
+			
+			if(uloga == null) {
+				uloga = new Authority();
+				uloga.setName("ROLE_USER");
+				authorityService.save(uloga);
+			}
+			
 			potvrda.setAuthority(uloga);
-			authorityService.save(uloga);
 			//authorityService.updateUserAuthority(potvrda.getId(), uloga.getId());
 			korisnikService.updateAkt(true, potvrda.getId());
 			response.sendRedirect("http://localhost:8080/prijava.html");
@@ -153,5 +174,107 @@ public class KorisnikController {
 	public Korisnik user(Principal user) {
 		System.out.println("USER NAME: " + user.getName());
 		return this.korisnikService.findByEmail(user.getName());
+	}
+	
+	@RequestMapping(
+			value = "/registruj_admina/{uloga}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Korisnik> registerAdmin(@RequestBody Korisnik korisnik, @PathVariable("uloga") Integer uloga){
+		
+		Korisnik postoji = korisnikService.findByEmail(korisnik.getEmail());
+		
+		if(postoji!=null) {
+			System.out.println("[KorisnikController: registerAdmin] korisnik sa ovim mejlom vec postoji");
+			return null;
+			
+		}else {
+			
+			Grad grad = gradService.findByNaziv(korisnik.getGrad().getNaziv());
+			
+			if(grad == null){
+				grad = new Grad();
+				grad.setNaziv(korisnik.getGrad().getNaziv());
+				grad = gradService.save(grad);
+				System.out.println("[KorisnikController: registerAdmin] grad nije postojao; sad ima id: " + grad.getId());
+			}else {
+				System.out.println("[KorisnikController: registerAdmin] grad je postojao; ima id: " + grad.getId());
+			}
+			
+			System.out.println("[KorisnikController: registerAdmin] korisnik: " + korisnik.getEmail() + " " + korisnik.getLozinka() + " " + korisnik.getIme() + " " + korisnik.getPrezime() + " " +
+				korisnik.getGrad().getNaziv() + " " + korisnik.getTelefon());
+		
+			
+			Korisnik novi_korisnik = new Korisnik();
+			novi_korisnik.setEmail(korisnik.getEmail());
+			novi_korisnik.setLozinka(passwordEncoder.encode(korisnik.getLozinka()));
+			
+			novi_korisnik.setIme(korisnik.getIme());
+			novi_korisnik.setPrezime(korisnik.getPrezime());
+			
+			novi_korisnik.setTelefon(korisnik.getTelefon());
+			novi_korisnik.setGrad(grad);
+			novi_korisnik.setBonus_poeni(0);
+			
+			novi_korisnik.setAdmin_id(korisnik.getAdmin_id());
+			novi_korisnik.setAktiviran(true);
+
+			Authority auth = null;
+			if(uloga == 1) {
+				auth = authorityService.findByName("ROLE_AVIOADMIN");
+				
+				if(auth == null) {
+					auth = new Authority();
+					auth.setName("ROLE_AVIOADMIN");
+					authorityService.save(auth);
+				}
+				
+			}else if(uloga == 2) {
+				auth = authorityService.findByName("ROLE_HOTELADMIN");
+				
+				if(auth == null) {
+					auth = new Authority();
+					auth.setName("ROLE_HOTELADMIN");
+					authorityService.save(auth);
+				}
+				
+			}else {
+				auth = authorityService.findByName("ROLE_RENTADMIN");
+				
+				if(auth == null) {
+					auth = new Authority();
+					auth.setName("ROLE_RENTADMIN");
+					authorityService.save(auth);
+				}
+			}
+			
+			novi_korisnik.setAuthority(auth);
+			novi_korisnik = korisnikService.save(novi_korisnik);
+			
+			if(uloga == 1) {
+
+				Aviokompanija avio = aviokompanijaService.findById(korisnik.getAdmin_id()).get();
+				avio.setId_admin(novi_korisnik.getId());
+				aviokompanijaService.updateAdmin(avio.getId(), novi_korisnik.getId());
+				
+			}else if(uloga == 2) {
+				
+				Hotel hotel = hotelService.findById(korisnik.getAdmin_id()).get();
+				hotel.setId_admin(novi_korisnik.getId());
+				hotelService.updateAdmin(hotel.getId(), novi_korisnik.getId());
+				
+			}else {
+				
+				RentacarServis rental = rentacarService.findById(korisnik.getAdmin_id()).get();
+				rental.setId_admin(novi_korisnik.getId());
+				rentacarService.updateAdmin(rental.getId(), novi_korisnik.getId());
+				
+			}
+			
+			System.out.println("[KorisnikController: registerAdmin] admin uspesno registrovan, id: " + novi_korisnik.getId());
+			return new ResponseEntity<Korisnik>(novi_korisnik, HttpStatus.CREATED);
+		
+		}
 	}
 }

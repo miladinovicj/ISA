@@ -66,6 +66,23 @@ public class RentacarController {
 	}
 	
 	@RequestMapping(
+			value = "/all_admin",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<RentacarServis>> getRentacarServisForAdmin(){
+		
+		Collection<RentacarServis> rents = rentService.findAll();
+		Collection<RentacarServis> result = new ArrayList<RentacarServis>();
+		
+		for (RentacarServis rs : rents){
+			if(rs.getId_admin() == null) {
+				result.add(rs);
+			}
+		}
+		return new ResponseEntity<Collection<RentacarServis>>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
 			value = "/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
