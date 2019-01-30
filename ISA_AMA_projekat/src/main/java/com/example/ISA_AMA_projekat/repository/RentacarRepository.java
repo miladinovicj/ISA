@@ -14,8 +14,10 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		RentacarServis findOneByNaziv(String naziv);
 		
 		@Modifying
+		@Transactional
 		@Query("select rentacar_servis from RentacarServis rentacar_servis where rentacar_servis.adresa.grad.naziv like ?1 or rentacar_servis.adresa.ulica like ?1 or rentacar_servis.adresa.broj like ?1 or rentacar_servis.naziv like ?1")
 		List<RentacarServis> search(String name_location);
+		
 		
 		@Modifying
 		@Query(value = "update RentacarServis rs set rs.naziv = ?1, rs.adresa_id=?2, rs.promotivni_opis=?3 where rs.id = ?4", nativeQuery = true)
@@ -25,4 +27,8 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		@Transactional
 		@Query(value = "update RentacarServis rs set rs.id_admin = ?2 where rs.id = ?1", nativeQuery = true)
 		public void updateAdmin(Integer rentalID, Integer adminID);
+
+		@Transactional
+		@Query("update RentacarServis rs set rs.naziv = ?1 , rs.adresa.id = ?2 , rs.promotivni_opis = ?3 where rs.id = ?4")
+		public void updateServis(String naziv, Integer adresa_id, String promotivni_opis,  Integer id);
 }

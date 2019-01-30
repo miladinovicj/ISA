@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Edit Rentacar</title>
+<title>Add Car</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
@@ -102,9 +102,9 @@
 	<!-- Home -->
 
 	<div class="home">
-		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/rentacar_background.jpg"></div>
+		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/car_wall.jpg"></div>
 		<div class="home_content">
-			<div class="home_title">Edit rentacar</div>
+			<div class="home_title">Add car</div>
 		</div>
 	</div>
 
@@ -124,12 +124,15 @@
 						
 						<form action="# "id="forma" class="contact_form text-center">
 							<table class="mojaTabela">
-								<tr><td><input type="text" style="width:60%;" id="contact_form_name" placeholder="Name" class="contact_form_name input_field" name="rent_naziv"></td><td id="validacijaNaziv" class="contact_form_name"  style="border-bottom: 0px transparent; font-size:11px; color: white;">&nbsp;</td></tr>
-								<tr><td><input type="text" style="width:60%;" placeholder="Address" class="contact_form_name input_field" name="rent_adresa"></td></tr>
-								<tr><td><input type="text" style="width:60%;" placeholder="Adress number" class="contact_form_name input_field" name="rent_broj"></td></tr>
-								<tr><td><input type="text" style="width:60%;" id="contact_form_name" class="contact_form_name input_field" name="rent_grad" placeholder="City"></td><td id="validacijaGrad" class="contact_form_name"  style="border-bottom: 0px transparent; font-size:11px; color: white;"></td></tr>
-								<tr><td><input type="text" style="width:80%;" placeholder="Promotional description" class="contact_form_name input_field"  name="rent_opis"></td></tr>
-								<tr><td colspan="2" align="center"><input id="form_submit_button" type="submit" class="form_submit_button button trans_200" value="Confirm"></td></tr>
+								<tr><td><select style="width:60%; background-color:#D6819D;" class="contact_form_name input_field" id="filijale_lista"></select></td></tr>
+								<tr><td><input type="text" style="width:60%;" placeholder="Name" class="contact_form_name input_field" name="naziv_auta"></td><td id="validacijaNaziv" class="contact_form_name"  style="border-bottom: 0px transparent; font-size:11px; color: white;"></td></tr>
+								<tr><td><input type="text" style="width:60%;" placeholder="Car brand" class="contact_form_name input_field" name="marka_auta"></td><td id="validacijaMarka" class="contact_form_name"  style="border-bottom: 0px transparent; font-size:11px; color: white;"></td></tr>
+								<tr><td><input type="text" style="width:60%;" placeholder="Model" class="contact_form_name input_field" name="model_auta"></td></tr>
+								<tr><td><input type="number" style="width:60%;" placeholder="Year of production" class="contact_form_name input_field" name="godina_auta"></td></tr>
+								<tr><td><input type="number" style="width:60%;" placeholder="Number of seats" class="contact_form_name input_field" name="sedista_auta"></td></tr>
+								<tr><td><input type="text" style="width:60%;" placeholder="Type" class="contact_form_name input_field" name="tip_auta"></td></tr>
+								<tr><td><input type="number" style="width:60%;" id="contact_form_name" class="contact_form_name input_field" name="cena_auta" placeholder="Cost"></td></tr>
+								<tr><td colspan="2" align="center"><input id="form_submit_button" type="submit" class="form_submit_button button trans_200" value="Add"></td></tr>
 	
 							</table>
 						</form>
@@ -329,7 +332,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="plugins/easing/easing.js"></script>
 <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
 <script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="js/izmenaRent.js"></script>
+<script src="js/dodajVozilo.js"></script>
 
 </body>
 

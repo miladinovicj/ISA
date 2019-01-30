@@ -7,7 +7,7 @@ $(document).ready(function()
     
 	$.ajax({
         type: 'GET',
-        url: 'api/rents/' + id,
+        url: 'api/rents/admin/' + id,
         success: function (rentacar)
 		{
             longitude = rentacar.adresa.longitude;
@@ -27,6 +27,13 @@ function showRentacar(rentacar)
 	 $('#rentacar_info_text').text(rentacar.promotivni_opis);
 	 var idiNa = "izmenaRent.html?id="+rentacar.id;
 	 $('#dugmeIzmena').attr("href", idiNa);
+	 var dodajFil = "dodajFilijalu.html?id="+rentacar.id;
+	 $('#dugmeFil').attr("href", dodajFil);
+	 
+	 var dodajVozilo = "dodajVozilo.html?id="+rentacar.id;
+	 $('#dugmeVozilo').attr("href", dodajVozilo);
+	 
+	 
 	 $('#adresa_rentacar').text(rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv);
 	    
 	    if(rentacar.filijale == 0)
@@ -38,7 +45,7 @@ function showRentacar(rentacar)
 	    	$("#text_no_filijale").text("Branches:");
 	    	for (let filijala of rentacar.filijale) 
 	    	{
-	    		addFilijala(filijala);
+	    		addFilijala(rentacar, filijala);
 	    	}
 	    	
 	    	
@@ -59,7 +66,7 @@ function showRentacar(rentacar)
 		}
 }
 
-function addFilijala(filijala)
+function addFilijala(rentacar, filijala)
 {
 	var temp, div, a;
 	temp = document.getElementById("template_filijala");
@@ -67,7 +74,6 @@ function addFilijala(filijala)
 	
 	
 	temp.content.getElementById("adresa_filijale").innerHTML =  filijala.adresa.ulica + ' ' + filijala.adresa.broj + ', ' + filijala.adresa.grad.naziv; ;
-	
 	
     if(filijala.vozila.length == 0)
 	{
@@ -77,16 +83,17 @@ function addFilijala(filijala)
 	}
     else
 	{
-    	temp.content.getElementById("vozila_u_ponudi").innerHTML = '<a id="vozila_dugme'+filijala.id + '" style="cursor:pointer; color:white;" onclick="javascript:izlistajVozila(' + filijala.id + ')">Cars on offer</a>';
+    	temp.content.getElementById("vozila_u_ponudi").innerHTML = '<a id="vozila_dugme'+filijala.id + '" style="cursor:pointer; color:white;" onclick="javascript:izlistajVozila(' + filijala.id + ',' + rentacar.id + ')">Cars on offer</a>';
     	
 	}
     
-   
+    temp.content.getElementById("izmena_filijale").innerHTML = '<a style="cursor:pointer; color:white;" href="izmenaFil.html?idr=' + rentacar.id + '&id=' + filijala.id + '">Edit branch</a>'
+	
     a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
 }
 
-function izlistajVozila(filijala_id)
+function izlistajVozila(filijala_id, rentacar_id)
 {
 	$("#vozila_dugme" + filijala_id).hide();
 	$.get({
@@ -96,7 +103,7 @@ function izlistajVozila(filijala_id)
 			for(let vozilo of filijala.vozila)
 				{
 				if(vozilo.zauzeto==false)
-					addVozilo(vozilo);
+					addVozilo(vozilo, rentacar_id);
 				}
 			
 		},
@@ -108,7 +115,7 @@ function izlistajVozila(filijala_id)
 
 }
 
-function addVozilo(car)
+function addVozilo(car, rentacar_id)
 {
 	var temp, div, a;
 	temp = document.getElementById("template_auto");
@@ -124,6 +131,8 @@ function addVozilo(car)
 	temp.content.getElementById("broj_sedista").innerHTML = broj_sedista_string;
 	temp.content.getElementById("cena_auta").innerHTML = '$' + car.cena_dan + '/day';
 	temp.content.getElementById("prosecna_ocena").innerHTML = car.prosecna_ocena;
+	 temp.content.getElementById("izmena_auta").innerHTML = '<a style="cursor:pointer; color:white;" href="izmenaAuta.html?idr=' + rentacar_id + '&id=' + car.id + '">Edit car</a>'
+		
 	a = document.importNode(div, true);
     document.getElementById("ubaci_auto_template").appendChild(a);
     

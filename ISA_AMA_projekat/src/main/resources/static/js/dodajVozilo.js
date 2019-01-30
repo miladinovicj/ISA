@@ -225,18 +225,18 @@ $(document).ready(function()
 	var splitted = search.split('&');
 	
     let id = splitted[0].substring(4);
-    
-	$.ajax({
+	
+    $.ajax({
         type: 'GET',
-        url: 'api/rents/admin/' + id,
+        url: '/api/rents/admin/' + id,
         success: function (rentacar)
 		{
             let servis=rentacar;
-            $('input[name="rent_naziv"]').val(servis.naziv);
-        	$('input[name="rent_adresa"]').val(servis.adresa.ulica);
-        	$('input[name="rent_broj"]').val(servis.adresa.broj);
-        	$('input[name="rent_grad"]').val(servis.adresa.grad.naziv);
-        	$('input[name="rent_opis"]').val(servis.promotivni_opis);
+            for(let filijala of servis.filijale)
+            	{
+            	var opcija='<option value="' + filijala.id + '">' + filijala.adresa.ulica + ' ' + filijala.adresa.broj + ' ' + filijala.adresa.grad.naziv + '</option>';
+            	$("#filijale_lista").append(opcija);
+            	}
         	
 		}
     });
@@ -246,50 +246,52 @@ $(document).ready(function()
 	$('#forma').submit(function(event) {
 		event.preventDefault();
 		let ispravno=true;
-		let naziv = $('input[name="rent_naziv"]').val();
-		let ulica = $('input[name="rent_adresa"]').val();
-		let broj = $('input[name="rent_broj"]').val();
-		let grad = $('input[name="rent_grad"]').val();
-		let opis = $('input[name="rent_opis"]').val();
-		
+		let filijala = $("#filijale_lista").val();
+		let naziv = $('input[name="naziv_auta"]').val();
+    	let marka = $('input[name="marka_auta"]').val();
+    	let model = $('input[name="model_auta"]').val();
+    	let godina = $('input[name="godina_auta"]').val();
+    	let sedista = $('input[name="sedista_auta"]').val();
+    	let tip = $('input[name="tip_auta"]').val();
+    	let cena = $('input[name="cena_auta"]').val();
+    	
 		$('#uspesno').text("");
 		$('#neuspesno').text("");
 		
-		if(!naziv || !ulica || !grad || !opis || !broj){
+		if(!naziv || !marka || !model || !godina || !sedista || !tip || !cena || !filijala){
 			$('#neuspesno').text('All fields must be filled!');
 			ispravno=false;
 		}
 		else
 		{
-			if(!(/[A-Z]/.test( naziv[0])))
-				{
-				$('#validacijaNaziv').text("First letter of name must be capital!");
-				ispravno=false;
-				
-				}
-			else
-				$('#validacijaNaziv').text("");
+			
 		
-			if(!(/^[a-zA-ZćĆčČšŠđĐžŽ ]+$/.test(grad)))
+			if(!(/[A-Z]/.test( naziv[0])))
 			{
-			$('#validacijaGrad').text("Field City must contains the letters!");
-			ispravno=false;
-			}
-			else if(!(/[A-Z]/.test( grad[0])))
-			{
-			$('#validacijaGrad').text("First letter of the city's name must be capital!");
+			$('#validacijaNaziv').text("First letter of the name must be capital!");
 			ispravno=false;
 			
 			}
-		else
-			$('#validacijaGrad').text("");
+			else
+			$('#validacijaNaziv').text("");
 		
+			
+		
+			if(!(/[A-Z]/.test( naziv[0])))
+			{
+			$('#validacijaMarka').text("First letter of the brand must be capital!");
+			ispravno=false;
+			
 			}
-		
+			else
+			$('#validacijaMarka').text("");
+	
+		}
+	
 		if(ispravno==true)
 			{
 			$.post({
-				url: '/api/rents/admin/izmenaRent/' + id + '/' + naziv + '/' + ulica + '/' + broj + '/' + grad + '/' + opis,
+				url: '/api/vozila/admin/dodajVozilo/' + filijala + '/'  + naziv + '/' + marka + '/' + model+ '/' + godina + '/' + sedista + '/' + tip + '/' + cena,
 				contentType: 'application/json',
 				success: function(data) {
 					if(data==null || data==""){
@@ -298,7 +300,7 @@ $(document).ready(function()
 					}
 					else {
 						
-						$('#uspesno').text('Rentacar successfully edited!');
+						$('#uspesno').text('Car successfully added!');
 						$('#forma').hide();
 						
 									window.location.href="rentAdmin.html?id="+id;
@@ -316,4 +318,3 @@ $(document).ready(function()
 			
 	});
 			});
-	

@@ -1,5 +1,6 @@
 package com.example.ISA_AMA_projekat.controller;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
+import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.FilijalaService;
+import com.example.ISA_AMA_projekat.service.GradService;
 
 @RestController
 @RequestMapping(value="api/filijale")
@@ -20,6 +25,13 @@ public class FilijalaController {
 	
 	@Autowired
 	private FilijalaService filijalaService;
+	
+	@Autowired
+	private GradService gradService; 
+	
+	@Autowired
+	private AddressService addressService; 
+	
 	
 	@RequestMapping(
 			value = "/{id}",
@@ -38,5 +50,89 @@ public class FilijalaController {
 			return null; 	
 		}
 	}
+	
+	@RequestMapping(
+			value = "/admin/izmenaFil/{id}/{ulica}/{broj}/{grad}",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Filijala editFilijala(@PathVariable("id") Integer id,
+			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str)
+	{
+		System.out.println("[FilijalaController]: editFilijala");
+		Filijala fil = filijalaService.findById(id).get();
+		System.out.println("[FilijalaController]: filijala_id: " + fil.getId());
+		Grad grad = null;
+		grad = gradService.findByNaziv(grad_str);
+		if(grad==null)
+		{
+			grad=new Grad();
+			grad.setNaziv(grad_str);
+			gradService.save(grad);
+		}
+		System.out.println("[FilijalaController]: grad: " + grad.getNaziv());
+		Adresa adr = null;
+		List<Adresa> adrese = addressService.checkAddress(grad.getId(), ulica, broj);
+		
+		if(adrese.isEmpty())
+		{
+			adr = new Adresa();
+			adr.setGrad(grad);
+			adr.setUlica(ulica);
+			adr.setBroj(broj);
+			addressService.save(adr);
+		}
+		else
+		{
+			adr = adrese.get(0);
+			addressService.updateAdresa(ulica, broj, grad.getId(), adr.getId());
+		}
+		System.out.println("[FilijalaController]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
+		filijalaService.updateFilijala(adr.getId(), fil.getId());
+		return fil;
+	}
+	
+	@RequestMapping(
+			value = "/admin/dodajFil/{ulica}/{broj}/{grad}/{idr}",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Filijala addFilijala(@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("idr") Integer idr)
+	{
+		System.out.println("[FilijalaController]:addFilijala");
+		
+		Grad grad = null;
+		grad = gradService.findByNaziv(grad_str);
+		if(grad==null)
+		{
+			grad=new Grad();
+			grad.setNaziv(grad_str);
+			gradService.save(grad);
+		}
+		System.out.println("[FilijalaController]: grad: " + grad.getNaziv());
+		Adresa adr = null;
+		List<Adresa> adrese = addressService.checkAddress(grad.getId(), ulica, broj);
+		
+		if(adrese.isEmpty())
+		{
+			adr = new Adresa();
+			adr.setGrad(grad);
+			adr.setUlica(ulica);
+			adr.setBroj(broj);
+			addressService.save(adr);
+		}
+		else
+		{
+			adr = adrese.get(0);
+			addressService.updateAdresa(ulica, broj, grad.getId(), adr.getId());
+		}
+		System.out.println("[FilijalaController]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
+		Filijala fil = new Filijala();
+		fil.setAdresa(adr);
+		Filijala f =filijalaService.save(fil);
+		filijalaService.updateRent(idr, f.getId());
+		return f;
+	}
+
 
 }

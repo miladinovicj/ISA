@@ -39,4 +39,8 @@ public class RentacarService {
 		rentRepository.updateAdmin(rentalID, adminID);
 	}
 
+	public void updateServis(String naziv, Integer adresa_id, String promotivni_opis, Integer id){
+		 rentRepository.updateServis(naziv, adresa_id, promotivni_opis, id);
+	}
+
 }
