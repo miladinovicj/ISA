@@ -28,7 +28,11 @@ $(document).ready(function()
 	1. Vars and Inits
 
 	*/
-
+	$('input[name=new_password]').hide();
+	$('input[name=confirm_new_password]').hide();
+	$('input[name=lozinka]').show();
+	$('#form_submit_button').val('Login');
+	
 	var menu = $('.menu');
 	var menuActive = false;
 	var header = $('.header');
@@ -235,7 +239,7 @@ $(document).ready(function()
 		let lozinka = $('input[name="lozinka"]').val();
 		$('#uspesno').text("");
 		$('#neuspesno').text("");
-		
+		$('#validacijaLozinka').text("");
 		
 		
 		if(!email || !lozinka){
@@ -245,41 +249,95 @@ $(document).ready(function()
 		
 			
 		if(ispravno==true)
+		{
+			if($('#form_submit_button').val() == 'Change password and login')
 			{
-		$.post({
-			url: "/auth/login",
-			data: JSON.stringify({email: email, lozinka: lozinka}),
-			contentType: 'application/json',
-			headers: 'Authorization',
-			  
-			success: function(res) {
-				if(res!="")
-					{
-				localStorage.setItem('jwtToken', res.accessToken);
-				$('#neuspesno').text("");
-				$('#uspesno').text('User successfully logged in! Enjoy!');
-				$('#formaPrijava').hide();
-				$("#uspesno").show().delay(2000).fadeOut(function(){
-					window.location.href="index.html";
-				});
+				console.log('menjanje lozinke');
+				
+				let check = true;
+				
+				let new_pass = $('input[name="new_password"]').val();
+				let confirm_new_pass = $('input[name="confirm_new_password"]').val();
+				
+				if(!(new_pass == confirm_new_pass))
+				{
+					$('#validacijaLozinka').text("The password must be the same!");
+					check = false;
 				}
 				else
-					{
-					$('#neuspesno').text("Incorrect email or password or you did not activate your profile with link you received on email!");
-					localStorage.removeItem('jwtToken');
-					}
+					$('#validacijaLozinka').text("");
 				
-					
-				}
-				});
-					
+				if(check == true)
+				{
+					$.post({
+						url: "/auth/first_admin_login/" + new_pass,
+						data: JSON.stringify({email: email, lozinka: lozinka}),
+						contentType: 'application/json',
+						headers: 'Authorization',
+						  
+						success: function(res) {
+							if(res!="")
+							{
+								localStorage.setItem('jwtToken', res.accessToken);
+								$('#neuspesno').text("");
+								$('#uspesno').text('User successfully logged in! Enjoy!');
+								$('#formaPrijava').hide();
+								$("#uspesno").show().delay(1500).fadeOut(function(){
+									window.location.href="index.html";
+								});
+							}
+							else
+							{
+								$('#neuspesno').text("The new password is the same as the previous.");
+								localStorage.removeItem('jwtToken');
+							}
 								
-					
-					
+						}
+					});
 				}
-			
-		
-			
+				
+			}
+			else
+			{
+				$.post({
+					url: "/auth/login",
+					data: JSON.stringify({email: email, lozinka: lozinka}),
+					contentType: 'application/json',
+					headers: 'Authorization',
+					  
+					success: function(res) {
+						if(res!="" && res.accessToken != null)
+						{
+							localStorage.setItem('jwtToken', res.accessToken);
+							$('#neuspesno').text("");
+							$('#uspesno').text('User successfully logged in! Enjoy!');
+							$('#formaPrijava').hide();
+							$("#uspesno").show().delay(1500).fadeOut(function(){
+								window.location.href="index.html";
+							});
+						}
+						else if(res!="" && res.id != null)
+						{
+							console.log('admin se loguje prvi put');
+							$('#neuspesno').text("You have to change your password, because it's your first time to login.");
+							$('input[name=new_password]').show();
+							$('input[name=confirm_new_password]').show();
+							$('input[name=lozinka]').hide();
+							$('input[name=new_password]').prop('required',true);
+							$('input[name=confirm_new_password]').prop('required',true);
+							$('#form_submit_button').val('Change password and login');
+						}
+						else
+						{
+							$('#neuspesno').text("Incorrect email or password or you did not activate your profile with link you received on email!");
+							localStorage.removeItem('jwtToken');
+						}
+							
+					}
+				});
+			}
+				
+		}
 	});
 	
 });

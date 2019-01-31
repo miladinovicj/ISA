@@ -106,15 +106,17 @@
 		<div class="home_content" style="bottom : 2px;">
 			<div class="home_title">login</div>
 			<form id="formaPrijava" align="center">
-		<table>
-			<tr><td><input style="background-color: #31124b;; margin-left: 2px; width:250px;" id="contact_form_email" placeholder="Email"  class="contact_form_name input_field" type="email" name="email"></td></tr>
-			<tr><td><input style="background-color: #31124b; margin-left: 2px; width:250px;" placeholder="Password"  class="contact_form_name input_field" type="password" name="lozinka"></td></tr>
-			<tr><td><input style="margin-left: 70px;"type="submit" id="form_submit_button" class="form_submit_button button trans_200" value="Login"></td></tr>
-		</table>
+				<table>
+					<tr><td><input required style="background-color: #31124b;; margin-left: 2px; width:250px;" id="contact_form_email" placeholder="Email"  class="contact_form_name input_field" type="email" name="email"></td></tr>
+					<tr><td><input required style="background-color: #31124b; margin-left: 2px; width:250px;" placeholder="Password"  class="contact_form_name input_field" type="password" name="lozinka"></td></tr>
+					<tr><td><input style="display: none; background-color: #31124b; margin-left: 2px; width:250px;" placeholder="New password"  class="contact_form_name input_field" type="password" name="new_password"></td></tr>
+					<tr><td><input style="display: none; background-color: #31124b; margin-left: 2px; width:250px;" placeholder="Confirm new password"  class="contact_form_name input_field" type="password" name="confirm_new_password"></td><td id="validacijaLozinka" style="font-size:13px; color:white;"></td></tr>
+					<tr><td><input style="margin-left: 70px;"type="submit" id="form_submit_button" class="form_submit_button button trans_200" value="Login"></td></tr>
+				</table>
 		
-	</form>
-	<p id="uspesno" style="color:white;" align="center"></p>
-	<p id="neuspesno" style="color:white;"  align="center"></p>
+			</form>
+			<p id="uspesno" style="color:white;" align="center"></p>
+			<p id="neuspesno" style="color:white;"  align="center"></p>
 		</div>
 	</div>
 

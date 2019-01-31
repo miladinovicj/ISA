@@ -12,22 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ISA_AMA_projekat.security.TokenUtils;
 import com.example.ISA_AMA_projekat.common.DeviceProvider;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.UserTokenState;
+import com.example.ISA_AMA_projekat.security.TokenUtils;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
 
 
@@ -51,6 +51,9 @@ public class AuthenticationController {
 	@Autowired
 	private DeviceProvider deviceProvider;
 	
+	@Autowired
+	private KorisnikService korisnikService;
+	
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody Korisnik korisnik,HttpServletResponse response, Device device) throws AuthenticationException, IOException {
@@ -62,7 +65,7 @@ public class AuthenticationController {
 		}
 		else
 		{
-			
+			System.out.println("korisnik lozinka: " + korisnik.getLozinka() + "; postoji lozinka: " + postoji.getLozinka());
 		 if(!passwordEncoder.matches(korisnik.getLozinka(), postoji.getLozinka()))
 		 {
 			 System.out.println("Pogresna lozinka");
@@ -73,6 +76,13 @@ public class AuthenticationController {
 			 if(postoji.getAktiviran()==false)
 			 {
 				 System.out.println("Nije aktiviran");
+				 
+				 if(postoji.getAdmin_id() != null) {
+					 System.out.println("Loguje se admin");
+					 
+					 return ResponseEntity.ok(postoji);
+				 }
+				 
 				 return null;
 			 }
 			 else
@@ -88,6 +98,7 @@ public class AuthenticationController {
 					// Kreiraj token
 					Korisnik user = (Korisnik) authentication.getPrincipal();
 					System.out.println("DA LI JE AKRIVAN: " + user.getAktiviran() + "DA LI JE ENABLED: " + user.isEnabled());
+					System.out.println("[AuthenticationController: firstAdminLogin] user lozinka: " + user.getLozinka() + "; user email: " + user.getEmail());
 					String jwt = tokenUtils.generateToken(user.getEmail(), device);
 					int expiresIn = tokenUtils.getExpiredIn(device);
 
@@ -120,9 +131,13 @@ public class AuthenticationController {
 		}
 	}
 
-	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('USER')")
+	
+	@RequestMapping(value = "/change_password", method = RequestMethod.POST)
+	//@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+		
+		System.out.println("[AuthenticationController: changePassword] oldPassword: " + passwordChanger.oldPassword + "; newPassword: " + passwordChanger.newPassword);
+		
 		userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 		
 		Map<String, String> result = new HashMap<>();
@@ -135,6 +150,7 @@ public class AuthenticationController {
 		public String newPassword;
 	}
 	
+	
 	@RequestMapping(value = "/userprofile", method = RequestMethod.POST)
 	public ResponseEntity<?> getProfile(@RequestBody String token) {
 
@@ -146,7 +162,51 @@ public class AuthenticationController {
 	    
 	    System.out.println("Korisnik: " + user.getEmail());
 		
-			return  new ResponseEntity<Korisnik>(user, HttpStatus.OK);
+		return  new ResponseEntity<Korisnik>(user, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/first_admin_login/{new_pass}", method = RequestMethod.POST)
+	public ResponseEntity<?> firstAdminLogin(@RequestBody Korisnik korisnik, HttpServletResponse response, Device device, @PathVariable("new_pass") String new_pass) throws AuthenticationException, IOException {
+		
+		Korisnik postoji = userDetailsService.findByEmail(korisnik.getEmail());
+		String encoded = passwordEncoder.encode(new_pass);
+		
+		System.out.println("[AuthenticationController: firstAdminLogin] postoji lozinka: " + postoji.getLozinka() + "; new_pass: " + new_pass + "; encoded: " + encoded);
+			
+		 if(passwordEncoder.matches(new_pass, postoji.getLozinka())){
+			 System.out.println("[AuthenticationController: firstAdminLogin] Lozinka nije promenjena");
+			 
+			 return null;
+		 }else {
+			 
+			 System.out.println("[AuthenticationController: firstAdminLogin] Lozinka promenjena");
+			 
+			 postoji.setLozinka(passwordEncoder.encode(new_pass));
+			 postoji.setAktiviran(true);
+			 
+			 korisnikService.updateAktPass(true, passwordEncoder.encode(new_pass), postoji.getId());
+			 
+			 final Authentication authentication = authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(
+								postoji.getEmail(),
+								new_pass));
+			 
+			// Ubaci username + password u kontext
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			// Kreiraj token
+			Korisnik user = (Korisnik) authentication.getPrincipal();
+			System.out.println("[AuthenticationController: firstAdminLogin] admin aktivan: " + user.getAktiviran() + "; admin enabled: " + user.isEnabled());
+			System.out.println("[AuthenticationController: firstAdminLogin] user lozinka: " + user.getLozinka() + "; user email: " + user.getEmail());
+			
+			String jwt = tokenUtils.generateToken(user.getEmail(), device);
+			int expiresIn = tokenUtils.getExpiredIn(device);
+			
+			// Vrati token kao odgovor na uspesno autentifikaciju
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+
+		 }
+		
 	}
 
 }

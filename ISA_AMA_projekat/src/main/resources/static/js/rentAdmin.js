@@ -14,7 +14,7 @@ $(document).ready(function()
         	latitude = rentacar.adresa.latitude;
             console.log(rentacar);
             showRentacar(rentacar);
-           // initMap();
+            initMap();
 		}
     });
 });

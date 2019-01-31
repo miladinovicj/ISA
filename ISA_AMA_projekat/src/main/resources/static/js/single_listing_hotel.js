@@ -19,7 +19,7 @@ $(document).ready(function()
         	latitude = hotel.adresa.latitude;
             console.log(hotel);
             showHotel(hotel);
-            //initMap();
+            initMap();
 		}
     });
     

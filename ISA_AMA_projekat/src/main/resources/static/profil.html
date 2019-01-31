@@ -137,63 +137,68 @@
 								<form action="#" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<div style="width: 49%;" class="search_item">
 										<div>Name: </div>
-										<input type="text" id="name_profile" class="destination search_input" required="required">
+										<input type="text" id="name_profile" class="destination search_input" required="required" readonly>
 										<br>
 									</div>
 
 									<div style="width: 49%;" class="search_item">
-										<div>Lastname: </div>
-										<input type="text" id="lastname_profile" class="destination search_input" required="required">
+										<div>Last name: </div>
+										<input type="text" id="lastname_profile" class="destination search_input" required="required" readonly>
 										<br>
 									</div>
 
 
-
-									<div style="width: 49%; margin-top: 5%" class="search_item">
-										<div>Username:</div>
-										<input type="text" id="username_profile" class="destination search_input" required="required">
-										<br>
-									</div>
-
-
-									<div style="width: 23%;  margin-top: 5%" class="search_item">
-										<div>Password: </div>
-										<input type="text" id="password_profile" class="destination search_input" required="required">
-										<br>
-									</div>
-
-									<button style="margin-top: 5%" class="button search_button">change password</button>
-
-
-									<div style="width: 49%; margin-top: 5%" class="search_item">
+									<div style="width: 49%; margin-top: 3%" class="search_item">
 										<div>Email:</div>
-										<input type="text" id="email_profile" class="destination search_input" required="required">
+										<input type="text" id="email_profile" class="destination search_input" required="required" readonly>
 										<br>
 									</div>
 
-
-									<div style="width: 49%;  margin-top: 5%" class="search_item">
+									<div style="width: 49%;  margin-top: 3%" class="search_item">
 										<div>Phone number: </div>
-										<input type="text" id="phone_profile" class="destination search_input" required="required">
+										<input type="text" id="phone_profile" class="destination search_input" required="required" readonly>
 										<br>
 									</div>
-
-									<div style="width: 49%; margin-top: 5%" class="search_item">
+									
+									<div style="width: 49%; margin-top: 3%" class="search_item">
 										<div>City:</div>
-										<input type="text" id="city_profile" class="destination search_input" required="required">
+										<input type="text" id="city_profile" class="destination search_input" required="required" readonly>
 										<br>
 									</div>
 
 
-									<div style="width: 49%;  margin-top: 5%" class="search_item">
-										<div>Address: </div>
-										<input type="text" id="address_profile" class="destination search_input" required="required">
+									<div style="width: 49%;  margin-top: 3%; margin-left: 18px" class="search_item">
+										<div>Bonus points:</div>
+										<input type="text" id="bonus_profile" class="destination search_input" required="required" readonly>
 										<br>
 									</div>
 
 
-
-									<button class="button search_button">Edit<span></span><span></span><span></span></button>
+									<div id="passChange" style="width: 49%; display: none; margin-top: 3%">
+										<div style="width: 100%;  margin-top: 3%" class="search_item">
+											<div>Old password: </div>
+											<input type="text" id="old_password_profile" class="destination search_input" >
+											<br>
+										</div>
+										
+										<div style="width: 100%;  margin-top: 3%" class="search_item">
+											<div>New password: </div>
+											<input type="text" id="new_password_profile" class="destination search_input">
+											<br>
+										</div>
+										
+										<div style="width: 100%;  margin-top: 3%" class="search_item">
+											<div>Confirm new password: </div>
+											<input type="text" id="confirm_new_password_profile" class="destination search_input">
+											<p id="error_pass_profile" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">The passwords must be the same.</p>
+											<br>
+										</div>
+									</div>
+									
+									<div style="float: right; position: absolute; right: 0px; bottom: 20px;">
+										<button class="button search_button" onclick="javascript:changePassword()">change password</button>
+										<input type="submit" value="edit" class="button search_button">
+									</div>
 								</form>
 							</div>
 
@@ -221,6 +226,17 @@
 							<button id="button_hotel" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:newHotel()">New hotel</button>
 							<button id="button_rental" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:newRental()">New car rental</button>
 						</div>
+						
+						
+						<div id="div_buttons_admin" style="margin-top: 25px;"">
+							<button id="button_airline_admin" style="margin-right: 3%; margin-left: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newAirlineAdmin()">New airline administrator</button>
+							<button id="button_hotel_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newHotelAdmin()">New hotel administrator</button>
+							<button id="button_rental_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newRentalAdmin()">New car rental administrator</button>
+						</div>
+						<div id="div_buttons_system_admin" style="width: 400px; margin:3% auto;">
+							<button id="button_system_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newSystemAdmin()">New system administrator</button>
+						</div>
+						
 						
 						<div style="margin-bottom: 60px; display: none; margin-bottom: 80px;" id="div_new">
 							<form action="#" id="add_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
@@ -283,12 +299,11 @@
 						
 					</div>
 					
-					<div style="width: 100%; margin-top: 25px;">
-						<div id="div_buttons_admin">
-							<button id="button_airline_admin" style="margin-right: 3%; margin-left: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newAirlineAdmin()">New airline administrator</button>
-							<button id="button_hotel_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newHotelAdmin()">New hotel administrator</button>
-							<button id="button_rental_admin" style="margin-right: 3%; margin-top: 0px;" class="button search_button" onclick="javascript:newRentalAdmin()">New car rental administrator</button>
-						</div>
+					<div style="width: 100%;">
+						
+						
+						
+						
 						<div style="margin-top: 5%">
 							<p id="no_one" style="display: none; font-size: 20px; color: #31124A; height: 35px;">There are no airlines to add their administrators.</p>
 							<button id="button_back_admin2" style="display: none; width: 24%; float: right; margin-bottom: 10px;" class="button search_button" onclick="javascript:backAdmin()">Back</button>
@@ -337,7 +352,7 @@
 									<br>
 								</div>
 								
-								<div style="width: 100%;  margin-top: 0%" class="search_item">
+								<div id="admin_sys_close" style="width: 100%;  margin-top: 0%" class="search_item">
 									<div id="admin_id" style="margin: 0; color: #31124A;">Airlines: </div>
 									<select name="admin_id" style="height: 46px; width: 100%; border-color: #31124A; border-style: solid; border-width: 2px;">
 									</select>

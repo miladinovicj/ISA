@@ -107,10 +107,8 @@ public class KorisnikController {
 				novi_korisnik.setTelefon(korisnik.getTelefon());
 				novi_korisnik.setBonus_poeni(0);
 				novi_korisnik.setAktiviran(false);
-		
-	
-		
 				novi_korisnik = korisnikService.save(novi_korisnik);
+				
 		return new ResponseEntity<Korisnik>(novi_korisnik, HttpStatus.CREATED);
 		}
 		else
@@ -218,10 +216,22 @@ public class KorisnikController {
 			novi_korisnik.setBonus_poeni(0);
 			
 			novi_korisnik.setAdmin_id(korisnik.getAdmin_id());
-			novi_korisnik.setAktiviran(true);
+			novi_korisnik.setAktiviran(false);
 
 			Authority auth = null;
-			if(uloga == 1) {
+			
+			if(uloga == 0) {
+				auth = authorityService.findByName("ROLE_SYSADMIN");
+				
+				if(auth == null) {
+					auth = new Authority();
+					auth.setName("ROLE_SYSADMIN");
+					authorityService.save(auth);
+				}
+				
+				novi_korisnik.setAdmin_id(null);
+				
+			}else if(uloga == 1) {
 				auth = authorityService.findByName("ROLE_AVIOADMIN");
 				
 				if(auth == null) {
@@ -264,7 +274,7 @@ public class KorisnikController {
 				hotel.setId_admin(novi_korisnik.getId());
 				hotelService.updateAdmin(hotel.getId(), novi_korisnik.getId());
 				
-			}else {
+			}else if(uloga == 3) {
 				
 				RentacarServis rental = rentacarService.findById(korisnik.getAdmin_id()).get();
 				rental.setId_admin(novi_korisnik.getId());
@@ -276,5 +286,36 @@ public class KorisnikController {
 			return new ResponseEntity<Korisnik>(novi_korisnik, HttpStatus.CREATED);
 		
 		}
+	}
+	
+	@RequestMapping("/changeData/{email}")
+	public void changeData(@PathVariable("email") String email, @RequestBody Korisnik korisnik){
+		
+		System.out.println("[KorisnikController: changeData] email stari: " + email);
+		Korisnik stari = korisnikService.findByEmail(email);
+		
+		stari.setIme(korisnik.getIme());
+		stari.setPrezime(korisnik.getPrezime());
+		stari.setEmail(korisnik.getEmail());
+		stari.setTelefon(korisnik.getTelefon());
+		
+		Grad grad = gradService.findByNaziv(korisnik.getGrad().getNaziv());
+		
+		if(grad == null){
+			grad = new Grad();
+			grad.setNaziv(korisnik.getGrad().getNaziv());
+			grad = gradService.save(grad);
+		}
+		
+		stari.setGrad(grad);
+		
+		System.out.println("[KorisnikController: changeData] id: " + stari.getId() + "; ime: " + stari.getIme() + "; prezime: " + stari.getPrezime() + "; email: "
+																	+ stari.getEmail() + "; telefon: " + stari.getTelefon() + "; grad: " + stari.getGrad().getNaziv());
+		
+		korisnikService.updateKorisnik(stari.getId(), stari.getIme(), stari.getPrezime(), stari.getEmail(), stari.getTelefon(), stari.getGrad());
+		
+		System.out.println("[KorisnikController: changeData] korisnik uspesno update-ovan.");
+			
+		
 	}
 }

@@ -13,15 +13,15 @@ $(document).ready(function(){
 		data : token,
 		  
 		success: function(user) {
+			korisnik = user;
+			
 			document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
 			document.getElementById("name_profile").value  = user.ime;
 			document.getElementById("lastname_profile").value  = user.prezime;
-			document.getElementById("username_profile").value  = user.ime;
-			document.getElementById("password_profile").value  = user.lozinka;
 			document.getElementById("email_profile").value  = user.email;
 			document.getElementById("phone_profile").value  = user.telefon;
 			document.getElementById("city_profile").value  = user.grad.naziv;
-			document.getElementById("address_profile").value  = user.grad.naziv;
+			document.getElementById("bonus_profile").value  = user.bonuspoeni;
 		},
 		
 		error: function() {
@@ -229,7 +229,7 @@ $(document).ready(function(){
 			document.getElementById("error_phone").style.display  = 'none';
 		}
 		
-		//atribut aktiviran ce se ovde koristiti kao identifikator uloge: 1-avio admin; 2-hotel admin; 3-rental admin
+		//atribut aktiviran ce se ovde koristiti kao identifikator uloge: 0-system admin; 1-avio admin; 2-hotel admin; 3-rental admin
 		let uloga;
 		
 		if(document.getElementById('admin_id').innerHTML == 'Car rentals: ')
@@ -240,9 +240,13 @@ $(document).ready(function(){
 		{
 			uloga = 2;
 		}
-		else
+		else if(document.getElementById('admin_id').innerHTML == 'Airlines:')
 		{
 			uloga = 1;
+		}
+		else
+		{
+			uloga = 0;
 		}
 		
 		if(ispravno == true)
@@ -268,6 +272,84 @@ $(document).ready(function(){
 		}
 			
 	});
+	
+	$('#search_form_1').submit(function(event) {
+		console.log('search_form_1 submit');
+		event.preventDefault();
+		
+		var attr = $('#passChange').attr('pomoc');
+		
+		if($('input[value=edit]').val() == 'edit' && (typeof attr == typeof undefined || attr == false))
+		{
+			$("#name_profile").prop('readonly', false);
+			$("#lastname_profile").prop('readonly', false);
+			$("#phone_profile").prop('readonly', false);
+			$("#city_profile").prop('readonly', false);
+			
+			$('input[value=edit]').val('save changes');
+			$('button[onclick="javascript:changePassword()"]').hide();
+		}
+		else if($('input[value="save changes"]').val() == 'save changes' && (typeof attr == typeof undefined || attr == false))
+		{
+			let name_profile = $("#name_profile").val();
+			let lastname_profile = $("#lastname_profile").val();
+			let email_profile = $("#email_profile").val();
+			let phone_profile = $("#phone_profile").val();
+			let city_profile = $("#city_profile").val();
+			
+			$.post({
+				url: "/api/users/changeData/" + korisnik.email,
+				data: JSON.stringify({email: email_profile, ime: name_profile, prezime: lastname_profile, grad: city_profile, telefon: phone_profile}),
+				contentType: 'application/json',
+				success: function() {
+					console.log('uspesna promena podataka korisnika');
+					window.location.href = 'profil.html';
+				}
+			});
+		}
+		else
+		{
+			console.log('password is changing');
+			
+			let ispravno = true;
+			
+			let old_password = $("#old_password_profile").val();
+			let new_password = $("#new_password_profile").val();
+			let confirm_new_password = $("#confirm_new_password_profile").val();
+			
+			if(!(new_password == confirm_new_password))
+			{
+				$('#error_pass_profile').show();
+				ispravno=false;
+			}
+			else
+				$('#error_pass_profile').hide();
+			
+			if(ispravno == true)
+			{
+				$.post({
+					url: "/auth/change_password/",
+					data: JSON.stringify({oldPassword: old_password, newPassword: new_password}),
+					contentType: 'application/json',
+					success: function(data) {
+						console.log('uspesna promena lozinke korisnika');
+						
+						$('#passChange').removeAttr('pomoc');
+						$("#old_password_profile").prop('required', false);
+				        $("#new_password_profile").prop('required', false);
+				        $("#confirm_new_password_profile").prop('required', false);
+				        
+						window.location.href = 'profil.html';
+					}
+				});
+			}
+			
+			
+			
+			
+		}
+		
+	});
 });
 
 function newAirline()
@@ -277,6 +359,7 @@ function newAirline()
 	document.getElementById("div_buttons").style.display  = 'none';
 	document.getElementById("div_new_admin").style.display  = 'none';
 	document.getElementById("div_buttons_admin").style.display  = 'block';
+	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add airline';
 }
 
@@ -287,6 +370,7 @@ function newHotel()
 	document.getElementById("div_buttons").style.display  = 'none';
 	document.getElementById("div_new_admin").style.display  = 'none';
 	document.getElementById("div_buttons_admin").style.display  = 'block';
+	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add hotel';
 }
 
@@ -297,6 +381,7 @@ function newRental()
 	document.getElementById("div_buttons").style.display  = 'none';
 	document.getElementById("div_new_admin").style.display  = 'none';
 	document.getElementById("div_buttons_admin").style.display  = 'block';
+	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add car rental';
 }
 
@@ -462,9 +547,11 @@ function newAirlineAdmin()
 	console.log('[profil.js: newAirlineAdmin()]');
 	document.getElementById("div_new_admin").style.display  = 'block';
 	document.getElementById("div_buttons_admin").style.display  = 'none';
+	document.getElementById("div_buttons_system_admin").style.display  = 'none';
 	document.getElementById("div_new").style.display  = 'none';
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add airline administrator';
+	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Airlines:';
 	
 	$.get({
@@ -506,9 +593,11 @@ function newHotelAdmin()
 	console.log('[profil.js: newHotelAdmin()]');
 	document.getElementById("div_new_admin").style.display  = 'block';
 	document.getElementById("div_buttons_admin").style.display  = 'none';
+	document.getElementById("div_buttons_system_admin").style.display  = 'none';
 	document.getElementById("div_new").style.display  = 'none';
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add hotel administrator';
+	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Hotels: ';
 	
 	$.get({
@@ -550,9 +639,11 @@ function newRentalAdmin()
 	console.log('[profil.js: newRentalAdmin()]');
 	document.getElementById("div_new_admin").style.display  = 'block';
 	document.getElementById("div_buttons_admin").style.display  = 'none';
+	document.getElementById("div_buttons_system_admin").style.display  = 'none';
 	document.getElementById("div_new").style.display  = 'none';
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add car rental administrator';
+	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Car rentals: ';
 	
 	$.get({
@@ -589,6 +680,18 @@ function newRentalAdmin()
 	});
 }
 
+function newSystemAdmin()
+{
+	console.log('[profil.js: newSystemAdmin()]');
+	document.getElementById("div_new_admin").style.display  = 'block';
+	document.getElementById("div_buttons_system_admin").style.display  = 'none';
+	document.getElementById("div_buttons_admin").style.display  = 'none';
+	document.getElementById("div_new").style.display  = 'none';
+	document.getElementById("div_buttons").style.display  = 'block';
+	document.getElementById('button_add_admin').value = 'Add system administrator';
+	document.getElementById('admin_sys_close').style.display = 'none';
+}
+
 function backAdmin()
 {
 	console.log('[profil.js: backAdmin()]');
@@ -596,4 +699,32 @@ function backAdmin()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("no_one").style.display  = 'none';
 	document.getElementById("button_back_admin2").style.display  = 'none';
+}
+
+function changePassword()
+{
+	console.log('changing password');
+	
+	$('#passChange').show();
+	//$('#passChange').attr('pomoc', 'pomoc');
+	$('input[value=edit]').hide();
+	
+	var $passChange = $('#passChange');
+	/*
+    if ($passChange.attr('pomoc')) {
+
+        $("#old_password_profile").prop('required', false);
+        $("#new_password_profile").prop('required', false);
+        $("#confirm_new_password_profile").prop('required', false);
+        
+    } else {*/
+	if(!$passChange.attr('pomoc'))
+	{
+    	$passChange.attr('pomoc', 'pomoc');
+
+        $("#old_password_profile").prop('required', true);
+        $("#new_password_profile").prop('required', true);
+        $("#confirm_new_password_profile").prop('required', true);
+    }
+    
 }
