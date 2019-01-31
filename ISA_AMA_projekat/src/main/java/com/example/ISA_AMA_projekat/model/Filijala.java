@@ -26,7 +26,7 @@ public class Filijala {
 	private Adresa adresa;
 	
 	
-	@OneToMany(mappedBy = "filijala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "filijala", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
 	

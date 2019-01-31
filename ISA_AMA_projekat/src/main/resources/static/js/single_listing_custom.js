@@ -19,17 +19,17 @@
 
 $(document).ready(function()
 {
-token = localStorage.getItem('jwtToken');
-	
+var token = localStorage.getItem('jwtToken');
+
 	if(token==null)
-		{
+	{
 		$('#prijava').show();
 		$('#reg').show();
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
 		$('#rentacarS').hide();
 		
-		}
+	}
 	else
 	{
 		$('#prijava').hide();
@@ -38,7 +38,7 @@ token = localStorage.getItem('jwtToken');
 		$('#profilKorisnika').show();
 		$.post({
 			url: "/auth/userprofile",
-			headers: 'Authorization',
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			data : token,
 			  

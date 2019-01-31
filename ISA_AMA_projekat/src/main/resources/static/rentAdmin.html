@@ -13,7 +13,6 @@
 <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
 <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
 <link rel="stylesheet" type="text/css" href="styles/single_listing_styles.css">
-<link rel="stylesheet" type="text/css" href="styles/single_listing_hotel_styles.css">
 <link rel="stylesheet" type="text/css" href="styles/single_listing_responsive.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
 </head>
@@ -134,11 +133,15 @@
 							
 							<div class="rentacar_info_text" style="padding-bottom: 20px;">
 								<p id="rentacar_info_text" style="font-size: 20px; color: #4d0066;">promotivni opis rent-a-car servisa</p>
+								
+								</div>
+								<div>
 								<span class="button book_button"  id="izmenaServisa" style=" height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeIzmena">Edit rentacar</a></span>
 								<span class="button book_button"  id="dodajFilijalu" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeFil">Add branch</a></span>
 								<span class="button book_button"  id="dodajVozilo" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeVozilo">Add car</a></span>
-							
+								<br/><br/><br/>
 								</div>
+								
 							<div>
 								<span class="contact_info_icon" style="float: left;"><img src="images/placeholder.svg" alt="" height="20" width="20"></span>
 								<span><p class="offers_text" id = "adresa_rentacar"></p></span>
@@ -151,6 +154,7 @@
 										</div>
 									</div>
 								</div>
+								
 							</div>
 							
 								
@@ -158,6 +162,12 @@
 							<!-- OVDE NAPRAVITI TABELU SA USLUGAMA -->
 							<div class="rentacar_info_tags" >
 								<p id="text_no_services" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Additional services: </p>
+								<form id="izmenaCENE" hidden="true">
+								<table id="izmena_cene">
+								<tr><td>Choose service: </td><td><select id="lista_usluga"></select></td><tr><td>Cost: </td><td><input type="number" name="promena_cene"></td></tr>
+								<tr><td colspan="3" align="center"><input class="button book_button" type="submit" style="color:white; align:center;" value="Confirm"></td></tr>
+								</table>
+								</form>
 								<ul id="usluge_rentacar" style="margin-left: 60px; font-size: 15px; list-style-type: disc;">
 									
 								</ul>
@@ -167,17 +177,18 @@
 						<p id="text_no_filijale" style="font-size: 15pt; font-weight: bold; color: #4d0066;"></p>
 						<!-- Rooms -->
 						
-						<div class="filijale" id="ubaci_filijale_template">
+						<div class="filijale" id="ubaci_filijale_template" >
 								<template id="template_filijala">
 								<!-- Room -->
-									<div class="filijala" id="ubaci_filijalu">
+									<div class="filijala" id="ubaci_filijalu" >
 										
 										<!-- Room -->
-										<div class="row">
-											<div class="col-lg-7" style="text-align: center;">
-													<span class="span_room room_name" id="adresa_filijale" style="width:33%; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
-													<span class="button book_button" style="height : 40px;" id="vozila_u_ponudi" style="font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
-													<span class="button book_button"  id="izmena_filijale" style="height : 40px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+										<div class="row" >
+											<div class="col-lg-12" style="text-align: center;">
+													<span class="span_room room_name" id="adresa_filijale" style="width:20%; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+													<span class="button book_button" style="height : 40px;" id="vozila_u_ponudi" style="width:20%; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+													<span class="button book_button"  id="brisanje_filijale" style=" width:20%; height : 40px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+													<span class="button book_button"  id="izmena_filijale" style=" width:20%; height : 40px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
 													<p id="text_no_cars" style="font-size: 15pt; font-weight: bold; color: #4d0066;"></p>
 												
 											
@@ -199,13 +210,15 @@
 										
 															<!-- Car -->
 																<div class="row">
-																	<div class="col-lg-7" style="text-align: center; margin-left: 60px;">
-																			<span class="span_room room_name" id="naziv_auta" style="font-size: 12pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
-																			<span class="span_room room_name" id="godina_proizvodnje" style="font-size: 10pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
-																			<span class="span_room room_name" id="broj_sedista" style="font-size: 10pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>													
-																			<span class="span_room room_price" id="cena_auta" style="margin-top: 0px; margin-bottom: 15px; float: left; font-size: 12pt"></span>
-																			<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 15px; width: 65px; margin-top: 10px; position: relative"></span>
+																	<div class="col-lg-12" style="text-align: center; margin-left: 60px;">
+																			<span class="span_room room_name" id="naziv_auta" style="margin-right: 15px;font-size: 12pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+																			<span class="span_room room_name" id="godina_proizvodnje" style="margin-right: 15px; font-size: 10pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+																			<span class="span_room room_name" id="broj_sedista" style="margin-right: 15px; font-size: 10pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>													
+																			<span class="span_room room_price" id="cena_auta" style="margin-right: 15px; margin-top: 10px; margin-bottom: 15px; float: left; font-size: 12pt"></span>
+																			<span class="span_room room_rating review_rating" id="prosecna_ocena" style="margin-right: 15px; float: left; bottom: 15px; width: 65px; margin-top: 10px; position: relative"></span>
 																			<span class="button book_button"  id="izmena_auta" style="height : 40px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+																			<span class="button book_button"  id="brisanje_auta" style="height : 40px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
+																			
 																			</div>
 																</div>	
 															</div>

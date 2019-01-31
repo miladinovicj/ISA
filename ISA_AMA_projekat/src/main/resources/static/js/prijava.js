@@ -16,11 +16,6 @@
 $(document).ready(function()
 {
 	var token=localStorage.getItem('jwtToken');
-	$.ajaxSetup({
-	    headers:{
-	        'Authorization': 'Bearer ' + token
-	    }
-	});
 	"use strict";
 
 	/* 
@@ -303,7 +298,7 @@ $(document).ready(function()
 					url: "/auth/login",
 					data: JSON.stringify({email: email, lozinka: lozinka}),
 					contentType: 'application/json',
-					headers: 'Authorization',
+					headers: {"Authorization": "Bearer " + token},
 					  
 					success: function(res) {
 						if(res!="" && res.accessToken != null)

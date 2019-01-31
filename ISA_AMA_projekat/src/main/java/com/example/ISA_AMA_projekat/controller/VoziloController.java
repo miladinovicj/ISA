@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,7 +40,7 @@ public class VoziloController {
 		}
 	}
 	
-	
+	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
 			value = "/admin/izmenaVozila/{id}/{naziv}/{marka}/{model}/{godina}/{sedista}/{tip}/{cena}",
 			method = RequestMethod.POST,
@@ -59,6 +60,7 @@ public class VoziloController {
 		return auto;
 	}
 	
+	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
 			value = "/admin/dodajVozilo/{filijala}/{naziv}/{marka}/{model}/{godina}/{sedista}/{tip}/{cena}",
 			method = RequestMethod.POST,
@@ -83,4 +85,25 @@ public class VoziloController {
 		voziloService.updateFil(filijala, v.getId());
 		return v;
 	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "admin/delete/{car_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Vozilo deleteVozilo(@PathVariable("car_id") Integer car_id)
+	{
+		try
+		{
+			Vozilo found = voziloService.findById(car_id).get();
+			voziloService.deleteVozilo(found.getId());
+			return found;
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji vozilo sa id: " + car_id);
+			return null; 	
+		}
+	}
+	
 }
