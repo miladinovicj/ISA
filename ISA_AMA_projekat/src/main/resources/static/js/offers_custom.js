@@ -29,7 +29,7 @@ $(document).ready(function()
 		$('#hotelAdmin').hide();
 		}
 	else
-		{
+	{
 		
 		$('#prijava').hide();
 		$('#reg').hide();
@@ -45,30 +45,41 @@ $(document).ready(function()
 			data : token,
 			  
 			success: function(user) {
-				if(user.authority.authority =="ROLE_RENTADMIN")
+				if(user != "")
 				{
-					var prosledi = "rentAdmin.html?id=" + user.admin_id;
-					$("#linkServis").attr("href", prosledi);
-					$('#rentacarS').show();
-					$('#hotelAdmin').hide();
-				
-				}
-				else if(user.authority.authority =="ROLE_HOTELADMIN")
-				{
-					$('#rentacarS').hide();
-					var prosledi = "hotelAdmin.html?id=" + user.admin_id;
-					$("#linkHotelAdmin").attr("href", prosledi);
-					$('#hotelAdmin').show();
-				}
+					if(user.authority.authority =="ROLE_RENTADMIN")
+					{
+						var prosledi = "rentAdmin.html?id=" + user.admin_id;
+						$("#linkServis").attr("href", prosledi);
+						$('#rentacarS').show();
+						$('#hotelAdmin').hide();
 					
+					}
+					else if(user.authority.authority =="ROLE_HOTELADMIN")
+					{
+						$('#rentacarS').hide();
+						var prosledi = "hotelAdmin.html?id=" + user.admin_id;
+						$("#linkHotelAdmin").attr("href", prosledi);
+						$('#hotelAdmin').show();
+					}
+				}
+				else
+				{
+					localStorage.clear();
+					window.location.href = 'index.html';
+				}
+				
 			},
 			
-			error: function() {
-				alert('Error');
-		}
+			error: function(data) {
+				//alert('Error');
+				console.log('istekao je token');
+				localStorage.clear();
+				window.location.href = 'index.html'
+			}
 		
-				});
-		}
+		});
+	}
 	"use strict";
 
 	/* 

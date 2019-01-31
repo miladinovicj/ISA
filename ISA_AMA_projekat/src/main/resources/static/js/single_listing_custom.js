@@ -19,7 +19,7 @@
 
 $(document).ready(function()
 {
-var token = localStorage.getItem('jwtToken');
+token = localStorage.getItem('jwtToken');
 	
 	if(token==null)
 		{
@@ -31,7 +31,7 @@ var token = localStorage.getItem('jwtToken');
 		
 		}
 	else
-		{
+	{
 		$('#prijava').hide();
 		$('#reg').hide();
 		$('#odjava').show();
@@ -43,7 +43,9 @@ var token = localStorage.getItem('jwtToken');
 			data : token,
 			  
 			success: function(user) {
-				if(user.authority.authority == 'ROLE_RENTADMIN')
+				if(user != "")
+				{
+					if(user.authority.authority == 'ROLE_RENTADMIN')
 					{
 					var prosledi = "rentAdmin.html?id="+user.admin_id;
 					$("#linkServis").attr("href", prosledi);
@@ -52,15 +54,24 @@ var token = localStorage.getItem('jwtToken');
 					}
 				else
 					$('#rentacarS').hide();
+				}
+				else
+				{
+					localStorage.clear();
+					window.location.href = 'index.html';
+				}
 			},
 			
-			error: function() {
-				alert('Error');
-		}
+			error: function(data) {
+				//alert('Error');
+				console.log('istekao je token');
+				localStorage.clear();
+				window.location.href = 'index.html';
+			}
 		
-				});
+		});
 		
-		}
+	}
 	
 	"use strict";
 

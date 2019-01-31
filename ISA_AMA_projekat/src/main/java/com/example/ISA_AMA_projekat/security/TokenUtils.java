@@ -27,10 +27,10 @@ public class TokenUtils {
 	@Value("somesecret")
 	public String SECRET;
 
-	@Value("3000")
+	@Value("1800")
 	private int EXPIRES_IN;
 
-	@Value("6000")
+	@Value("900")
 	private int MOBILE_EXPIRES_IN;
 
 	@Value("Authorization")
@@ -72,7 +72,7 @@ public class TokenUtils {
 
 	private Date generateExpirationDate(Device device) {
 		long expiresIn = device.isTablet() || device.isMobile() ? MOBILE_EXPIRES_IN : EXPIRES_IN;
-		return new Date(timeProvider.now().getTime() + expiresIn * 1000);
+		return new Date(timeProvider.now().getTime() + expiresIn*1000);
 	}
 
 	// Functions for refreshing JWT token
