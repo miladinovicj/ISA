@@ -26,6 +26,7 @@ $(document).ready(function()
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
 		$('#rentacarS').hide();
+		$('#hotelAdmin').hide();
 		}
 	else
 		{
@@ -34,6 +35,8 @@ $(document).ready(function()
 		$('#reg').hide();
 		$('#odjava').show();
 		$('#profilKorisnika').show();
+		$('#hotelAdmin').hide();
+		$('#rentacarS').hide();
 		
 		$.post({
 			url: "/auth/userprofile",
@@ -43,14 +46,21 @@ $(document).ready(function()
 			  
 			success: function(user) {
 				if(user.authority.authority =="ROLE_RENTADMIN")
-					{
-					var prosledi = "rentAdmin.html?id="+user.admin_id;
+				{
+					var prosledi = "rentAdmin.html?id=" + user.admin_id;
 					$("#linkServis").attr("href", prosledi);
 					$('#rentacarS').show();
-					
-					}
-				else
+					$('#hotelAdmin').hide();
+				
+				}
+				else if(user.authority.authority =="ROLE_HOTELADMIN")
+				{
 					$('#rentacarS').hide();
+					var prosledi = "hotelAdmin.html?id=" + user.admin_id;
+					$("#linkHotelAdmin").attr("href", prosledi);
+					$('#hotelAdmin').show();
+				}
+					
 			},
 			
 			error: function() {

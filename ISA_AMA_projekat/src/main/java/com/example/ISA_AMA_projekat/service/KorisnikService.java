@@ -15,11 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
-
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.repository.KorisnikRepository;
 
@@ -62,6 +60,14 @@ public class KorisnikService implements UserDetailsService{
 	{
 		korisnikRepository.updateAktiviran(aktiviran, id);
 	}
+	
+	public void updateAktPass(boolean aktiviran, String new_pass, Integer id){
+		korisnikRepository.updateAktiviranPass(aktiviran, new_pass, id);
+	}
+	
+	public void updateKorisnik(Integer id, String ime, String prezime, String email, String telefon, Grad grad) {
+		korisnikRepository.updateKorisnik(id, ime, prezime, email, telefon, grad);
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String email)
@@ -78,6 +84,7 @@ public class KorisnikService implements UserDetailsService{
 
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
+		System.out.println("[KorisnikService: changePassword] username: " + username);
 
 		if (authenticationManager != null) {
 			LOGGER.debug("Re-authenticating user '" + username + "' for password change request.");
