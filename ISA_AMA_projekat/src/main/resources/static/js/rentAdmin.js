@@ -14,9 +14,40 @@ $(document).ready(function()
         	latitude = rentacar.adresa.latitude;
             console.log(rentacar);
             showRentacar(rentacar);
-           // initMap();
+            initMap();
 		}
     });
+	
+	$('#izmenaCENE').submit(function(event){
+		
+		event.preventDefault();
+		
+		let izabrano = $("#lista_usluga").val();
+		let cena = $('input[name="promena_cene"]').val();
+		
+		$.post({
+			url: '/api/usluge/admin/izmenaUsluge/' + izabrano + '/'  + cena,
+			contentType: 'application/json',
+			success: function(data) {
+				if(data==null || data==""){
+					//$('#validacijaEmail').text('User with this email already exists!');
+					alert('Nije izmenjena!');
+				}
+				else {
+					
+								alert('Cost of additional service successfully changed!');
+								window.location.href="rentAdmin.html?id="+id;
+								
+								
+					
+					
+				}
+			}
+		
+			
+	});
+		
+	});
 });
 
 function showRentacar(rentacar)
@@ -58,6 +89,13 @@ function showRentacar(rentacar)
 	    else
 		{
 	    	$("#text_no_services").text("Additional services: ");
+	    	$("#izmenaCENE").attr("hidden", false);
+	    	$('input[name="promena_cene"]').val(0);
+	    	for(let usluga of rentacar.usluge)
+	    		{
+	    		var opcija='<option value="' + usluga.id + '">' + usluga.naziv +  '</option>';
+            	$("#lista_usluga").append(opcija);
+	    		}
 	    	for (let usluga of rentacar.usluge) 
 	    	{
 	    		let li = $('<li>' + usluga.naziv + ' - $' + usluga.cena + '/per day</li>');
@@ -87,12 +125,26 @@ function addFilijala(rentacar, filijala)
     	
 	}
     
+    temp.content.getElementById("brisanje_filijale").innerHTML = '<a style="cursor:pointer; color:white;" onclick="javascript:brisanjeFil('  + filijala.id + ');">Delete branch</a>'
     temp.content.getElementById("izmena_filijale").innerHTML = '<a style="cursor:pointer; color:white;" href="izmenaFil.html?idr=' + rentacar.id + '&id=' + filijala.id + '">Edit branch</a>'
 	
     a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
 }
 
+function brisanjeFil(filijala_id)
+{
+	$.ajax({
+        type: 'DELETE',
+        url: 'api/filijale/admin/delete/' + filijala_id,
+        contentType: 'application/json',
+        success: function (filijala)
+		{
+            alert('Branch with id: ' + filijala.id + 'successfully deleted!');
+            window.location.href="rentAdmin.html?id="+id;
+		}
+    });
+}
 function izlistajVozila(filijala_id, rentacar_id)
 {
 	$("#vozila_dugme" + filijala_id).hide();
@@ -131,12 +183,29 @@ function addVozilo(car, rentacar_id)
 	temp.content.getElementById("broj_sedista").innerHTML = broj_sedista_string;
 	temp.content.getElementById("cena_auta").innerHTML = '$' + car.cena_dan + '/day';
 	temp.content.getElementById("prosecna_ocena").innerHTML = car.prosecna_ocena;
-	 temp.content.getElementById("izmena_auta").innerHTML = '<a style="cursor:pointer; color:white;" href="izmenaAuta.html?idr=' + rentacar_id + '&id=' + car.id + '">Edit car</a>'
+	temp.content.getElementById("izmena_auta").innerHTML = '<a style="cursor:pointer; color:white;" href="izmenaAuta.html?idr=' + rentacar_id + '&id=' + car.id + '">Edit car</a>'
+	temp.content.getElementById("brisanje_auta").innerHTML = '<a style="cursor:pointer; color:white;" onclick="javascript:brisanjeVozila('  + car.id + ');">Delete car</a>'
 		
 	a = document.importNode(div, true);
     document.getElementById("ubaci_auto_template").appendChild(a);
     
 }
+
+function brisanjeVozila(car_id)
+{
+	$.ajax({
+        type: 'DELETE',
+        url: 'api/vozila/admin/delete/' + car_id,
+        contentType: 'application/json',
+        success: function (vozilo)
+		{
+            alert('Car with id: ' + vozilo.id + 'successfully deleted!');
+            window.location.href="rentAdmin.html?id="+id;
+		}
+    });
+}
+
+
 function initMap()
 {
 	var map = new ol.Map({

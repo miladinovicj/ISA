@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.FilijalaService;
 import com.example.ISA_AMA_projekat.service.GradService;
@@ -132,6 +133,25 @@ public class FilijalaController {
 		Filijala f =filijalaService.save(fil);
 		filijalaService.updateRent(idr, f.getId());
 		return f;
+	}
+	
+	@RequestMapping(
+			value = "admin/delete/{filijala_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Filijala deleteFilijala(@PathVariable("filijala_id") Integer	filijala_id)
+	{
+		try
+		{
+			Filijala found = filijalaService.findById(filijala_id).get();
+			filijalaService.deleteFilijala(found);
+			return found;
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji fil sa id: " + filijala_id);
+			return null; 	
+		}
 	}
 
 

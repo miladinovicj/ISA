@@ -83,4 +83,24 @@ public class VoziloController {
 		voziloService.updateFil(filijala, v.getId());
 		return v;
 	}
+	
+	@RequestMapping(
+			value = "admin/delete/{car_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Vozilo deleteVozilo(@PathVariable("car_id") Integer car_id)
+	{
+		try
+		{
+			Vozilo found = voziloService.findById(car_id).get();
+			voziloService.deleteVozilo(found.getId());
+			return found;
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji vozilo sa id: " + car_id);
+			return null; 	
+		}
+	}
+	
 }

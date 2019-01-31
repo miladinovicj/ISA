@@ -32,5 +32,13 @@ public class VoziloService {
 	{
 		voziloRepository.updateFilVozilo(filijala, id);
 	}
+	
+	public void deleteVozilo(Integer id)
+	{
+		voziloRepository.deleteVozilo(id);
+	}
+	
+	
+	
 
 }

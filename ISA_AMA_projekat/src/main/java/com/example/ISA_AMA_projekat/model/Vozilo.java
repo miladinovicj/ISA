@@ -57,7 +57,7 @@ public class Vozilo {
 	@JsonManagedReference(value = "RezervacijaVozila-Vozilo")
 	private Set<RezervacijaVozila> rezervacije = new HashSet<RezervacijaVozila>();
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Rating> ocene = new HashSet<Rating>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
