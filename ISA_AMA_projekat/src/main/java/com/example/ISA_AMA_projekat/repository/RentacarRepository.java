@@ -25,7 +25,7 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		
 		@Modifying
 		@Transactional
-		@Query(value = "update RentacarServis rs set rs.id_admin = ?2 where rs.id = ?1", nativeQuery = true)
+		@Query(value = "update rentacar_servis rs set rs.id_admin = ?2 where rs.id = ?1", nativeQuery = true)
 		public void updateAdmin(Integer rentalID, Integer adminID);
 
 		@Transactional

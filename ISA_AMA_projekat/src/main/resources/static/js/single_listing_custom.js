@@ -20,6 +20,7 @@
 $(document).ready(function()
 {
 var token = localStorage.getItem('jwtToken');
+
 	
 	if(token==null)
 		{
@@ -32,13 +33,14 @@ var token = localStorage.getItem('jwtToken');
 		}
 	else
 		{
+		
 		$('#prijava').hide();
 		$('#reg').hide();
 		$('#odjava').show();
 		$('#profilKorisnika').show();
 		$.post({
 			url: "/auth/userprofile",
-			headers: 'Authorization',
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			data : token,
 			  

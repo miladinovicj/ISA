@@ -290,8 +290,10 @@ $(document).ready(function()
 	
 		if(ispravno==true)
 			{
+			let token=localStorage.getItem('jwtToken');
 			$.post({
 				url: '/api/vozila/admin/dodajVozilo/' + filijala + '/'  + naziv + '/' + marka + '/' + model+ '/' + godina + '/' + sedista + '/' + tip + '/' + cena,
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {
 					if(data==null || data==""){

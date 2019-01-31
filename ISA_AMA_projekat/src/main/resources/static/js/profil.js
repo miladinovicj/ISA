@@ -1,20 +1,30 @@
 $(document).ready(function(){
-	var token=localStorage.getItem('jwtToken');
-	$.ajaxSetup({
-	    headers:{
-	        'Authorization': 'Bearer ' + token
-	    }
-	});
+	token=localStorage.getItem('jwtToken');
+	
+	
 	
 	$.post({
 		url: "/auth/userprofile",
-		headers: 'Authorization',
+		headers: {"Authorization": "Bearer " + token},
 		contentType: 'application/json',
 		data : token,
 		  
 		success: function(user) {
 			korisnik = user;
-			
+			if(korisnik.authority.authority!="ROLE_SYSADMIN")
+				{
+				$("#div_buttons").hide();
+				$("#div_buttons_admin").hide();
+				$("#div_buttons_system_admin").hide();
+				
+				}
+			else
+				{
+				$("#div_buttons").show();
+				$("#div_buttons_admin").show();
+				$("#div_buttons_system_admin").show();
+				
+				}
 			document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
 			document.getElementById("name_profile").value  = user.ime;
 			document.getElementById("lastname_profile").value  = user.prezime;
@@ -22,6 +32,7 @@ $(document).ready(function(){
 			document.getElementById("phone_profile").value  = user.telefon;
 			document.getElementById("city_profile").value  = user.grad.naziv;
 			document.getElementById("bonus_profile").value  = user.bonuspoeni;
+			
 		},
 		
 		error: function() {
@@ -254,6 +265,7 @@ $(document).ready(function(){
 			$.post({
 				url: "/api/users/registruj_admina/" + uloga,
 				data: JSON.stringify({email: email_admin, lozinka: pass_admin, ime: name_admin, prezime: last_name_admin, grad: city_admin, telefon: phone_admin, admin_id: option}),
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {
 					if(data == null || data == ""){
@@ -492,7 +504,7 @@ function finalAdd(address)
 			url: "/rest/airline/save",
 			data: JSON.stringify({naziv: name, opis: description, adresa: address}),
 			contentType: 'application/json',
-			  
+			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
 				console.log('aviokompanija uspesno uneta');
 				var url = window.location.search='';
@@ -510,7 +522,7 @@ function finalAdd(address)
 			url: "/api/hotels/save",
 			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
 			contentType: 'application/json',
-			  
+			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
 				console.log('hotel uspesno unet');
 				var url = window.location.search='';
@@ -527,6 +539,7 @@ function finalAdd(address)
 		$.post({
 			url: "/api/rents/save",
 			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			  
 			success: function(airline) {
@@ -556,6 +569,8 @@ function newAirlineAdmin()
 	
 	$.get({
 		url: "/rest/airline/all_admin",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(airlines) {
 
 			if(airlines == null || airlines.length == 0)
@@ -602,6 +617,8 @@ function newHotelAdmin()
 	
 	$.get({
 		url: "/api/hotels/all_admin",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(hoteli) {
 
 			if(hoteli == null || hoteli.length == 0)
@@ -648,6 +665,8 @@ function newRentalAdmin()
 	
 	$.get({
 		url: "/api/rents/all_admin",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(rentals) {
 
 			if(rentals == null || rentals.length == 0)

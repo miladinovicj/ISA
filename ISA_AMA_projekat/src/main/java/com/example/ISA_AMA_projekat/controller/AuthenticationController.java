@@ -99,6 +99,7 @@ public class AuthenticationController {
 					Korisnik user = (Korisnik) authentication.getPrincipal();
 					System.out.println("DA LI JE AKRIVAN: " + user.getAktiviran() + "DA LI JE ENABLED: " + user.isEnabled());
 					System.out.println("[AuthenticationController: firstAdminLogin] user lozinka: " + user.getLozinka() + "; user email: " + user.getEmail());
+					System.out.println("ULOGA : " + authentication.getName() + " " + user.getAuthority().getAuthority());
 					String jwt = tokenUtils.generateToken(user.getEmail(), device);
 					int expiresIn = tokenUtils.getExpiredIn(device);
 

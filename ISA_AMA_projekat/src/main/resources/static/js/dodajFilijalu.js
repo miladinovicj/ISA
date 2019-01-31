@@ -266,8 +266,10 @@ $(document).ready(function()
 		
 		if(ispravno==true)
 			{
+			let token=localStorage.getItem('jwtToken');
 			$.post({
 				url: '/api/filijale/admin/dodajFil/' + ulica + '/' + broj + '/' + grad + '/' + idr,
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {
 					if(data==null || data==""){

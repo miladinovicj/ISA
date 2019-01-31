@@ -5,8 +5,10 @@ import static javax.persistence.FetchType.LAZY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -329,11 +331,13 @@ public class Korisnik implements Serializable, UserDetails
 		// TODO Auto-generated method stub
 		return aktiviran;
 	}
-//ne znam da li ce ova metoda negde trebati, morala sam da je dodam, ali vraca null
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return null;
+		List<Authority> authorities= new ArrayList<Authority>();
+		authorities.add(this.authority);
+		return authorities;
 	}
 
     

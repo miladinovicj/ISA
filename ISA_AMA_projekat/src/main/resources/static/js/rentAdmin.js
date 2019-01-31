@@ -1,5 +1,7 @@
 $(document).ready(function()
 {
+	let token=localStorage.getItem('jwtToken');
+	
 	var search = window.location.search;
 	var splitted = search.split('&');
 	
@@ -8,6 +10,8 @@ $(document).ready(function()
 	$.ajax({
         type: 'GET',
         url: 'api/rents/admin/' + id,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
         success: function (rentacar)
 		{
             longitude = rentacar.adresa.longitude;
@@ -27,6 +31,7 @@ $(document).ready(function()
 		
 		$.post({
 			url: '/api/usluge/admin/izmenaUsluge/' + izabrano + '/'  + cena,
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			success: function(data) {
 				if(data==null || data==""){
@@ -137,6 +142,7 @@ function brisanjeFil(filijala_id)
 	$.ajax({
         type: 'DELETE',
         url: 'api/filijale/admin/delete/' + filijala_id,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         success: function (filijala)
 		{
@@ -196,6 +202,7 @@ function brisanjeVozila(car_id)
 	$.ajax({
         type: 'DELETE',
         url: 'api/vozila/admin/delete/' + car_id,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         success: function (vozilo)
 		{
