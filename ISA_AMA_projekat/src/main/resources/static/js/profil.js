@@ -341,6 +341,7 @@ $(document).ready(function(){
 			
 			let ispravno = true;
 			
+			$('#error_old_pass_profile').hide();
 			let old_password = $("#old_password_profile").val();
 			let new_password = $("#new_password_profile").val();
 			let confirm_new_password = $("#confirm_new_password_profile").val();
@@ -357,6 +358,7 @@ $(document).ready(function(){
 			{
 				$.post({
 					url: "/auth/change_password/",
+					headers: {"Authorization": "Bearer " + token},
 					data: JSON.stringify({oldPassword: old_password, newPassword: new_password}),
 					contentType: 'application/json',
 					success: function(data) {

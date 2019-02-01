@@ -28,6 +28,7 @@ var token = localStorage.getItem('jwtToken');
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
 		$('#rentacarS').hide();
+		$('#hotelAdmin').hide();
 		
 	}
 	else
@@ -36,6 +37,9 @@ var token = localStorage.getItem('jwtToken');
 		$('#reg').hide();
 		$('#odjava').show();
 		$('#profilKorisnika').show();
+		$('#hotelAdmin').hide();
+		$('#rentacarS').hide();
+		
 		$.post({
 			url: "/auth/userprofile",
 			headers: {"Authorization": "Bearer " + token},

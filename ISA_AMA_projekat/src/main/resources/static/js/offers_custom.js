@@ -40,7 +40,7 @@ $(document).ready(function()
 		
 		$.post({
 			url: "/auth/userprofile",
-			headers: 'Authorization',
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			data : token,
 			  

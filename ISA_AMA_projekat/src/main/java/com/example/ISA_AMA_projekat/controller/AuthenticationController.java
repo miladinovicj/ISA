@@ -152,10 +152,6 @@ public class AuthenticationController {
 		
 		System.out.println("[AuthenticationController: changePassword] oldPassword: " + passwordChanger.oldPassword + "; newPassword: " + passwordChanger.newPassword);
 		
-		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
-		System.out.println("[AuthenticationController: changePassword] username: " + username);
-		
 		boolean uspesno = userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 		
 		Map<String, String> result = new HashMap<>();
