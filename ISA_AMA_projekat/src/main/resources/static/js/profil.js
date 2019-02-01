@@ -378,6 +378,10 @@ $(document).ready(function(){
 							$('#error_old_pass_profile').show();
 						}
 						
+					},
+					error: function(data)
+					{
+						console.log('greska prilikom menjanja lozinke');
 					}
 				});
 				
