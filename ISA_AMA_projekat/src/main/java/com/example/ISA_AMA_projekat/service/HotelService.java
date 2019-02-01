@@ -38,4 +38,8 @@ public class HotelService {
 	public void updateAdmin(Integer hotelID, Integer adminID) {
 		hotelRepository.updateAdmin(hotelID, adminID);
 	}
+	
+	public void updateHotel(Integer id, String naziv, String opis, Integer adresa) {
+		hotelRepository.updateHotel(id, naziv, opis, adresa);
+	}
 }

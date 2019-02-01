@@ -56,6 +56,10 @@ $(document).ready(function(){
 	
 	});
 	
+	$('textarea').on('keyup', function(){
+  	  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
+  });
+	
 	$('#add_form').submit(function(event) {
 		console.log('add_form submit');
 		event.preventDefault();
@@ -66,7 +70,7 @@ $(document).ready(function(){
 		number = $('input[name="new_street_number"]').val();
 		latitude = $('input[name="new_latitude"]').val();
 		longitude = $('input[name="new_longitude"]').val();
-		description = $('input[name="new_description"]').val();
+		description = $('textarea[name="new_description"]').val();
 		
 		let ispravno = true;
 		
@@ -117,7 +121,7 @@ $(document).ready(function(){
 		
 		if(!(/^[0-9.]+$/.test(latitude)))
 		{
-			document.getElementById("error_new_latitude").innerHTML = "Field Latitude number must contains only numbers.";
+			document.getElementById("error_new_latitude").innerHTML = "Field Latitude must contains only numbers.";
 			document.getElementById("error_new_latitude").style.display  = 'block';
 			ispravno=false;
 		}
@@ -130,7 +134,7 @@ $(document).ready(function(){
 		
 		if(!(/^[0-9.]+$/.test(longitude)))
 		{
-			document.getElementById("error_new_longitude").innerHTML = "Field Latitude number must contains only numbers.";
+			document.getElementById("error_new_longitude").innerHTML = "Field Latitude must contains only numbers.";
 			document.getElementById("error_new_longitude").style.display  = 'block';
 			ispravno=false;
 		}

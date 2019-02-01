@@ -31,7 +31,12 @@
 				<div class="row">
 					<div class="col d-flex flex-row">
 						<div class="user_box ml-auto">
-					</div>
+							<div id="prijava" class="user_box_login user_box_link"><a href="prijava.html">login</a></div>
+							<div id="odjava" class="user_box_login user_box_link" onclick="javascript:odjava()" ><a href="index.html">logout</a></div>
+							<div id="reg" class="user_box_register user_box_link"><a href="registration.html">register</a></div>
+							<div id="rentacarS" class="user_box_register user_box_link" ><a id="linkServis">Your rentacar</a></div>
+							<div id="hotelAdmin" class="user_box_register user_box_link" ><a id="linkHotelAdmin">Your hotel</a></div>
+						</div>
 					</div>
 				</div>
 			</div>		
@@ -288,14 +293,17 @@
 					
 								<div style="width: 74%; margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #31124A;">Description: </div>
-									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_description" class="search_input" required="required">
+									<textarea maxlength="255" style="border-color: #31124A; border-style: solid; height: 150px;" name="new_description" class="search_input" required="required"></textarea>
 									<br>
 								</div>
 								
 								<!--  onclick="javascript:add()" -->
-								<input id="button_add" value="Add airline" type="submit" style="width: 24%; float: right; margin-top: 0%" class="button search_button">
+								<div style=" width: 24%; float: right; margin-top: 0%">
+									<input id="button_add" style="width: 100%; " value="Add airline" type="submit"  class="button search_button">
+									
+									<button id="button_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:back()">Back</button>
+								</div>
 							</form>
-							<button id="button_back" style="width: 24%; float: right; margin-bottom: 15px; margin-top: 10px;" class="button search_button" onclick="javascript:back()">Back</button>
 						</div>
 						
 					</div>
@@ -358,7 +366,7 @@
 									<select name="admin_id" style="height: 46px; width: 100%; border-color: #31124A; border-style: solid; border-width: 2px;">
 									</select>
 									<br>
-								  </div>
+								</div>
 								
 								<input id="button_add_admin" value="Add airline administrator" type="submit" style="width: 30%; margin-left: 70%;" class="button search_button">
 							</form>

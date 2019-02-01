@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -663,6 +665,25 @@ public class HotelController {
 		}
 		
 		return result;
+	}
+	
+	@RequestMapping(
+			value = "/editHotel/{hotel_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<?> editHotel(@PathVariable("hotel_id") Integer id, @RequestBody Hotel hotel) {
+		
+		Hotel stari =  hotelService.findById(id).get();
+		
+		System.out.println("[HotelController: editHotel] id hotela: " + stari.getId());
+		hotelService.updateHotel(stari.getId(), hotel.getNaziv(), hotel.getPromotivni_opis(), hotel.getAdresa().getId());
+		
+		Map<String, String> result = new HashMap<>();
+		result.put("result", "success");
+	
+		return ResponseEntity.accepted().body(result);
 	}
 	
 	public Hotel pretraga_hotel(Hotel hotel, Date check_in, Date check_out, int adults){

@@ -21,4 +21,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>{
 	@Transactional
 	@Query(value = "update hotel h set h.id_admin = ?2 where h.id = ?1", nativeQuery = true)
 	public void updateAdmin(Integer hotelID, Integer adminID);
+	
+	@Modifying
+	@Transactional
+	@Query("update Hotel h set h.naziv = ?2, h.promotivni_opis = ?3, h.adresa.id = ?4 where h.id = ?1")
+	public void updateHotel(Integer id, String naziv, String opis, Integer adresa);
 }
