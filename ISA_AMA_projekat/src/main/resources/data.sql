@@ -183,4 +183,7 @@ insert into AUTHORITY (id, name) values (5, 'ROLE_SYSADMIN');
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (3, 'makaric.milica@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, false, 6);
 insert into user_authority (user_id, authority_id) values (3, 3);
+update hotel h set h.id_admin = 3 where h.id = 6;
 
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
+insert into user_authority (user_id, authority_id) values (4, 5);

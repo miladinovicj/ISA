@@ -13,4 +13,9 @@ public interface UslugaRepository extends JpaRepository<Usluga, Integer>{
 	@Transactional
 	@Query("update Usluga u set u.cena = ?1 where u.id = ?2")
 	public void updateUsluga(double cena,  Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "insert into hotel_usluge (hotel_id, usluge_id) VALUES (?1, ?2)", nativeQuery = true)
+	public void addToHotel(Integer id_hotel, Integer id_usluga);
 }

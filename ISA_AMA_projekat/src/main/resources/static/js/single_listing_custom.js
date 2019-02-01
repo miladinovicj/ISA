@@ -402,3 +402,8 @@ var token = localStorage.getItem('jwtToken');
 		}
 	}
 });
+
+function odjava()
+{
+	localStorage.clear();
+}

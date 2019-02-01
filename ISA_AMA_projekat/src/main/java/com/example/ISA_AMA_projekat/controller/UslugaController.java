@@ -18,7 +18,7 @@ public class UslugaController {
 	@Autowired
 	private UslugaService uslugaService;
 
-	@PreAuthorize("hasRole('RENTADMIN')")
+	@PreAuthorize("hasRole('RENTADMIN') or hasRole('HOTELADMIN')")
 	@RequestMapping(
 			value = "/admin/izmenaUsluge/{izabrano}/{cena}",
 			method = RequestMethod.POST,
@@ -33,6 +33,36 @@ public class UslugaController {
 		
 		uslugaService.updateCena(cena, u.getId());
 		return u;
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/dodaj_uslugu/{naziv}/{cena}/{id_hotel}",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Usluga dodajUsluga(@PathVariable("naziv") String naziv, @PathVariable("cena") double cena,  @PathVariable("id_hotel") Integer id_hotel){
+	
+		Usluga u = new Usluga();
+		u.setNaziv(naziv);
+		u.setCena(cena);
+		
+		u = uslugaService.save(u, id_hotel);
+		
+		System.out.println("[UslugaController]: usluga_id: " + u.getId());
+		return u;
+	}
+	
+	@RequestMapping(
+			value = "/get/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double getUsluga(@PathVariable("id") Integer id){
+	
+		Usluga u = uslugaService.findById(id).get();
+		System.out.println("[UslugaController]: usluga_id: " + u.getId());
+		
+		return u.getCena();
 	}
 	
 }

@@ -133,6 +133,16 @@
 
 						<div class="hotel_info">
 
+							<!-- dugmad za izmenu hotela -->
+							<div style="width: 100%; margin-top: 25px;">
+								<div id="div_changing_buttons">
+									<button id="button_edit_hotel" style="margin-right: 10%; margin-left: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editHotel()">Edit hotel</button>
+									<button id="button_edit_services" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editServices()">Edit additional services</button>
+									<button id="button_edit_rooms" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editRooms()">Edit rooms</button>
+								</div>
+							
+							</div>
+
 							<!-- Hotel Info Text -->
 							
 							<div class="hotel_info_text" style="padding-bottom: 20px;">
@@ -216,23 +226,104 @@
 									</div>
 								</template>
 						</div>
-
-						<!-- Location on Map -->
-
-						<div class="location_on_map">
-							<div class="location_on_map_title"></div>
-
-							<!-- Google Map -->
-		
-							<div class="travelix_map">
-								<div id="google_map" class="google_map">
-									<div class="map_container">
-										<div id="map"></div>
-									</div>
+						
+						<!-- forma za izmenu hotela -->
+						
+						<div style="margin-bottom: 60px; display: none;" id="div_edit_hotel">
+							<form action="#" id="edit_hotel_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div style="height: 121px; width: 49%; margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Name: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="hotel_name" class="search_input" required="required">
+									<p id="error_hotel_name" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
+									<br>
 								</div>
-							</div>
-
+					
+								<div style="height: 121px; width: 49%;  margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;">City: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="hotel_city" class="search_input" required="required">
+									<p id="error_hotel_city" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
+									<br>
+								</div>
+								
+								<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Street: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="hotel_street" class="search_input" required="required">
+									<p id="error_hotel_street" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
+									<br>
+								</div>
+					
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Number in street: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="hotel_street_number" class="search_input" required="required">
+									<br>
+								</div>
+								
+								<div style="width: 100%; margin-top: 0%">
+									<a href="https://www.latlong.net/convert-address-to-lat-long.html">Click here to calculate latitude and longitude from address</a>
+								</div>
+								
+								<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Latitude: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="hotel_latitude" class="search_input" required="required">
+									<p id="error_hotel_latitude" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
+									<br>
+								</div>
+				
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Longitude: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="hotel_longitude" class="search_input" required="required">
+									<p id="error_hotel_longitude" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;"></p>
+									<br>
+								</div>
+					
+								<div style="width: 74%; margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Description: </div>
+									<textarea maxlength="255" style="border-color: #31124A; border-style: solid; height: 150px;" name="hotel_description" class="search_input" required="required"></textarea>
+									<br>
+								</div>
+								
+								<div style=" width: 24%; float: right; margin-top: 0%">
+									<input id="button_click_hotel" value="Edit" type="submit" style="width: 100%;" class="button search_button">
+									<button id="button_hotel_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
+								</div>
+							</form>
+							
 						</div>
+						
+						<!-- forma za izmenu dodatnih usluga -->
+						
+						<div style=" width: 100%; margin-top: 60px; margin-bottom: 60px; display: none;" id="div_edit_services">
+							<form action="#" id="change_price_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div style="height: 121px; width: 30%; margin-top: 0%" class="search_item">
+									<div id="div_services" style="width:100%; margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px;">Additional services: </div>
+									<select name="select_services" onchange="javascript:changeSelection()" style=" width:100%; height: 46px; border-color: #31124A; border-style: solid; border-width: 2px;">
+									</select>
+									
+									<div class="new_additional_service" style="margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px; margin-top: 30px;">New service: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_service" class="new_additional_service search_input">
+									<br>
+								</div>
+				
+								<div style="height: 121px; width: 30%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px;">Price: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="price_service" class="search_input" required="required">
+									<p id="error_price_service" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field price must contains only numbers.</p>
+									<br>
+									
+									<div class="new_additional_service" style="margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px; margin-top: 30px;">Price of new service: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_price_service" class="new_additional_service search_input">
+									<p id="error_new_price_service" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field new price must contains only numbers.</p>
+									<br>
+								</div>
+								
+								<div style=" width: 24%; float: right; margin-top: 105px">
+									<input id="button_change_price" value="Change price" type="submit" style="width: 100%;" class="button search_button">
+									<button id="button_add_service" style="width: 100%; margin-top: 20px;" class="button search_button" onclick="javascript:addService()">Add new service</button>
+									<button id="button_hotel_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
+								</div>
+							</form>
+						</div>
+						
 					</div>
 				</div>
 			</div>
