@@ -155,13 +155,13 @@ insert into popust_usluge (popust_id, usluge_id) values (1, 5);
 insert into popust_usluge (popust_id, usluge_id) values (3, 8);
 insert into popust_usluge (popust_id, usluge_id) values (3, 10);
 
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (1, true, 3, false, '2019-02-03', '2019-02-15', 0, 1105, 1, 1, 1);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (2, true, 3, false, '2019-02-03', '2019-02-15', 0, 2000, 1, 1, 3);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (1, true, 3, false, '2019-01-03', '2019-02-01', 0, 1105, 1, 1, 1);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (2, true, 3, false, '2019-01-29', '2019-02-01', 0, 2000, 1, 1, 3);
 insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (3, true, 3, false, '2019-02-17', '2019-02-20', 0, 650, 1, 1, 1);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (4, true, 3, false, '2019-03-04', '2019-03-10', 0, 880, 1, 1, 1);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (4, true, 3, false, '2019-01-26', '2019-01-30', 0, 880, 1, 1, 1);
 insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (5, true, 5, false, '2019-02-03', '2019-02-15', 0, 1105, 1, 1, 2);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (6, true, 2, false, '2019-02-15', '2019-02-20', 0, 889, 1, 1, 2);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (7, true, 1, false, '2019-02-03', '2019-02-15', 0, 770, 1, 1, 4);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (6, true, 2, false, '2019-01-26', '2019-01-28', 0, 889, 1, 1, 2);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (7, true, 1, false, '2018-11-01', '2018-11-03', 0, 770, 1, 1, 4);
 
 insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (1, 1);
 insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (3, 2);
