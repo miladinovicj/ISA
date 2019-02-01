@@ -167,6 +167,30 @@ public class HotelController {
 		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/admin/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> getOneHotel(@PathVariable("id") Integer id){
+		
+		System.out.println("usao u metodu api/hotels/hotelAdmin/{id}; id: " + id);
+		Hotel result = null;
+		
+		try{
+			result = hotelService.findById(id).get();
+			System.out.println("Nasao hotel sa id:" + result.getId());
+		}catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji hotel sa id: " + id);
+			return null; 	
+		}
+		
+		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
+		
+		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
+	}
+	
 	@RequestMapping(
 			value = "specialPrice/{id}/{check_in}/{check_out}/{adults}",
 			method = RequestMethod.GET,

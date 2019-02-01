@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,11 +99,22 @@ public class AuthenticationController {
 					// Kreiraj token
 					Korisnik user = (Korisnik) authentication.getPrincipal();
 					System.out.println("DA LI JE AKRIVAN: " + user.getAktiviran() + "DA LI JE ENABLED: " + user.isEnabled());
-					System.out.println("[AuthenticationController: firstAdminLogin] user lozinka: " + user.getLozinka() + "; user email: " + user.getEmail());
+
+					System.out.println("[AuthenticationController: createAuthenticationToken] user lozinka: " + user.getLozinka() + "; user email: " + user.getEmail());
+
 					System.out.println("ULOGA : " + authentication.getName() + " " + user.getAuthority().getAuthority());
 					String jwt = tokenUtils.generateToken(user.getEmail(), device);
 					int expiresIn = tokenUtils.getExpiredIn(device);
+					
+					String username = this.tokenUtils.getUsernameFromToken(jwt);
+					System.out.println("[AuthenticationController: createAuthenticationToken] username from token: " + username);
 
+					System.out.println("[AuthenticationController: createAuthenticationToken] jwt: " + jwt);
+					
+					Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+					String email = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
+					System.out.println("[AuthenticationController: createAuthenticationToken] username: " + email);
+					
 					// Vrati token kao odgovor na uspesno autentifikaciju
 					return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 			 }
@@ -113,9 +125,10 @@ public class AuthenticationController {
 	}
 	
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
-	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
+	public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request, @RequestBody String token) {
 
-		String token = tokenUtils.getToken(request);
+		String tokenFromRequest = tokenUtils.getToken(request);
+		System.out.println("[AuthenticationController: refreshAuthenticationToken] token: " + token + "; tokenFromRequest: " + tokenFromRequest);
 		String username = this.tokenUtils.getUsernameFromToken(token);
 	    Korisnik user = (Korisnik) this.userDetailsService.loadUserByUsername(username);
 
@@ -139,10 +152,17 @@ public class AuthenticationController {
 		
 		System.out.println("[AuthenticationController: changePassword] oldPassword: " + passwordChanger.oldPassword + "; newPassword: " + passwordChanger.newPassword);
 		
-		userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
+		boolean uspesno = userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 		
 		Map<String, String> result = new HashMap<>();
-		result.put("result", "success");
+		
+		if(uspesno) {
+
+			result.put("result", "success");
+		}else {
+
+			result.put("result", "error");
+		}
 		return ResponseEntity.accepted().body(result);
 	}
 
@@ -159,7 +179,15 @@ public class AuthenticationController {
 		String email = tokenUtils.getUsernameFromToken(token);
 		
 		System.out.println("USERNAME: " + email);
-	    Korisnik user = (Korisnik) this.userDetailsService.loadUserByUsername(email);
+		
+		Korisnik user = null;
+		try {
+
+		    user = (Korisnik) this.userDetailsService.loadUserByUsername(email);
+		}catch(UsernameNotFoundException e) {
+			System.out.println("[AuthenticationController: getProfile] uhvatio je exception");
+			return null;
+		}
 	    
 	    System.out.println("Korisnik: " + user.getEmail());
 		

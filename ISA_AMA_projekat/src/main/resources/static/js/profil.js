@@ -10,33 +10,48 @@ $(document).ready(function(){
 		data : token,
 		  
 		success: function(user) {
-			korisnik = user;
-			if(korisnik.authority.authority!="ROLE_SYSADMIN")
-				{
-				$("#div_buttons").hide();
-				$("#div_buttons_admin").hide();
-				$("#div_buttons_system_admin").hide();
+			
+			if(user != "")
+			{
+				korisnik = user;
 				
+				if(korisnik.authority.authority!="ROLE_SYSADMIN")
+				{
+					$("#div_buttons").hide();
+					$("#div_buttons_admin").hide();
+					$("#div_buttons_system_admin").hide();
+					
 				}
+				else
+				{
+					$("#div_buttons").show();
+					$("#div_buttons_admin").show();
+					$("#div_buttons_system_admin").show();
+					
+				}
+				
+				document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
+				document.getElementById("name_profile").value  = user.ime;
+				document.getElementById("lastname_profile").value  = user.prezime;
+				document.getElementById("email_profile").value  = user.email;
+				document.getElementById("phone_profile").value  = user.telefon;
+				document.getElementById("city_profile").value  = user.grad.naziv;
+				document.getElementById("bonus_profile").value  = user.bonuspoeni;
+			}
 			else
-				{
-				$("#div_buttons").show();
-				$("#div_buttons_admin").show();
-				$("#div_buttons_system_admin").show();
-				
-				}
-			document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
-			document.getElementById("name_profile").value  = user.ime;
-			document.getElementById("lastname_profile").value  = user.prezime;
-			document.getElementById("email_profile").value  = user.email;
-			document.getElementById("phone_profile").value  = user.telefon;
-			document.getElementById("city_profile").value  = user.grad.naziv;
-			document.getElementById("bonus_profile").value  = user.bonuspoeni;
+			{
+				localStorage.clear();
+				window.location.href = 'index.html';
+			}
 			
 		},
 		
 		error: function() {
-			alert('Error');
+			//alert('Error');
+			console.log('istekao je token');
+			localStorage.clear();
+			window.location.href = 'index.html';
+			
 		}
 	
 	});
@@ -290,6 +305,7 @@ $(document).ready(function(){
 		event.preventDefault();
 		
 		var attr = $('#passChange').attr('pomoc');
+		let email_profile = $("#email_profile").val();
 		
 		if($('input[value=edit]').val() == 'edit' && (typeof attr == typeof undefined || attr == false))
 		{
@@ -325,6 +341,7 @@ $(document).ready(function(){
 			
 			let ispravno = true;
 			
+			$('#error_old_pass_profile').hide();
 			let old_password = $("#old_password_profile").val();
 			let new_password = $("#new_password_profile").val();
 			let confirm_new_password = $("#confirm_new_password_profile").val();
@@ -341,19 +358,37 @@ $(document).ready(function(){
 			{
 				$.post({
 					url: "/auth/change_password/",
+					headers: {"Authorization": "Bearer " + token},
 					data: JSON.stringify({oldPassword: old_password, newPassword: new_password}),
 					contentType: 'application/json',
 					success: function(data) {
-						console.log('uspesna promena lozinke korisnika');
 						
-						$('#passChange').removeAttr('pomoc');
-						$("#old_password_profile").prop('required', false);
-				        $("#new_password_profile").prop('required', false);
-				        $("#confirm_new_password_profile").prop('required', false);
-				        
-						window.location.href = 'profil.html';
+						if(data.result == 'success')
+						{
+							console.log('uspesna promena lozinke korisnika');
+							
+							$('#passChange').removeAttr('pomoc');
+							$("#old_password_profile").prop('required', false);
+					        $("#new_password_profile").prop('required', false);
+					        $("#confirm_new_password_profile").prop('required', false);
+					        $('#error_old_pass_profile').hide();
+					        
+							loginAgain(email_profile, new_password);
+						}
+						else
+						{
+							$('#error_old_pass_profile').show();
+						}
+						
+					},
+					error: function(data)
+					{
+						console.log('greska prilikom menjanja lozinke');
 					}
 				});
+				
+					
+				
 			}
 			
 			
@@ -363,6 +398,54 @@ $(document).ready(function(){
 		
 	});
 });
+/*
+function refresh()
+{
+	$.post({
+		url: "/auth/refresh",
+		headers: 'Authorization',
+		contentType: 'application/json',
+		  
+		success: function(res) {
+			if(res!="" && res.accessToken != null)
+			{
+				localStorage.setItem('jwtToken', res.accessToken);
+			}
+			else
+			{
+				localStorage.removeItem('jwtToken');
+			}
+		},
+		
+		error: function() {
+			console.log('greska prilikom refresh-ovanja tokena');
+		}
+	
+	});
+}
+*/
+function loginAgain(email, pass)
+{
+	$.post({
+		url: "/auth/login",
+		data: JSON.stringify({email: email, lozinka: pass}),
+		contentType: 'application/json',
+		headers: 'Authorization',
+		  
+		success: function(res) {
+			if(res!="" && res.accessToken != null)
+			{
+				localStorage.setItem('jwtToken', res.accessToken);
+				window.location.href="profil.html";
+			}
+			else
+			{
+				console.log('greska prilikom logovanja sa novom lozinkom');
+			}
+				
+		}
+	});
+}
 
 function newAirline()
 {

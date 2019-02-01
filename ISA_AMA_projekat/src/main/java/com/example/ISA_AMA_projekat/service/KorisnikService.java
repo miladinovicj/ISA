@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ISA_AMA_projekat.controller.AuthenticationController;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.repository.KorisnikRepository;
@@ -35,6 +36,9 @@ public class KorisnikService implements UserDetailsService{
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	AuthenticationController authController;
 
 	
 	public Korisnik findByEmail(String email) {
@@ -80,11 +84,18 @@ public class KorisnikService implements UserDetailsService{
 		}
 	}
 	
-	public void changePassword(String oldPassword, String newPassword) {
+	public boolean changePassword(String oldPassword, String newPassword) {
 
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
 		System.out.println("[KorisnikService: changePassword] username: " + username);
+		
+		Korisnik user = (Korisnik) findByEmail(username);
+		
+		if(!(passwordEncoder.matches(oldPassword, user.getLozinka()))) {
+			System.out.println("[KorisnikService: changePassword] matches vraca false ");
+			return false;
+		}
 
 		if (authenticationManager != null) {
 			LOGGER.debug("Re-authenticating user '" + username + "' for password change request.");
@@ -93,19 +104,22 @@ public class KorisnikService implements UserDetailsService{
 		} else {
 			LOGGER.debug("No authentication manager set. can't change Password!");
 
-			return;
+			return false;
 		}
 
 		LOGGER.debug("Changing password for user '" + username + "'");
 
-		Korisnik user = (Korisnik) findByEmail(username);
+		
+		//final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, newPassword));
+		//SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
 		// ne zelimo da u bazi cuvamo lozinke u plain text formatu
 		//user.setPassword(passwordEncoder.encode(newPassword));
 		user.setLozinka(passwordEncoder.encode(newPassword));
 		korisnikRepository.save(user);
-
+		
+		return true;
 	}
 	
 

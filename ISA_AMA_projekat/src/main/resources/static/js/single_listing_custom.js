@@ -21,23 +21,25 @@ $(document).ready(function()
 {
 var token = localStorage.getItem('jwtToken');
 
-	
 	if(token==null)
-		{
+	{
 		$('#prijava').show();
 		$('#reg').show();
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
 		$('#rentacarS').hide();
+		$('#hotelAdmin').hide();
 		
-		}
+	}
 	else
-		{
-		
+	{
 		$('#prijava').hide();
 		$('#reg').hide();
 		$('#odjava').show();
 		$('#profilKorisnika').show();
+		$('#hotelAdmin').hide();
+		$('#rentacarS').hide();
+		
 		$.post({
 			url: "/auth/userprofile",
 			headers: {"Authorization": "Bearer " + token},
@@ -45,24 +47,40 @@ var token = localStorage.getItem('jwtToken');
 			data : token,
 			  
 			success: function(user) {
-				if(user.authority.authority == 'ROLE_RENTADMIN')
+				if(user != "")
+				{
+					if(user.authority.authority == 'ROLE_RENTADMIN')
 					{
-					var prosledi = "rentAdmin.html?id="+user.admin_id;
-					$("#linkServis").attr("href", prosledi);
-					$('#rentacarS').show();
+						var prosledi = "rentAdmin.html?id="+user.admin_id;
+						$("#linkServis").attr("href", prosledi);
+						$('#rentacarS').show();
 					
 					}
+					else if(user.authority.authority =="ROLE_HOTELADMIN")
+					{
+						var prosledi = "hotelAdmin.html?id=" + user.admin_id;
+						$("#linkHotelAdmin").attr("href", prosledi);
+						$('#hotelAdmin').show();
+						$('#rentacarS').hide();
+					}
+				}
 				else
-					$('#rentacarS').hide();
+				{
+					localStorage.clear();
+					window.location.href = 'index.html';
+				}
 			},
 			
-			error: function() {
-				alert('Error');
-		}
+			error: function(data) {
+				//alert('Error');
+				console.log('istekao je token');
+				localStorage.clear();
+				window.location.href = 'index.html';
+			}
 		
-				});
+		});
 		
-		}
+	}
 	
 	"use strict";
 

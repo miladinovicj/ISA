@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
-import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.FilijalaService;
 import com.example.ISA_AMA_projekat.service.GradService;
