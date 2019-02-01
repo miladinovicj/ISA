@@ -47,13 +47,18 @@ var token = localStorage.getItem('jwtToken');
 				{
 					if(user.authority.authority == 'ROLE_RENTADMIN')
 					{
-					var prosledi = "rentAdmin.html?id="+user.admin_id;
-					$("#linkServis").attr("href", prosledi);
-					$('#rentacarS').show();
+						var prosledi = "rentAdmin.html?id="+user.admin_id;
+						$("#linkServis").attr("href", prosledi);
+						$('#rentacarS').show();
 					
 					}
-				else
-					$('#rentacarS').hide();
+					else if(user.authority.authority =="ROLE_HOTELADMIN")
+					{
+						var prosledi = "hotelAdmin.html?id=" + user.admin_id;
+						$("#linkHotelAdmin").attr("href", prosledi);
+						$('#hotelAdmin').show();
+						$('#rentacarS').hide();
+					}
 				}
 				else
 				{

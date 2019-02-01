@@ -110,6 +110,11 @@ public class AuthenticationController {
 					System.out.println("[AuthenticationController: createAuthenticationToken] username from token: " + username);
 
 					System.out.println("[AuthenticationController: createAuthenticationToken] jwt: " + jwt);
+					
+					Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+					String email = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
+					System.out.println("[AuthenticationController: createAuthenticationToken] username: " + email);
+					
 					// Vrati token kao odgovor na uspesno autentifikaciju
 					return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 			 }
@@ -146,6 +151,10 @@ public class AuthenticationController {
 	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
 		
 		System.out.println("[AuthenticationController: changePassword] oldPassword: " + passwordChanger.oldPassword + "; newPassword: " + passwordChanger.newPassword);
+		
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
+		System.out.println("[AuthenticationController: changePassword] username: " + username);
 		
 		boolean uspesno = userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 		

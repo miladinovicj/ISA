@@ -20,14 +20,14 @@ $(document).ready(function()
 	var token = localStorage.getItem('jwtToken');
 	
 	if(token==null)
-		{
+	{
 		$('#prijava').show();
 		$('#reg').show();
 		$('#odjava').hide();
 		$('#profilKorisnika').hide();
 		$('#rentacarS').hide();
 		$('#hotelAdmin').hide();
-		}
+	}
 	else
 	{
 		
@@ -57,10 +57,10 @@ $(document).ready(function()
 					}
 					else if(user.authority.authority =="ROLE_HOTELADMIN")
 					{
-						$('#rentacarS').hide();
 						var prosledi = "hotelAdmin.html?id=" + user.admin_id;
 						$("#linkHotelAdmin").attr("href", prosledi);
 						$('#hotelAdmin').show();
+						$('#rentacarS').hide();
 					}
 				}
 				else
