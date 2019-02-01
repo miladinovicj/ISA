@@ -734,6 +734,7 @@ public class RentacarController {
 		return result;
 	}
 	
+	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
 			value = "/admin/izmenaRent/{id}/{naziv}/{ulica}/{broj}/{grad}/{opis}",
 			method = RequestMethod.POST,
@@ -773,5 +774,48 @@ public class RentacarController {
 		System.out.println("[RentacarControler]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
 		rentService.updateServis(naziv, adr.getId(), opis, ser.getId());
 		return ser;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/sveRezervacijeVozila/{id_servisa}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<RezervacijaVozila>> getAllRez(@PathVariable("id_servisa") Integer id){
+		
+		RentacarServis rent = rentService.findById(id).get();
+		
+		ArrayList<Integer> vozilaSer = new ArrayList<Integer>();
+		for (Iterator<Filijala> iteratorFil = rent.getFilijale().iterator(); iteratorFil.hasNext();)
+		{
+			Filijala filijala = iteratorFil.next();
+			for(Iterator<Vozilo> iteratorVoz = filijala.getVozila().iterator(); iteratorVoz.hasNext();)
+			{
+				Vozilo v = iteratorVoz.next();
+				vozilaSer.add(v.getId());
+			}
+		}
+		
+		List<RezervacijaVozila> sve_rez = rezervacijaVozilaService.getAll();
+		List<RezervacijaVozila> rez = new ArrayList<RezervacijaVozila>();
+		for(Iterator<RezervacijaVozila> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();)
+		{
+			RezervacijaVozila rv = iteratorSveRez.next();
+			for(int i = 0; i<vozilaSer.size();i++)
+			{
+				if(rv.getVozilo().getId()==vozilaSer.get(i))
+				{
+					rez.add(rv);
+				}
+			}
+		}
+		
+		System.out.println("Rezervacija ima: " + rez.size());
+		for(Iterator<RezervacijaVozila> iteratorRez = rez.iterator(); iteratorRez.hasNext();)
+		{
+			RezervacijaVozila rv2 = iteratorRez.next();
+			System.out.println("REZ " + rv2.getId() + " ima ukupnu cenu: " + rv2.getUkupna_cena());
+		}
+		return new ResponseEntity<Collection<RezervacijaVozila>>(rez, HttpStatus.OK);
 	}
 }

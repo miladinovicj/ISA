@@ -1,6 +1,6 @@
 $(document).ready(function()
 {
-	let token=localStorage.getItem('jwtToken');
+	token=localStorage.getItem('jwtToken');
 	
 	var search = window.location.search;
 	var splitted = search.split('&');
@@ -14,6 +14,7 @@ $(document).ready(function()
         contentType: 'application/json',
         success: function (rentacar)
 		{
+        	servis = rentacar;
             longitude = rentacar.adresa.longitude;
         	latitude = rentacar.adresa.latitude;
             console.log(rentacar);
@@ -65,10 +66,9 @@ function showRentacar(rentacar)
 	 $('#dugmeIzmena').attr("href", idiNa);
 	 var dodajFil = "dodajFilijalu.html?id="+rentacar.id;
 	 $('#dugmeFil').attr("href", dodajFil);
-	 
 	 var dodajVozilo = "dodajVozilo.html?id="+rentacar.id;
 	 $('#dugmeVozilo').attr("href", dodajVozilo);
-	 
+	
 	 
 	 $('#adresa_rentacar').text(rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv);
 	    
@@ -136,7 +136,24 @@ function addFilijala(rentacar, filijala)
     a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
 }
+function prikaziIzvestaj()
+{
+	
+	
+	var id_servisa = servis.id;
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/sveRezervacijeVozila/' + id_servisa,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (rezervacije)
+		{
+        	alert('Pritisnuto dugme za prikaz izvestaja rentacara: ' + servis.id);
+		}
+    });
+	
 
+}
 function brisanjeFil(filijala_id)
 {
 	$.ajax({

@@ -155,6 +155,23 @@ insert into popust_usluge (popust_id, usluge_id) values (1, 5);
 insert into popust_usluge (popust_id, usluge_id) values (3, 8);
 insert into popust_usluge (popust_id, usluge_id) values (3, 10);
 
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (1, true, 3, false, '2019-02-03', '2019-02-15', 0, 1105, 1, 1, 1);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (2, true, 3, false, '2019-02-03', '2019-02-15', 0, 2000, 1, 1, 3);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (3, true, 3, false, '2019-02-17', '2019-02-20', 0, 650, 1, 1, 1);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (4, true, 3, false, '2019-03-04', '2019-03-10', 0, 880, 1, 1, 1);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (5, true, 5, false, '2019-02-03', '2019-02-15', 0, 1105, 1, 1, 2);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (6, true, 2, false, '2019-02-15', '2019-02-20', 0, 889, 1, 1, 2);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (7, true, 1, false, '2019-02-03', '2019-02-15', 0, 770, 1, 1, 4);
+
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (1, 1);
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (3, 2);
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (1, 3);
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (1, 4);
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (2, 5);
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (2, 6);
+insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (4, 7);
+
+
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (2, 'mojmejl@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Endzi', 'Jeremic', 1, '062522006', 0, true, 1);
 insert into AUTHORITY (id, name) values (2, 'ROLE_RENTADMIN');
 insert into user_authority (user_id, authority_id) values (2, 2);

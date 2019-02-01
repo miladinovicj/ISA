@@ -1,5 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +20,10 @@ public class RezervacijaVozilaService {
 	
 	public void insertRezervacijaVozila(Integer rezervacija_id, Integer vozilo_id) {
 		rezervacijaVozilaRepository.insertRezervacijaVozila(rezervacija_id, vozilo_id);
+	}
+	
+	public List<RezervacijaVozila> getAll()
+	{
+		return rezervacijaVozilaRepository.findAll();
 	}
 }
