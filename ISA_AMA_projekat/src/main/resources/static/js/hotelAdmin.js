@@ -1,6 +1,6 @@
 $(document).ready(function()	
 {
-	let token = localStorage.getItem('jwtToken');
+	token = localStorage.getItem('jwtToken');
 	
 	var search = window.location.search;
     id_presented = search.substring(4);
@@ -27,10 +27,14 @@ $(document).ready(function()
 		}
     });
     
+    /*
     $('textarea').on('keyup', function(){
     	  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
     });
-
+     */
+    $('input[name=price_service]').on('keyup', function(){
+  	  $('#error_price_service').hide();
+    });
 	
 	$('#edit_hotel_form').submit(function(event) {
 		console.log('edit_hotel_form submit');
@@ -127,10 +131,7 @@ $(document).ready(function()
 			}
 			
 			if(ispravno == true)
-			{
-				lat = parseFloat(latitude);
-				long = parseFloat(longitude)
-				
+			{	
 				$.get({
 					url: "/api/address/check/" + city +'/' + street + '/' + number + '/' + latitude + '/' + longitude,
 					success: function(data) {
@@ -160,6 +161,8 @@ $(document).ready(function()
 	$('#change_price_form').submit(function(event) {
 		console.log('add_form_admin submit');
 		event.preventDefault();
+		
+		document.getElementById("error_price_service").style.display  = 'none';
 		
 		var attr = $('#button_hotel_back').attr('pritisnuto');
 		var attr2 = $('#button_add_service').attr('pritisnuto');
@@ -205,8 +208,24 @@ $(document).ready(function()
 							else {
 								
 								console.log('Usluga dodata!');
-								window.location.href="hotelAdmin.html?id=" + id_presented;
-											
+								//window.location.href="hotelAdmin.html?id=" + id_presented;
+								
+								$('.new_additional_service').hide();
+								$('#button_add_service').text('Add new service');
+								
+								$('input[name=new_price_service]').prop('required',false);
+								$('input[name=new_service]').prop('required',false);
+								
+					    		var option = document.createElement("option");
+								option.text = data.naziv;
+								option.value = data.id;
+								$('select[name=select_services]').append(option);
+								
+								$('select[name=select_services]').val(data.id);
+								editServices();
+								
+								let li = $('<li><span>' + data.naziv + ' - $' + data.cena + '/per day</span></li>');
+					    		$('#usluge_hotela').append(li);
 							}
 						}
 					});
@@ -246,7 +265,8 @@ $(document).ready(function()
 							
 							console.log('Cost of additional service successfully changed!');
 							window.location.href="hotelAdmin.html?id=" + id_presented;
-										
+							//$('select[name=select_services]').val(data.id);
+							//editServices();
 						}
 					}
 				});
@@ -255,12 +275,92 @@ $(document).ready(function()
 		}
 	});
 	
+
+
+	$('#add_room_form').submit(function(event) {
+		console.log('add_room_form submit');
+		event.preventDefault();
+		
+		var attr = $('#button_hotel_back').attr('pritisnuto');
+		
+		if (typeof attr !== typeof undefined && attr !== false)
+		{
+			$('#button_hotel_back').removeAttr('pritisnuto');
+		}
+		
+		let number_of_bads = $('input[name="number_of_bads"]').val();
+		let price_night = $('input[name="price_night"]').val();
+		let desc_room = $('textarea[name="room_description"]').val();
+		
+		let ispravno = true;
+		
+		if(!(/^[0-9]+$/.test(price_night)))
+		{
+			document.getElementById("error_price_night").style.display  = 'block';
+			ispravno=false;
+		}
+		else
+		{
+			document.getElementById("error_price_night").style.display  = 'none';
+		}
+		
+		if(ispravno == true)
+		{
+			if($('input[id=button_click_room]').val() == 'Add')
+			{
+
+				console.log('add room');
+				
+				$.post({
+					url: '/api/hotels/add_room/' + id_presented,
+					headers: {"Authorization": "Bearer " + token},
+					data: JSON.stringify({cena_nocenja: price_night, broj_kreveta: number_of_bads, opis: desc_room}),
+					contentType: 'application/json',
+					success: function(data) {
+						if(data==null || data==""){
+							console.log('Nije dodata soba');
+						}
+						else {
+							
+							console.log('Soba uspesno dodata');
+							window.location.href="hotelAdmin.html?id=" + id_presented;
+						}
+					}
+				});
+			}
+			else
+			{
+
+				console.log('edit room');
+				
+				$.post({
+					url: '/api/hotels/edit_room/' + soba_id,
+					headers: {"Authorization": "Bearer " + token},
+					data: JSON.stringify({cena_nocenja: price_night, broj_kreveta: number_of_bads, opis: desc_room}),
+					contentType: 'application/json',
+					success: function(data) {
+						if(data==null || data==""){
+							console.log('Nije izmenjena soba');
+						}
+						else {
+							
+							console.log('Soba uspesno izmenjena');
+							window.location.href="hotelAdmin.html?id=" + id_presented;
+						}
+					}
+				});
+			}
+		}
+		
+	});
+	
 });
 
 function finalEdit(address)
 {
 	$.post({
 		url: "/api/hotels/editHotel/" + id_presented,
+		headers: {"Authorization": "Bearer " + token},
 		data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
 		contentType: 'application/json',
 		success: function(data) {
@@ -268,6 +368,7 @@ function finalEdit(address)
 			{
 				console.log('uspesna promena podataka hotela');
 				window.location.href = 'hotelAdmin.html?id=' + id_presented;
+				editHotel();
 			}
 			else
 			{
@@ -300,6 +401,8 @@ function showHotel(hotel)
     	{
     		addSoba(soba);
     	}
+		
+		
     	
 	}
     
@@ -364,7 +467,129 @@ function addSoba(soba)
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_sobe_template").appendChild(a);
-   
+    
+    let rezervisana = false;
+    
+    for(let rezervacija of soba.rezervacije)
+    {
+    	var today = new Date();
+    	today.setHours(0, 0, 0);
+    	
+    	var end = rezervacija.datum_odlaska.substring(0, 19);
+    	var date = new Date(end + "Z");
+    	var pravi = date.toString();
+    	var date_end = new Date(pravi);
+    	
+    	console.log(today);
+    	console.log(date_end);
+    	
+    	if(today < date_end || (today.getFullYear() == date_end.getFullYear() && today.getMonth() == date_end.getMonth() && today.getDate() == date_end.getDate()))
+    	{
+    		rezervisana = true;
+    		break;
+    	}
+    	
+    	console.log(today === date_end);
+
+    }
+    
+    if(rezervisana == false)
+    {
+		var elements = document.getElementsByClassName('button_edit_room');
+		for(element of elements)
+		{
+			$(element).removeClass('button_edit_room');
+			$(element).click(editRoom(soba.id));
+		}
+		
+		$(".button_delete_room").addClass('soba_id_' + soba.id);
+		var elements = document.getElementsByClassName('button_delete_room');
+		for(element of elements)
+		{
+			$(element).removeClass('button_delete_room');
+			$(element).click(deleteRoom(soba.id));
+		}
+    }
+    else
+    {
+    	var elements = document.getElementsByClassName('button_edit_room');
+		for(element of elements)
+		{
+			$(element).removeClass('button_edit_room');
+			element.parentElement.style.display = 'none';
+		}
+		
+		var elements = document.getElementsByClassName('button_delete_room');
+		for(element of elements)
+		{
+			$(element).removeClass('button_delete_room');
+			element.parentElement.style.display = 'none';
+		}
+    }
+}
+
+function editRoom(id)
+{
+	return function(){
+		
+		console.log('edit room with id: ' + id);
+		
+		$.ajax({
+			url: 'api/hotels/get_soba/' + id,
+			type: 'POST',
+			success: function(soba) {
+				
+				console.log("uspesno nadjena soba sa id_sobe: " + soba.id);
+				editingRoom(soba);
+			}
+		});
+	};
+	
+}
+
+function deleteRoom(id)
+{
+	return function(){
+		
+		console.log('delete room with id: ' + id);
+		
+		$.ajax({
+			url: 'api/hotels/delete_room/' + id,
+			headers: {"Authorization": "Bearer " + token},
+			type: 'DELETE',
+			success: function(soba) {
+				
+				console.log("uspesno obrisana soba sa id_sobe: " + soba.id);
+				window.location.href="hotelAdmin.html?id=" + id_presented;
+			},
+			error: function(data){
+				console.log("neuspesno brisanje sobe");
+			}
+		});
+		
+		
+	};
+	
+}
+
+function editingRoom(soba)
+{
+	soba_id = soba.id;
+	
+	console.log('editing room');
+	
+	$('#div_add_room').show();
+	$('#div_edit_hotel').hide();
+	$('#div_edit_services').hide();
+	
+	var el = document.getElementById('div_add_room');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -330);
+    
+    $('input[name="number_of_bads"]').val(soba.broj_kreveta);
+	$('input[name="price_night"]').val(soba.cena_nocenja);
+	$('textarea[name="room_description"]').val(soba.opis);
+	$('input[id=button_click_room]').val('Edit');
 }
 
 function initMap()
@@ -394,6 +619,8 @@ function editHotel()
     $('textarea[name=hotel_description').val(moj_hotel.promotivni_opis);
     
     $('#div_edit_services').hide();
+	$('#div_add_room').hide();
+	
 	$('#div_edit_hotel').show();
 	var el = document.getElementById('div_edit_hotel');
     el.scrollIntoView(true);
@@ -404,6 +631,9 @@ function editServices()
 {
 	console.log('editing services');
 	$('#div_edit_hotel').hide();
+	$('#div_add_room').hide();
+	
+	$('input[name=price_service]').prop('required',true);
 	
 	$('#div_edit_services').show();
 	var el = document.getElementById('div_edit_services');
@@ -412,9 +642,22 @@ function editServices()
     changeSelection();
 }
 
-function editRooms()
+function addRoom()
 {
+	console.log('adding room');
 	
+	$('#div_add_room').show();
+	$('#div_edit_hotel').hide();
+	$('#div_edit_services').hide();
+	
+	var el = document.getElementById('div_add_room');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -330);
+    
+    $('input[name="number_of_bads"]').val('');
+	$('input[name="price_night"]').val('');
+	$('textarea[name="room_description"]').val('');
+	$('input[id=button_click_room]').val('Add');
 }
 
 function backEdit()
@@ -422,6 +665,7 @@ function backEdit()
 	$('#div_edit_hotel').hide();
 	$('#div_edit_services').hide();
 	$('.new_additional_service').hide();
+	$('#div_add_room').hide();
 	
 	$('#button_hotel_back').attr('pritisnuto', 'true');
 	
@@ -434,18 +678,25 @@ function changeSelection()
 {
 	let id = $( "select[name=select_services] option:selected" ).val();
 	
-	$.get({
-		url: "/api/usluge/get/" + id,
-		success: function(price) {
-			$('input[name=price_service]').val(price);
-		},
+	if(id != undefined)
+	{
+		$.get({
+			url: "/api/usluge/get/" + id,
+			success: function(price) {
+				$('input[name=price_service]').val(price);
+			},
+			
+			error: function(data) {
+				console.log('Error with loading service');
+			}
 		
-		error: function(data) {
-			console.log('Error with loading service');
-		}
-	
-	});
-	
+		});
+	}
+	else
+	{
+
+		$('input[name=price_service]').prop('required',false);
+	}
 }
 
 function addService()
@@ -456,6 +707,7 @@ function addService()
 	
 	$('input[name=new_price_service]').prop('required',true);
 	$('input[name=new_service]').prop('required',true);
+	
 }
 
 function initMap()

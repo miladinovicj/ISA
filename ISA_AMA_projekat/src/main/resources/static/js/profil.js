@@ -56,9 +56,11 @@ $(document).ready(function(){
 	
 	});
 	
+	/*
 	$('textarea').on('keyup', function(){
   	  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
-  });
+	});
+	*/
 	
 	$('#add_form').submit(function(event) {
 		console.log('add_form submit');
@@ -460,6 +462,10 @@ function newAirline()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add airline';
+	
+	var el = document.getElementById('div_new');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function newHotel()
@@ -471,6 +477,10 @@ function newHotel()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add hotel';
+	
+	var el = document.getElementById('div_new');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function newRental()
@@ -482,6 +492,10 @@ function newRental()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add car rental';
+	
+	var el = document.getElementById('div_new');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function back()
@@ -489,6 +503,10 @@ function back()
 	console.log('[profil.js: back()]');
 	document.getElementById("div_new").style.display  = 'none';
 	document.getElementById("div_buttons").style.display  = 'block';
+	
+	var el = document.getElementById('div_buttons');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 /*
@@ -654,6 +672,10 @@ function newAirlineAdmin()
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Airlines:';
 	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -50);
+	
 	$.get({
 		url: "/rest/airline/all_admin",
 		headers: {"Authorization": "Bearer " + token},
@@ -701,6 +723,10 @@ function newHotelAdmin()
 	document.getElementById('button_add_admin').value = 'Add hotel administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Hotels: ';
+	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -50);
 	
 	$.get({
 		url: "/api/hotels/all_admin",
@@ -750,6 +776,10 @@ function newRentalAdmin()
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Car rentals: ';
 	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -50);
+	
 	$.get({
 		url: "/api/rents/all_admin",
 		headers: {"Authorization": "Bearer " + token},
@@ -796,6 +826,10 @@ function newSystemAdmin()
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add system administrator';
 	document.getElementById('admin_sys_close').style.display = 'none';
+	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function backAdmin()
@@ -803,8 +837,13 @@ function backAdmin()
 	console.log('[profil.js: backAdmin()]');
 	document.getElementById("div_new_admin").style.display  = 'none';
 	document.getElementById("div_buttons_admin").style.display  = 'block';
+	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById("no_one").style.display  = 'none';
 	document.getElementById("button_back_admin2").style.display  = 'none';
+	
+	var el = document.getElementById('div_buttons_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -250);
 }
 
 function changePassword()

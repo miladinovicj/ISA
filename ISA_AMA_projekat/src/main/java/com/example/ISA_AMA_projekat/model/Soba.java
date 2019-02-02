@@ -41,14 +41,14 @@ public class Soba {
 	@Column
 	private double cena_popust;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
 	@JsonBackReference(value = "Hotel-Soba")
 	private Hotel hotel;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Popust> popusti = new HashSet<Popust>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JsonManagedReference(value = "RezervacijaHotel-Soba")
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	

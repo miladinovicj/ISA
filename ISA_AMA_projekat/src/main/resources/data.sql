@@ -97,13 +97,17 @@ insert into hotel_usluge (hotel_id, usluge_id) values (6, 1);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 2);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 3);
 
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (1, '2018-12-25', '2018-12-26', 1, 2, false, 10, true, 0);
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (2, '2018-12-25', '2018-12-27', 3, 3, false, 10, true, 0);
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (3, '2018-12-20', '2018-12-23', 3, 4, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (1, '2018-12-25', '2018-02-01', 1, 2, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (2, '2018-12-25', '2019-02-03', 3, 3, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (3, '2018-12-20', '2018-02-03', 3, 4, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (4, '2018-12-25', '2018-02-05', 3, 3, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (5, '2018-12-20', '2018-01-05', 3, 4, false, 10, true, 0);
 
 insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 1);
-insert into soba_rezervacije (soba_id, rezervacije_id) values (3, 2);
-insert into soba_rezervacije (soba_id, rezervacije_id) values (3, 3);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 2);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 3);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (2, 4);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (2, 5);
 
 insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Angel', 8, 'Mlada firma sa velikom vizijom. Iznajmljivanje automobila sa i bez vozaca.', 3.2);
 insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Cartize Company', 9, 'Najpovoljnije cene rentiranja automobila u Novom Sadu', 4.8);

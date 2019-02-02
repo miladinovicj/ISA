@@ -29,7 +29,7 @@ public class Popust {
 	@Column
 	private double popust;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	public Popust() {

@@ -667,6 +667,7 @@ public class HotelController {
 		return result;
 	}
 	
+	@PreAuthorize("hasRole('HOTELADMIN')")
 	@RequestMapping(
 			value = "/editHotel/{hotel_id}",
 			method = RequestMethod.POST,
@@ -684,6 +685,71 @@ public class HotelController {
 		result.put("result", "success");
 	
 		return ResponseEntity.accepted().body(result);
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/add_room/{hotel_id}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> addSoba(@PathVariable("hotel_id") Integer hotel_id, @RequestBody Soba soba){
+		System.out.println("[HotelController: addSoba]: usao u metodu add_room");
+		
+		Hotel hotel = hotelService.findById(hotel_id).get();
+		
+		soba.setHotel(hotel);
+		soba.setProsecna_ocena(0);
+		soba.setZauzeta(false);
+		
+		System.out.println("[HotelController: addSoba] PRE CUVANJA SOBE U BAZU - hotel: " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
+		
+		Soba result = sobaService.save(soba);
+		
+		System.out.println("[HotelController: addSoba] PRE CUVANJA HOTELA U BAZU - hotel: " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
+
+		hotel.getSobe().add(result);
+		Hotel novi_hotel = hotelService.save(hotel);
+		System.out.println("[HotelController: addSoba] POSLE CUVANJA U BAZU - hotel: " + novi_hotel.getNaziv() + " ima " + novi_hotel.getSobe().size() + " soba.");
+		
+		return new ResponseEntity<Soba>(result, HttpStatus.OK);
+		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/edit_room/{soba_id}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> editSoba(@PathVariable("soba_id") Integer soba_id, @RequestBody Soba soba){
+		System.out.println("[HotelController: addSoba]: usao u metodu add_room");
+		
+		Soba pronadjena = sobaService.findById(soba_id).get();
+		
+		pronadjena.setBroj_kreveta(soba.getBroj_kreveta());
+		pronadjena.setCena_nocenja(soba.getCena_nocenja());
+		pronadjena.setOpis(soba.getOpis());
+		
+		Soba result = sobaService.save(pronadjena);
+		
+		return new ResponseEntity<Soba>(result, HttpStatus.OK);
+		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/delete_room/{soba_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> deleteSoba(@PathVariable("soba_id") Integer soba_id){
+		System.out.println("[HotelController: deleteSoba]: usao u metodu delete_room");
+		
+		Soba pronadjena = sobaService.findById(soba_id).get();
+		sobaService.deleteRoom(pronadjena);
+		
+		return new ResponseEntity<Soba>(pronadjena, HttpStatus.OK);
+		
 	}
 	
 	public Hotel pretraga_hotel(Hotel hotel, Date check_in, Date check_out, int adults){

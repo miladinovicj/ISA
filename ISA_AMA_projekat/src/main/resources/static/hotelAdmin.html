@@ -138,7 +138,7 @@
 								<div id="div_changing_buttons">
 									<button id="button_edit_hotel" style="margin-right: 10%; margin-left: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editHotel()">Edit hotel</button>
 									<button id="button_edit_services" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editServices()">Edit additional services</button>
-									<button id="button_edit_rooms" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editRooms()">Edit rooms</button>
+									<button id="button_add_rooms" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:addRoom()">Add room</button>
 								</div>
 							
 							</div>
@@ -215,12 +215,13 @@
 										
 										<!-- Room -->
 										<div class="row">
-											<div style="text-align: center; width: 100%;">
+											<div class="div_append" style="text-align: center; width: 100%;">
 												<span class="span_room room_name" id="naziv" style="font-size: 20pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
 												<span class="span_room room_price" id="broj_kreveta" style="margin-top: -10px; white-space: pre; width: 30%; float: left; font-size: 10pt"></span>
-												<span class="span_room room_price" id="cena_nocenja" style="margin-top: -10px; float: left; white-space: pre; font-size: 12pt"></span>
-												<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 15px; width: 65px; position: relative"></span>
-												<span hidden="true" class="span_room button book_button trans_200" id="button_book_room" style="margin-right:10%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_book_room" style="cursor: pointer; color: white;">book<span></span><span></span><span></span></a></span>
+												<span class="span_room room_price" id="cena_nocenja" style="margin-top: 5px; float: left; white-space: pre; font-size: 12pt"></span>
+												<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 0px; width: 65px; position: relative"></span>
+												<span class="span_room button book_button trans_200" id="button_edit_room" style="bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_edit_room" style="padding-left: 25px; cursor: pointer; color: white;">Edit room</a></span>
+												<span class="span_room button book_button trans_200" id="button_delete_room" style="margin-right:5%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_delete_room" style="padding-left: 15px; cursor: pointer; color: white;">Delete room</a></span>
 											</div>
 										</div>	
 									</div>
@@ -320,6 +321,36 @@
 									<input id="button_change_price" value="Change price" type="submit" style="width: 100%;" class="button search_button">
 									<button id="button_add_service" style="width: 100%; margin-top: 20px;" class="button search_button" onclick="javascript:addService()">Add new service</button>
 									<button id="button_hotel_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
+								</div>
+							</form>
+						</div>
+						
+						<!-- forma za dodavanje nove sobe -->
+						
+						<div style=" width: 100%; margin-top: 60px; margin-bottom: 60px; display: none;" id="div_add_room">
+							<form action="#" id="add_room_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div style="height: 121px; width: 49%; margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Number of beds: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="number" min="1" max="5" name="number_of_bads" class="search_input" required="required">
+									<br>
+								</div>
+					
+								<div style="height: 121px; width: 49%;  margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Price for night: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="price_night" class="search_input" required="required">
+									<p id="error_price_night" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field price must contains only numbers.</p>
+									<br>
+								</div>
+					
+								<div style="width: 74%; margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Description: </div>
+									<textarea maxlength="255" style="border-color: #31124A; border-style: solid; height: 150px;" name="room_description" class="search_input" required="required"></textarea>
+									<br>
+								</div>
+								
+								<div style=" width: 24%; float: right; margin-top: 0%">
+									<input id="button_click_room" value="Add" type="submit" style="width: 100%;" class="button search_button">
+									<button type="button" id="button_hotel_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
 								</div>
 							</form>
 						</div>
