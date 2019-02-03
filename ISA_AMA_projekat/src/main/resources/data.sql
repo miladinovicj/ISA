@@ -1,10 +1,11 @@
 delete from rating;
 delete from user_authority;
 delete from AUTHORITY;
-delete from korisnik;
 delete from aviokompanija_brzi_letovi;
 delete from let;
 delete from aviokompanija;
+delete from friend_request;
+delete from korisnik;
 
 delete from vozilo_rezervacije;
 delete from rezervacija_vozila;
@@ -166,3 +167,8 @@ insert into AUTHORITY (id, name) values (4, 'ROLE_AVIOADMIN');
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (3, 'makaric.milica@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, false, 6);
 insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
+
+
+insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
+insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
+

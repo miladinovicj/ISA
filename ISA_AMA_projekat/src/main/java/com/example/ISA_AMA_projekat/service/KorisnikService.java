@@ -1,5 +1,6 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
+import com.example.ISA_AMA_projekat.repository.FriendRequestRepository;
 import com.example.ISA_AMA_projekat.repository.KorisnikRepository;
 
 
@@ -35,9 +38,13 @@ public class KorisnikService implements UserDetailsService{
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired 
+	private FriendRequestRepository requestRepository;
 
 	
-	public Korisnik findByEmail(String email) {
+	public Korisnik findByEmail(String email) 
+	{
 		return korisnikRepository.findOneByEmail(email);
 	}
 
@@ -49,6 +56,34 @@ public class KorisnikService implements UserDetailsService{
 	{
 		return korisnikRepository.findById(id);
 	}
+	
+	
+	public List<Korisnik> getAllFriendsOfUser(int id)
+	{
+		List<FriendRequest> requestList = requestRepository.findBySaljeOrPrima(id);
+		List<Korisnik> retVala = new ArrayList<Korisnik>();
+		
+		for (int i = 0 ; i < requestList.size() ; i ++ )
+		{
+			FriendRequest fq = requestList.get(i);
+			
+			Korisnik k = null;
+			
+			if(fq.getPrima().getId() == id)
+			{
+				k = fq.getSalje();
+			}
+			if(fq.getSalje().getId() == id)
+			{
+				k = fq.getPrima();
+			}
+			retVala.add(k);
+		}
+		
+		return retVala;
+	}
+	
+	
 	
 	public Korisnik save(Korisnik korisnik)
 	{
@@ -80,8 +115,8 @@ public class KorisnikService implements UserDetailsService{
 		}
 	}
 	
-	public void changePassword(String oldPassword, String newPassword) {
-
+	public void changePassword(String oldPassword, String newPassword) 
+	{
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
 		System.out.println("[KorisnikService: changePassword] username: " + username);
@@ -105,7 +140,6 @@ public class KorisnikService implements UserDetailsService{
 		//user.setPassword(passwordEncoder.encode(newPassword));
 		user.setLozinka(passwordEncoder.encode(newPassword));
 		korisnikRepository.save(user);
-
 	}
 	
 

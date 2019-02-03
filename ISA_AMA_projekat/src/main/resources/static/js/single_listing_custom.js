@@ -53,10 +53,13 @@ var token = localStorage.getItem('jwtToken');
 				else
 					$('#rentacarS').hide();
 			},
+			error: function() 
+			{
+				alert('Errrr');
+			}
 			
-			error: function() {
-				alert('Error');
-		}
+			
+			
 		
 				});
 		

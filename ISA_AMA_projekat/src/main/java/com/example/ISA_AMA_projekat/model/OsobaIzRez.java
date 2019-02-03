@@ -9,7 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
+ 
+enum Prtljag 
+{
+   RUCNI, STANDARD, EXTRA
+}
 @Entity
 public class OsobaIzRez implements Serializable{
 
@@ -38,10 +42,14 @@ public class OsobaIzRez implements Serializable{
 	
 	@Column(nullable = false)
 	private boolean potvrdjeno;
+	
+	@Column(nullable = false)
+	private Prtljag prtljag;
 		
 
 	//FOREIGN KEY:
 	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName="id", nullable=false)
 	private Rezervacija rezervacija;
@@ -127,7 +135,13 @@ public class OsobaIzRez implements Serializable{
 	}
 	
 	
-	
+	public int getPrtljag() {
+		return prtljag.ordinal();
+	}
+
+	public void setPrtljag(int prtljag) {
+		this.prtljag = Prtljag.values()[prtljag];
+	}
 	
 
 }
