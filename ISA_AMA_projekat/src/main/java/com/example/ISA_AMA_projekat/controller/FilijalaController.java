@@ -1,7 +1,15 @@
 package com.example.ISA_AMA_projekat.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
+import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.FilijalaService;
 import com.example.ISA_AMA_projekat.service.GradService;
+import com.example.ISA_AMA_projekat.service.RezervacijaVozilaService;
 
 @RestController
 @RequestMapping(value="api/filijale")
@@ -32,6 +43,9 @@ public class FilijalaController {
 	
 	@Autowired
 	private AddressService addressService; 
+	
+	@Autowired
+	private RezervacijaVozilaService rezervacijaVozilaService;
 	
 	
 	@RequestMapping(
@@ -54,12 +68,13 @@ public class FilijalaController {
 	
 	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
-			value = "/admin/izmenaFil/{id}/{ulica}/{broj}/{grad}",
+			value = "/admin/izmenaFil/{id}/{ulica}/{broj}/{grad}/{latitude}/{longitude}",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public Filijala editFilijala(@PathVariable("id") Integer id,
-			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str)
+			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str,
+			@PathVariable("latitude") double latitude, @PathVariable("longitude") double longitude)
 	{
 		System.out.println("[FilijalaController]: editFilijala");
 		Filijala fil = filijalaService.findById(id).get();
@@ -82,6 +97,8 @@ public class FilijalaController {
 			adr.setGrad(grad);
 			adr.setUlica(ulica);
 			adr.setBroj(broj);
+			adr.setLatitude(latitude);
+			adr.setLongitude(longitude);
 			addressService.save(adr);
 		}
 		else
@@ -96,11 +113,12 @@ public class FilijalaController {
 	
 	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
-			value = "/admin/dodajFil/{ulica}/{broj}/{grad}/{idr}",
+			value = "/admin/dodajFil/{ulica}/{broj}/{grad}/{idr}/{latitude}/{longitude}",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Filijala addFilijala(@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("idr") Integer idr)
+	public Filijala addFilijala(@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("idr") Integer idr,
+			@PathVariable("latitude") double latitude, @PathVariable("longitude") double longitude)
 	{
 		System.out.println("[FilijalaController]:addFilijala");
 		
@@ -122,6 +140,8 @@ public class FilijalaController {
 			adr.setGrad(grad);
 			adr.setUlica(ulica);
 			adr.setBroj(broj);
+			adr.setLatitude(latitude);
+			adr.setLongitude(longitude);
 			addressService.save(adr);
 		}
 		else
@@ -156,6 +176,8 @@ public class FilijalaController {
 			return null; 	
 		}
 	}
+	
+
 
 
 }

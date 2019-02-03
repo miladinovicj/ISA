@@ -22,10 +22,7 @@ public interface VoziloRepository extends JpaRepository<Vozilo, Integer>{
 	@Query("update Vozilo v set v.filijala.id = ?1 where v.id = ?2")
 	public void updateFilVozilo(Integer filijala,  Integer id);
 	
-	@Modifying
-	@Transactional
-	@Query("delete from Vozilo v  where v.id = ?1")
-	public void deleteVozilo(Integer id);
+	
 	
 
 

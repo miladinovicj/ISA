@@ -49,7 +49,7 @@ public class Vozilo {
 	@Column
 	private double prosecna_ocena;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
 	@JsonBackReference
 	private Filijala filijala;
 	

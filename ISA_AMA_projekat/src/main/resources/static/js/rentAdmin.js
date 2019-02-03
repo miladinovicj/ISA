@@ -2,6 +2,7 @@ $(document).ready(function()
 {
 	token=localStorage.getItem('jwtToken');
 	
+	
 	var search = window.location.search;
 	var splitted = search.split('&');
 	
@@ -299,18 +300,20 @@ function brisanjeFil(filijala_id)
 function izlistajVozila(filijala_id, rentacar_id)
 {
 	$("#vozila_dugme" + filijala_id).hide();
+	
 	$.get({
 		url: '/api/filijale/' + filijala_id,
 		success: function(filijala) {
 			console.log('filijala_uspesno_vracena ' + filijala.id);
 			for(let vozilo of filijala.vozila)
 				{
-				if(vozilo.zauzeto==false)
+				
 					addVozilo(vozilo, rentacar_id);
+					
 				}
 			
 		},
-		error : function(data){
+		error : function(){
 			alert('Greska prilikom vracanja filijale.');
 		}
 	});
@@ -320,6 +323,8 @@ function izlistajVozila(filijala_id, rentacar_id)
 
 function addVozilo(car, rentacar_id)
 {
+	
+	
 	var temp, div, a;
 	temp = document.getElementById("template_auto");
 	div = temp.content.querySelector("div#ubaci_auto");
@@ -334,8 +339,44 @@ function addVozilo(car, rentacar_id)
 	temp.content.getElementById("broj_sedista").innerHTML = broj_sedista_string;
 	temp.content.getElementById("cena_auta").innerHTML = '$' + car.cena_dan + '/day';
 	temp.content.getElementById("prosecna_ocena").innerHTML = car.prosecna_ocena;
+	 let rezervisana = false;
+	    
+	    for(let rezervacija of car.rezervacije)
+	    {
+	    	var today = new Date();
+	    	today.setHours(0, 0, 0);
+	    	
+	    	var end = rezervacija.datum_vracanja.substring(0, 19);
+	    	var date = new Date(end + "Z");
+	    	var pravi = date.toString();
+	    	var date_end = new Date(pravi);
+	    	
+	    	console.log(today);
+	    	console.log(date_end);
+	    	
+	    	if(today < date_end || (today.getFullYear() == date_end.getFullYear() && today.getMonth() == date_end.getMonth() && today.getDate() == date_end.getDate()))
+	    	{
+	    		rezervisana = true;
+	    		break;
+	    	}
+	    	
+	    	console.log(today === date_end);
+
+	    }
+	if(!rezervisana)
+		{
 	temp.content.getElementById("izmena_auta").innerHTML = '<a style="cursor:pointer; color:white;" href="izmenaAuta.html?idr=' + rentacar_id + '&id=' + car.id + '">Edit car</a>'
 	temp.content.getElementById("brisanje_auta").innerHTML = '<a style="cursor:pointer; color:white;" onclick="javascript:brisanjeVozila('  + car.id + ');">Delete car</a>'
+		}
+	else
+		{
+		temp.content.getElementById("izmena_auta").innerHTML = '';
+		temp.content.getElementById("brisanje_auta").innerHTML = '';
+		}
+	
+	
+	
+	
 		
 	a = document.importNode(div, true);
     document.getElementById("ubaci_auto_template").appendChild(a);

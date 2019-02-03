@@ -96,7 +96,7 @@ public class VoziloController {
 		try
 		{
 			Vozilo found = voziloService.findById(car_id).get();
-			voziloService.deleteVozilo(found.getId());
+			voziloService.deleteVozilo(found);
 			return found;
 		}
 		catch(NoSuchElementException e)

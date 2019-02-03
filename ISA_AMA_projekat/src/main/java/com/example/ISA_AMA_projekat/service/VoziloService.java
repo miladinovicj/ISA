@@ -32,9 +32,9 @@ public class VoziloService {
 		voziloRepository.updateFilVozilo(filijala, id);
 	}
 	
-	public void deleteVozilo(Integer id)
+	public void deleteVozilo(Vozilo vozilo)
 	{
-		voziloRepository.deleteVozilo(id);
+		voziloRepository.delete(vozilo);
 	}
 	
 	
