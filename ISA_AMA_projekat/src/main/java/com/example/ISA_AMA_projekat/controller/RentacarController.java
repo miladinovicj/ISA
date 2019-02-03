@@ -3,9 +3,12 @@ package com.example.ISA_AMA_projekat.controller;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -235,7 +238,7 @@ public class RentacarController {
 							//break;
 						}else {
 							for(Iterator<RezervacijaVozila> iteratorRezervacija = vozilo.getRezervacije().iterator(); iteratorRezervacija.hasNext();) {
-								System.out.println("[HotelController: pretraga]: postoje rezervacije za sobu; ima ih " + vozilo.getRezervacije().size() + ".");
+								System.out.println("[HotelController: pretraga]: postoje rezervacije za vozilo; ima ih " + vozilo.getRezervacije().size() + ".");
 								RezervacijaVozila rezervacijaVozilo = iteratorRezervacija.next();
 								System.out.println("[RentacarController: pretraga]: zahtev:  datum preuzimanja: " + check_in + ", datum vracanja: " + check_out + ".");
 								System.out.println("[RentacarController: pretraga]: rezervacija: " + rezervacijaVozilo.getId() + ", datum preuzimanja: " + rezervacijaVozilo.getDatum_preuzimanja() + ", datum vracanja: " + rezervacijaVozilo.getDatum_vracanja() + ".");
@@ -319,7 +322,7 @@ public class RentacarController {
 			value = "/{id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentacarServis> getHotel(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town,  @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
+	public ResponseEntity<RentacarServis> getServis(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_in_town") String check_in_town,  @PathVariable("check_out") String check_out, @PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers) throws ParseException
 	{
 		System.out.println("usao u metodu api/rents/{id}/checkin/checkout");
 		
@@ -734,6 +737,7 @@ public class RentacarController {
 		return result;
 	}
 	
+	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
 			value = "/admin/izmenaRent/{id}/{naziv}/{ulica}/{broj}/{grad}/{opis}",
 			method = RequestMethod.POST,
@@ -773,5 +777,570 @@ public class RentacarController {
 		System.out.println("[RentacarControler]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
 		rentService.updateServis(naziv, adr.getId(), opis, ser.getId());
 		return ser;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/sveRezervacijeVozila/total/{id_servisa}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double getAllRezAndTotal(@PathVariable("id_servisa") Integer id) throws ParseException{
+		
+		RentacarServis rent = rentService.findById(id).get();
+		
+		ArrayList<Integer> vozilaSer = new ArrayList<Integer>();
+		for (Iterator<Filijala> iteratorFil = rent.getFilijale().iterator(); iteratorFil.hasNext();)
+		{
+			Filijala filijala = iteratorFil.next();
+			for(Iterator<Vozilo> iteratorVoz = filijala.getVozila().iterator(); iteratorVoz.hasNext();)
+			{
+				Vozilo v = iteratorVoz.next();
+				vozilaSer.add(v.getId());
+			}
+		}
+		
+		List<RezervacijaVozila> sve_rez = rezervacijaVozilaService.getAll();
+		List<RezervacijaVozila> rez = new ArrayList<RezervacijaVozila>();
+		for(Iterator<RezervacijaVozila> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();)
+		{
+			RezervacijaVozila rv = iteratorSveRez.next();
+			for(int i = 0; i<vozilaSer.size();i++)
+			{
+				if(rv.getVozilo().getId()==vozilaSer.get(i))
+				{
+					rez.add(rv);
+				}
+			}
+		}
+		
+		System.out.println("Rezervacija ima: " + rez.size());
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today_str = format.format(new Date());
+		Date today = format.parse(today_str);
+		System.out.println("DANASNJI DATUM: " + today);
+		
+		
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -90);
+		String today90_str = format.format(cal.getTime());
+		Date today90 = format.parse(today90_str);
+		System.out.println("DATUM PRE TRI MESECA: " + today90);
+		double total=0;
+		for(Iterator<RezervacijaVozila> iteratorRez = rez.iterator(); iteratorRez.hasNext();)
+		{
+			RezervacijaVozila rv2 = iteratorRez.next();
+			System.out.println("REZ " + rv2.getId() + " ima ukupnu cenu: " + rv2.getUkupna_cena());
+			System.out.println("DATUM Vracanja: " + rv2.getDatum_vracanja());
+			System.out.println("DATUM VRACANJA JE PRE 3 MESECA " + today90.equals(rv2.getDatum_vracanja()));
+			System.out.println("DATUM VRACANJA JE DANAS " + today.equals(rv2.getDatum_vracanja()));
+			
+			if(today90.equals(rv2.getDatum_vracanja()) || (today90.before(rv2.getDatum_vracanja()) && today.after(rv2.getDatum_vracanja()))
+					|| today.equals(rv2.getDatum_vracanja()))
+			{
+				System.out.println("Datum vracanja je okej za rez: " + rv2.getId());
+				total+=rv2.getUkupna_cena();
+			}
+			
+		}
+		
+		return total;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/last7days/{id_servisa}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public int[] getLast7days(@PathVariable("id_servisa") Integer id) throws ParseException{
+		
+		RentacarServis rent = rentService.findById(id).get();
+		
+		ArrayList<Integer> vozilaSer = new ArrayList<Integer>();
+		for (Iterator<Filijala> iteratorFil = rent.getFilijale().iterator(); iteratorFil.hasNext();)
+		{
+			Filijala filijala = iteratorFil.next();
+			for(Iterator<Vozilo> iteratorVoz = filijala.getVozila().iterator(); iteratorVoz.hasNext();)
+			{
+				Vozilo v = iteratorVoz.next();
+				vozilaSer.add(v.getId());
+			}
+		}
+		
+		List<RezervacijaVozila> sve_rez = rezervacijaVozilaService.getAll();
+		List<RezervacijaVozila> rez = new ArrayList<RezervacijaVozila>();
+		for(Iterator<RezervacijaVozila> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();)
+		{
+			RezervacijaVozila rv = iteratorSveRez.next();
+			for(int i = 0; i<vozilaSer.size();i++)
+			{
+				if(rv.getVozilo().getId()==vozilaSer.get(i))
+				{
+					rez.add(rv);
+				}
+			}
+		}
+		
+		System.out.println("Rezervacija ima: " + rez.size());
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today_str = format.format(new Date());
+		Date today = format.parse(today_str);
+		System.out.println("DANASNJI DATUM: " + today);
+		
+		
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		String today6_str = format.format(cal.getTime());
+		Date today6 = format.parse(today6_str);
+		System.out.println("DATUM6: " + today6);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -6);
+		String today5_str = format.format(cal.getTime());
+		Date today5 = format.parse(today5_str);
+		System.out.println("DATUM5: " + today5);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -5);
+		String today4_str = format.format(cal.getTime());
+		Date today4 = format.parse(today4_str);
+		System.out.println("DATUM4: " + today4);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -4);
+		String today3_str = format.format(cal.getTime());
+		Date today3 = format.parse(today3_str);
+		System.out.println("DATUM3: " + today3);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -3);
+		String today2_str = format.format(cal.getTime());
+		Date today2 = format.parse(today2_str);
+		System.out.println("DATUM2: " + today2);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -2);
+		String today1_str = format.format(cal.getTime());
+		Date today1 = format.parse(today1_str);
+		System.out.println("DATUM1: " + today1);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		String today0_str = format.format(cal.getTime());
+		Date today0 = format.parse(today0_str);
+		System.out.println("DATUM0: " + today0);
+		
+		
+		int day7 = 0,day6 =0 ,day5 = 0,day4 = 0,day3 = 0,day2 = 0,day1 = 0;
+		
+		for(Iterator<RezervacijaVozila> iteratorRez = rez.iterator(); iteratorRez.hasNext();)
+		{
+			RezervacijaVozila rv2 = iteratorRez.next();
+			
+			if(today6.equals(rv2.getDatum_vracanja()) || (today6.before(rv2.getDatum_vracanja()) && today6.after(rv2.getDatum_preuzimanja()))
+					|| today6.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY7 REZ" + rv2.getId());
+				day7+=1;
+			}
+			
+			if(today5.equals(rv2.getDatum_vracanja()) || (today5.before(rv2.getDatum_vracanja()) && today5.after(rv2.getDatum_preuzimanja()))
+					|| today5.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY6 REZ" + rv2.getId());
+				day6+=1;
+			}
+			
+			if(today4.equals(rv2.getDatum_vracanja()) || (today4.before(rv2.getDatum_vracanja()) && today4.after(rv2.getDatum_preuzimanja()))
+					|| today4.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY5 REZ" + rv2.getId());
+				day5+=1;
+			}
+			
+			if(today3.equals(rv2.getDatum_vracanja()) || (today3.before(rv2.getDatum_vracanja()) && today3.after(rv2.getDatum_preuzimanja()))
+					|| today3.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY4 REZ" + rv2.getId());
+				day4+=1;
+			}
+			
+			if(today2.equals(rv2.getDatum_vracanja()) || (today2.before(rv2.getDatum_vracanja()) && today2.after(rv2.getDatum_preuzimanja()))
+					|| today2.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY3 REZ" + rv2.getId());
+				day3+=1;
+			}
+			
+			if(today1.equals(rv2.getDatum_vracanja()) || (today1.before(rv2.getDatum_vracanja()) && today1.after(rv2.getDatum_preuzimanja()))
+					|| today1.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY2 REZ" + rv2.getId());
+				day2+=1;
+			}
+			
+			if(today0.equals(rv2.getDatum_vracanja()) || (today0.before(rv2.getDatum_vracanja()) && today0.after(rv2.getDatum_preuzimanja()))
+					|| today0.equals(rv2.getDatum_preuzimanja()))
+			{
+				System.out.println("DAY1 REZ" + rv2.getId());
+				day1+=1;
+			}
+			
+		}
+		
+		int[] dani = new int[7]; 
+		dani[0]=day7;
+		System.out.println(dani[0]);
+		dani[1]=day6;
+		System.out.println(dani[1]);
+		dani[2]=day5;
+		System.out.println(dani[2]);
+		dani[3]=day4;
+		System.out.println(dani[3]);
+		dani[4]=day3;
+		System.out.println(dani[4]);
+		dani[5]=day2;
+		System.out.println(dani[5]);
+		dani[6]=day1;
+		System.out.println(dani[6]);
+		
+		return dani;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/months/{id_servisa}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public int[] getGodisnji(@PathVariable("id_servisa") Integer id) throws ParseException{
+		
+		RentacarServis rent = rentService.findById(id).get();
+		
+		ArrayList<Integer> vozilaSer = new ArrayList<Integer>();
+		for (Iterator<Filijala> iteratorFil = rent.getFilijale().iterator(); iteratorFil.hasNext();)
+		{
+			Filijala filijala = iteratorFil.next();
+			for(Iterator<Vozilo> iteratorVoz = filijala.getVozila().iterator(); iteratorVoz.hasNext();)
+			{
+				Vozilo v = iteratorVoz.next();
+				vozilaSer.add(v.getId());
+			}
+		}
+		
+		List<RezervacijaVozila> sve_rez = rezervacijaVozilaService.getAll();
+		List<RezervacijaVozila> rez = new ArrayList<RezervacijaVozila>();
+		for(Iterator<RezervacijaVozila> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();)
+		{
+			RezervacijaVozila rv = iteratorSveRez.next();
+			for(int i = 0; i<vozilaSer.size();i++)
+			{
+				if(rv.getVozilo().getId()==vozilaSer.get(i))
+				{
+					rez.add(rv);
+				}
+			}
+		}
+		
+		System.out.println("Rezervacija ima: " + rez.size());
+		
+		int year = Year.now().getValue();
+		boolean prestupna=false;
+		if(year%4==0)
+		{
+			prestupna=true;
+		}
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = new GregorianCalendar();
+		
+		
+		cal.set(year, 0, 1);
+		String jan1_str = format.format(cal.getTime());
+		Date jan1 = format.parse(jan1_str);
+		System.out.println("JAN1 " + jan1);
+		
+		cal.set(year, 0, 31);
+		String jan31_str = format.format(cal.getTime());
+		Date jan31 = format.parse(jan31_str);
+		System.out.println("JAN31 " + jan31);
+		
+		cal.set(year, 1, 1);
+		String feb1_str = format.format(cal.getTime());
+		Date feb1 = format.parse(feb1_str);
+		System.out.println("FEB1 " + feb1);
+		
+		String febkraj_str="";
+		if(prestupna)
+		{
+			cal.set(year, 1, 29);
+			febkraj_str=format.format(cal.getTime());
+		}
+		else
+		{
+			cal.set(year, 1, 28);
+			febkraj_str=format.format(cal.getTime());
+		}
+		Date febkraj = format.parse(febkraj_str);
+		
+		cal.set(year, 2, 1);
+		String mart1_str = format.format(cal.getTime());
+		Date mart1 = format.parse(mart1_str);
+		
+		cal.set(year, 2, 31);
+		String mart31_str = format.format(cal.getTime());
+		Date mart31 = format.parse(mart31_str);
+		
+		cal.set(year, 3, 1);
+		String apr1_str = format.format(cal.getTime());
+		Date apr1 = format.parse(apr1_str);
+		
+		cal.set(year, 3, 30);
+		String apr30_str = format.format(cal.getTime());
+		Date apr30 = format.parse(apr30_str);
+		
+		cal.set(year, 4, 1);
+		String maj1_str = format.format(cal.getTime());
+		Date maj1 = format.parse(maj1_str);
+		
+		cal.set(year, 4, 31);
+		String maj31_str = format.format(cal.getTime());
+		Date maj31 = format.parse(maj31_str);
+		
+		cal.set(year, 5, 1);
+		String jun1_str = format.format(cal.getTime());
+		Date jun1 = format.parse(jun1_str);
+		System.out.println("JUN1 " + jun1);
+		
+		cal.set(year, 5, 30);
+		String jun30_str = format.format(cal.getTime());
+		Date jun30 = format.parse(jun30_str);
+		
+		cal.set(year, 6, 1);
+		String jul1_str = format.format(cal.getTime());
+		Date jul1 = format.parse(jul1_str);
+		
+		cal.set(year, 6, 31);
+		String jul31_str = format.format(cal.getTime());
+		Date jul31 = format.parse(jul31_str);
+		
+		cal.set(year, 7, 1);
+		String avg1_str = format.format(cal.getTime());
+		Date avg1 = format.parse(avg1_str);
+		
+		cal.set(year, 7, 31);
+		String avg31_str = format.format(cal.getTime());
+		Date avg31 = format.parse(avg31_str);
+		
+		cal.set(year, 8, 1);
+		String sep1_str = format.format(cal.getTime());
+		Date sep1 = format.parse(sep1_str);
+		
+		cal.set(year, 8, 30);
+		String sep30_str = format.format(cal.getTime());
+		Date sep30 = format.parse(sep30_str);
+		System.out.println("SEP30 " + sep30);
+		
+		cal.set(year, 9, 1);
+		String okt1_str = format.format(cal.getTime());
+		Date okt1 = format.parse(okt1_str);
+		
+		cal.set(year, 9, 31);
+		String okt31_str = format.format(cal.getTime());
+		Date okt31 = format.parse(okt31_str);
+		
+		cal.set(year, 10, 1);
+		String nov1_str = format.format(cal.getTime());
+		Date nov1 = format.parse(nov1_str);
+		
+		cal.set(year, 10, 30);
+		String nov30_str = format.format(cal.getTime());
+		Date nov30 = format.parse(nov30_str);
+		
+		cal.set(year, 11, 1);
+		String dec1_str = format.format(cal.getTime());
+		Date dec1 = format.parse(dec1_str);
+		
+		cal.set(year, 11, 31);
+		String dec31_str = format.format(cal.getTime());
+		Date dec31 = format.parse(dec31_str);
+	
+		int jan = 0,feb =0 ,mart = 0,apr = 0,maj = 0,jun = 0,jul = 0, avg = 0, sep = 0, okt = 0, nov = 0, dec =0;
+		
+		for(Iterator<RezervacijaVozila> iteratorRez = rez.iterator(); iteratorRez.hasNext();)
+		{
+			RezervacijaVozila rv2 = iteratorRez.next();
+			Calendar start = Calendar.getInstance();
+			start.setTime(rv2.getDatum_preuzimanja());
+			Calendar end = Calendar.getInstance();
+			end.setTime(rv2.getDatum_vracanja());
+			System.out.println("START: " + start.getTime() + " END: " + end.getTime());
+			for(Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime())
+			{
+				
+				if(jan1.equals(date) || jan31.equals(date) || (jan1.before(date) && jan31.after(date)))
+				{
+					jan+=1;
+				}
+				
+				if(feb1.equals(date) || febkraj.equals(date) || (feb1.before(date) && febkraj.after(date)))
+				{
+					feb+=1;
+				}
+				
+				if(mart1.equals(date) || mart31.equals(date) || (mart1.before(date) && mart31.after(date)))
+				{
+					mart+=1;
+				}
+				
+				if(apr1.equals(date) || apr30.equals(date) || (apr1.before(date) && apr30.after(date)))
+				{
+					apr+=1;
+				}
+				
+				if(maj1.equals(date) || maj31.equals(date) || (maj1.before(date) && maj31.after(date)))
+				{
+					maj+=1;
+				}
+				
+				if(jun1.equals(date) || jun30.equals(date) || (jun1.before(date) && jun30.after(date)))
+				{
+					jun+=1;
+				}
+				
+				if(jul1.equals(date) || jul31.equals(date) || (jul1.before(date) && jul31.after(date)))
+				{
+					jul+=1;
+				}
+				
+				if(avg1.equals(date) || avg31.equals(date) || (avg1.before(date) && avg31.after(date)))
+				{
+					avg+=1;
+				}
+				
+				if(sep1.equals(date) || sep30.equals(date) || (sep1.before(date) && sep30.after(date)))
+				{
+					sep+=1;
+				}
+				
+				if(okt1.equals(date) || okt31.equals(date) || (okt1.before(date) && okt31.after(date)))
+				{
+					okt+=1;
+				}
+				
+				if(nov1.equals(date) || nov30.equals(date) || (nov1.before(date) && nov30.after(date)))
+				{
+					nov+=1;
+				}
+				
+				if(dec1.equals(date) || dec31.equals(date) || (dec1.before(date) && dec31.after(date)))
+				{
+					dec+=1;
+				}	
+				
+				
+			}
+			
+			
+		}
+		
+		int[] meseci = new int[12]; 
+		meseci[0]=jan;
+		System.out.println(meseci[0]);
+		meseci[1]=feb;
+		System.out.println(meseci[1]);
+		meseci[2]=mart;
+		System.out.println(meseci[2]);
+		meseci[3]=apr;
+		System.out.println(meseci[3]);
+		meseci[4]=maj;
+		System.out.println(meseci[4]);
+		meseci[5]=jun;
+		System.out.println(meseci[5]);
+		meseci[6]=jul;
+		System.out.println(meseci[6]);
+		meseci[7]=avg;
+		System.out.println(meseci[7]);
+		meseci[8]=sep;
+		System.out.println(meseci[8]);
+		meseci[9]=okt;
+		System.out.println(meseci[9]);
+		meseci[10]=nov;
+		System.out.println(meseci[10]);
+		meseci[11]=dec;
+		System.out.println(meseci[11]);
+		
+		
+		return meseci;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/dnevni/{id_servisa}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double getDnevni(@PathVariable("id_servisa") Integer id) throws ParseException{
+		
+		double ret=0;
+		RentacarServis rent = rentService.findById(id).get();
+		
+		ArrayList<Integer> vozilaSer = new ArrayList<Integer>();
+		for (Iterator<Filijala> iteratorFil = rent.getFilijale().iterator(); iteratorFil.hasNext();)
+		{
+			Filijala filijala = iteratorFil.next();
+			for(Iterator<Vozilo> iteratorVoz = filijala.getVozila().iterator(); iteratorVoz.hasNext();)
+			{
+				Vozilo v = iteratorVoz.next();
+				vozilaSer.add(v.getId());
+			}
+		}
+		
+		List<RezervacijaVozila> sve_rez = rezervacijaVozilaService.getAll();
+		List<RezervacijaVozila> rez = new ArrayList<RezervacijaVozila>();
+		for(Iterator<RezervacijaVozila> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();)
+		{
+			RezervacijaVozila rv = iteratorSveRez.next();
+			for(int i = 0; i<vozilaSer.size();i++)
+			{
+				if(rv.getVozilo().getId()==vozilaSer.get(i))
+				{
+					rez.add(rv);
+				}
+			}
+		}
+		
+		System.out.println("Rezervacija ima: " + rez.size());
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today_str = format.format(new Date());
+		Date today = format.parse(today_str);
+		System.out.println("DANASNJI DATUM: " + today);
+		
+		
+		int broj_rez=0;
+		for(Iterator<RezervacijaVozila> iteratorRez = rez.iterator(); iteratorRez.hasNext();)
+		{
+			RezervacijaVozila rv2 = iteratorRez.next();
+			
+			if(today.equals(rv2.getDatum_preuzimanja()) || (today.before(rv2.getDatum_vracanja()) && today.after(rv2.getDatum_preuzimanja()))
+					|| today.equals(rv2.getDatum_vracanja()))
+			{
+				broj_rez+=1;
+			}
+			
+		}
+		System.out.println("BROJ REZ: " + broj_rez + " BROJ_VOZILA: " + vozilaSer.size());
+		
+		
+		ret = (double)broj_rez/vozilaSer.size();
+		ret = ret *100;
+		System.out.println("Povratna vrednost: " + ret);
+		
+		return ret;
 	}
 }

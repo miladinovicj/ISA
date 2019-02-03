@@ -1,6 +1,6 @@
 $(document).ready(function()
 {
-	let token=localStorage.getItem('jwtToken');
+	token=localStorage.getItem('jwtToken');
 	
 	var search = window.location.search;
 	var splitted = search.split('&');
@@ -14,6 +14,7 @@ $(document).ready(function()
         contentType: 'application/json',
         success: function (rentacar)
 		{
+        	servis = rentacar;
             longitude = rentacar.adresa.longitude;
         	latitude = rentacar.adresa.latitude;
             console.log(rentacar);
@@ -65,10 +66,9 @@ function showRentacar(rentacar)
 	 $('#dugmeIzmena').attr("href", idiNa);
 	 var dodajFil = "dodajFilijalu.html?id="+rentacar.id;
 	 $('#dugmeFil').attr("href", dodajFil);
-	 
 	 var dodajVozilo = "dodajVozilo.html?id="+rentacar.id;
 	 $('#dugmeVozilo').attr("href", dodajVozilo);
-	 
+	
 	 
 	 $('#adresa_rentacar').text(rentacar.adresa.ulica + ' ' + rentacar.adresa.broj + ', ' + rentacar.adresa.grad.naziv);
 	    
@@ -136,7 +136,152 @@ function addFilijala(rentacar, filijala)
     a = document.importNode(div, true);
     document.getElementById("ubaci_filijale_template").appendChild(a);
 }
+function prikaziIzvestaj()
+{
+	
+	$("#izvestaj").hide();
+	var id_servisa = servis.id;
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/sveRezervacijeVozila/total/' + id_servisa,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (total)
+		{
+        	//alert('Pritisnuto dugme za prikaz izvestaja rentacara: ' + servis.id + ", ukupna cena: " + total);
+        	$("#totalCena").text("TOTAL IN THE LAST THREE MONTHS: $" + total);
+        	
+		}
+    });
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/dnevni/' + id_servisa,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (dan)
+		{
+        	
+        	document.getElementById("bar-chart-day").height=70;
+        	
+        	let day = new Chart(document.getElementById("bar-chart-day"), {
+        	type: 'pie',
+        	data: {
+        	labels:['Reserved', 'Unreserved'],
+        	datasets: [{
+        	        	
+        	        	data : [dan, 100-dan],
+        	        	backgroundColor: ['#ffce56', '#cc65fe'] ,
+        	        	
+        	           }]
+        	},
+        	options: {
+                
+        		title : {
+        			display : true,
+        			text : "Today's bookings in percentages",
+        			fontSize : 25
+        			
+        		}
+        	}
+        	});
+        	
+        
+		}
+    });
+	
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/last7days/' + id_servisa,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (dani)
+		{
+        	
+        	document.getElementById("bar-chart").height=70;
+        	
+        	let week = new Chart(document.getElementById("bar-chart"), {
+        	type: 'bar',
+        	data: {
+        	labels:['Day1', 'Day2', 'Day3', 'Day4', 'Day5', 'Day6', 'Day7'],
+        	datasets: [{
+        	        	label : 'Reservations' ,
+        	        	data : dani,
+        	        	backgroundColor: '#ffce56',
+        	        	borderWidth : 4,
+        	        	borderColor : 'black'
+        	           }]
+        	},
+        	options: {
+        		 scales: {
+                    
+                     yAxes: [{
+                             display: true,
+                             ticks: {
+                                 beginAtZero: true,
+                             }
+                         }]
+                 },
+        		title : {
+        			display : true,
+        			text : 'Reservations in last 7 days',
+        			fontSize : 25
+        			
+        		}
+        	}
+        	});
+        	
+        
+		}
+    });
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/rents/months/' + id_servisa,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (meseci)
+		{
+        	
+        	document.getElementById("bar-chart-month").height=70;
+        	
+        	let month = new Chart(document.getElementById("bar-chart-month"), {
+        	type: 'bar',
+        	data: {
+        	labels:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Avg', 'Sep', 'Oct', 'Nov', 'Dec'],
+        	datasets: [{
+        	        	label : 'Reservations' ,
+        	        	data : meseci,
+        	        	backgroundColor: '#cc65fe',
+        	        	borderWidth : 4,
+        	        	borderColor : 'black'
+        	           }]
+        	},
+        	options: {
+        		 scales: {
+                    
+                     yAxes: [{
+                             display: true,
+                             ticks: {
+                                 beginAtZero: true,
+                             }
+                         }]
+                 },
+        		title : {
+        			display : true,
+        			text : 'Reservations in this year',
+        			fontSize : 25
+        			
+        		}
+        	}
+        	});
+        	
+        
+		}
+    });
+	
 
+}
 function brisanjeFil(filijala_id)
 {
 	$.ajax({
