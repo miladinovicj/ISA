@@ -17,12 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-<<<<<<< HEAD
 import com.example.ISA_AMA_projekat.model.FriendRequest;
-=======
 import com.example.ISA_AMA_projekat.controller.AuthenticationController;
->>>>>>> a6663545d7ed1689050b5be407b3553005daf0e4
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.repository.FriendRequestRepository;
@@ -43,13 +39,10 @@ public class KorisnikService implements UserDetailsService{
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-<<<<<<< HEAD
 	@Autowired 
 	private FriendRequestRepository requestRepository;
-=======
 	@Autowired
 	AuthenticationController authController;
->>>>>>> a6663545d7ed1689050b5be407b3553005daf0e4
 
 	
 	public Korisnik findByEmail(String email) 
@@ -124,13 +117,9 @@ public class KorisnikService implements UserDetailsService{
 		}
 	}
 	
-<<<<<<< HEAD
-	public void changePassword(String oldPassword, String newPassword) 
-	{
-=======
+
 	public boolean changePassword(String oldPassword, String newPassword) {
 
->>>>>>> a6663545d7ed1689050b5be407b3553005daf0e4
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti
 		System.out.println("[KorisnikService: changePassword] username: " + username);
@@ -163,11 +152,8 @@ public class KorisnikService implements UserDetailsService{
 		//user.setPassword(passwordEncoder.encode(newPassword));
 		user.setLozinka(passwordEncoder.encode(newPassword));
 		korisnikRepository.save(user);
-<<<<<<< HEAD
-=======
 		
 		return true;
->>>>>>> a6663545d7ed1689050b5be407b3553005daf0e4
 	}
 	
 

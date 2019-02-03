@@ -70,22 +70,12 @@ var token = localStorage.getItem('jwtToken');
 					window.location.href = 'index.html';
 				}
 			},
-			error: function() 
-			{
-				alert('Errrr');
-			}
-			
-			
-			
-<<<<<<< HEAD
-=======
 			error: function(data) {
 				//alert('Error');
 				console.log('istekao je token');
 				localStorage.clear();
 				window.location.href = 'index.html';
 			}
->>>>>>> a6663545d7ed1689050b5be407b3553005daf0e4
 		
 		});
 		

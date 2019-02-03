@@ -15,6 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Entity;
 
 @Entity
@@ -40,11 +45,12 @@ public class Rezervacija implements Serializable{
 	
 	
 	//SLOZENI ATRIBUTI:
-	
+	@JsonManagedReference
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="rezervacija")
 	private List<OsobaIzRez> osobe = new ArrayList<OsobaIzRez>();	
 	
 	//FOREIGN KEY:
+	
 	
 	@ManyToOne
 	@JoinColumn(referencedColumnName="id", nullable=false)
