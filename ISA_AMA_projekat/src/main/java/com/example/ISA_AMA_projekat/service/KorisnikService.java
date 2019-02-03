@@ -18,9 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.example.ISA_AMA_projekat.model.FriendRequest;
-
 import com.example.ISA_AMA_projekat.controller.AuthenticationController;
 
 import com.example.ISA_AMA_projekat.model.Grad;
@@ -44,8 +42,12 @@ public class KorisnikService implements UserDetailsService{
 	private AuthenticationManager authenticationManager;
 	
 
+
 	@Autowired 
 	private FriendRequestRepository requestRepository;
+
+
+
 
 	@Autowired
 	AuthenticationController authController;
@@ -125,9 +127,7 @@ public class KorisnikService implements UserDetailsService{
 	
 
 
-
 	public boolean changePassword(String oldPassword, String newPassword) {
-
 
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName(); //ovde treba da bude email, ne znam sta ce vratiti

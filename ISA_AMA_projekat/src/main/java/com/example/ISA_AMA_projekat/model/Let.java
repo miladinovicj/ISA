@@ -19,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,6 +73,7 @@ public class Let
 	@OneToMany(cascade={ALL}, fetch=LAZY)
 	private List<Rating> rejtinzi = new ArrayList<Rating>();
 
+	@JsonIgnore
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="let")
 	private List<Rezervacija> rezervacije = new ArrayList<Rezervacija>();
 

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
  
 enum Prtljag 
 {
@@ -52,6 +54,7 @@ public class OsobaIzRez implements Serializable{
 
 	@ManyToOne
 	@JoinColumn(referencedColumnName="id", nullable=false)
+	@JsonBackReference
 	private Rezervacija rezervacija;
 	
 	//nullable ako je pozvan korisnik koji nema acc

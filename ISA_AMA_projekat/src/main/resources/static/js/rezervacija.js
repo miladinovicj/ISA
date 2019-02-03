@@ -72,6 +72,11 @@ function getKorisnik()
 		  
 		success: function(user) 
 		{
+			if(user == null)
+			{
+				window.location.replace("index.html");
+			}
+			
 			korisnik = user;
 			//ako je null idi na pocetnu
 			getFriendListForUser(korisnik.id, function() {
@@ -81,8 +86,7 @@ function getKorisnik()
 		},
 		error: function() 
 		{
-			alert('Errrr');
-			//idi na pocetnu
+			window.location.replace("index.html");
 		}
 	});
 }
@@ -405,11 +409,12 @@ function makeRezervation()
 		success: function(data) {
 			if(data==null || data=="")
 			{
-				console.log("Greska u bekendu.");
+				alert("An error occured while processing information.")
 			}
 			else 
 			{
-				console.log(data)
+				alert("Your flight is succesfully booked.")
+				window.location.replace("rezervacijaPreview.html?id=" + data);
 			}
 		}
 	

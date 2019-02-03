@@ -3,17 +3,21 @@ package com.example.ISA_AMA_projekat.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ISA_AMA_projekat.model.Aviokompanija;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Let;
 import com.example.ISA_AMA_projekat.model.OsobaIzRez;
@@ -157,11 +161,27 @@ public class RezervacijaController
 			new_osobe.add(new_osoba);
 			System.out.println("UPISANA NOVA OSOBA:" + new_osoba.getId() + " " + new_osoba.getEmail());
 		}
-		
-
-		
+				
 		return rez.getId().toString();
-		
+	}
+	
+	
+	
+	@RequestMapping(
+			value = "/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Rezervacija> getRezervacija(@PathVariable("id") Integer id)	
+	{
+		try
+		{
+			return new ResponseEntity<Rezervacija>(rezervacijaService.findById(id).get(), HttpStatus.OK);
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("ispao");
+			return null; 	
+		}
 	}
 	
 }
