@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,6 +52,7 @@ public class FilijalaController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
 			value = "/admin/izmenaFil/{id}/{ulica}/{broj}/{grad}",
 			method = RequestMethod.POST,
@@ -92,6 +94,7 @@ public class FilijalaController {
 		return fil;
 	}
 	
+	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
 			value = "/admin/dodajFil/{ulica}/{broj}/{grad}/{idr}",
 			method = RequestMethod.POST,
@@ -132,6 +135,26 @@ public class FilijalaController {
 		Filijala f =filijalaService.save(fil);
 		filijalaService.updateRent(idr, f.getId());
 		return f;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "admin/delete/{filijala_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Filijala deleteFilijala(@PathVariable("filijala_id") Integer	filijala_id)
+	{
+		try
+		{
+			Filijala found = filijalaService.findById(filijala_id).get();
+			filijalaService.deleteFilijala(found);
+			return found;
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji fil sa id: " + filijala_id);
+			return null; 	
+		}
 	}
 
 

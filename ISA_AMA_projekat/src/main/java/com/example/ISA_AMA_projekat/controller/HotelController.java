@@ -6,14 +6,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +62,7 @@ public class HotelController {
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN')")
 	@RequestMapping(
 			value = "/all_admin",
 			method = RequestMethod.GET,
@@ -159,6 +163,30 @@ public class HotelController {
 		}
 		
 		result = pretraga_hotel(result, date_check_in, date_check_out, adults);
+		
+		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
+		
+		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/admin/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> getOneHotel(@PathVariable("id") Integer id){
+		
+		System.out.println("usao u metodu api/hotels/hotelAdmin/{id}; id: " + id);
+		Hotel result = null;
+		
+		try{
+			result = hotelService.findById(id).get();
+			System.out.println("Nasao hotel sa id:" + result.getId());
+		}catch(NoSuchElementException e)
+		{
+			System.out.println("Ne postoji hotel sa id: " + id);
+			return null; 	
+		}
 		
 		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
 		
@@ -305,6 +333,7 @@ public class HotelController {
 	}
 	*/
 	
+	@PreAuthorize("hasRole('SYSADMIN')")
 	@RequestMapping(
 			value = "/save",
 			method = RequestMethod.POST,
@@ -636,6 +665,91 @@ public class HotelController {
 		}
 		
 		return result;
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/editHotel/{hotel_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<?> editHotel(@PathVariable("hotel_id") Integer id, @RequestBody Hotel hotel) {
+		
+		Hotel stari =  hotelService.findById(id).get();
+		
+		System.out.println("[HotelController: editHotel] id hotela: " + stari.getId());
+		hotelService.updateHotel(stari.getId(), hotel.getNaziv(), hotel.getPromotivni_opis(), hotel.getAdresa().getId());
+		
+		Map<String, String> result = new HashMap<>();
+		result.put("result", "success");
+	
+		return ResponseEntity.accepted().body(result);
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/add_room/{hotel_id}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> addSoba(@PathVariable("hotel_id") Integer hotel_id, @RequestBody Soba soba){
+		System.out.println("[HotelController: addSoba]: usao u metodu add_room");
+		
+		Hotel hotel = hotelService.findById(hotel_id).get();
+		
+		soba.setHotel(hotel);
+		soba.setProsecna_ocena(0);
+		soba.setZauzeta(false);
+		
+		System.out.println("[HotelController: addSoba] PRE CUVANJA SOBE U BAZU - hotel: " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
+		
+		Soba result = sobaService.save(soba);
+		
+		System.out.println("[HotelController: addSoba] PRE CUVANJA HOTELA U BAZU - hotel: " + hotel.getNaziv() + " ima " + hotel.getSobe().size() + " soba.");
+
+		hotel.getSobe().add(result);
+		Hotel novi_hotel = hotelService.save(hotel);
+		System.out.println("[HotelController: addSoba] POSLE CUVANJA U BAZU - hotel: " + novi_hotel.getNaziv() + " ima " + novi_hotel.getSobe().size() + " soba.");
+		
+		return new ResponseEntity<Soba>(result, HttpStatus.OK);
+		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/edit_room/{soba_id}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> editSoba(@PathVariable("soba_id") Integer soba_id, @RequestBody Soba soba){
+		System.out.println("[HotelController: addSoba]: usao u metodu add_room");
+		
+		Soba pronadjena = sobaService.findById(soba_id).get();
+		
+		pronadjena.setBroj_kreveta(soba.getBroj_kreveta());
+		pronadjena.setCena_nocenja(soba.getCena_nocenja());
+		pronadjena.setOpis(soba.getOpis());
+		
+		Soba result = sobaService.save(pronadjena);
+		
+		return new ResponseEntity<Soba>(result, HttpStatus.OK);
+		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/delete_room/{soba_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Soba> deleteSoba(@PathVariable("soba_id") Integer soba_id){
+		System.out.println("[HotelController: deleteSoba]: usao u metodu delete_room");
+		
+		Soba pronadjena = sobaService.findById(soba_id).get();
+		sobaService.deleteRoom(pronadjena);
+		
+		return new ResponseEntity<Soba>(pronadjena, HttpStatus.OK);
+		
 	}
 	
 	public Hotel pretraga_hotel(Hotel hotel, Date check_in, Date check_out, int adults){

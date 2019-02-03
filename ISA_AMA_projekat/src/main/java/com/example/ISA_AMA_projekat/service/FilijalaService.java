@@ -32,4 +32,9 @@ public class FilijalaService {
 	{
 		filijalaRepository.updateRentacarFil(idr, id);
 	}
+	
+	public void deleteFilijala(Filijala filijala)
+	{
+		filijalaRepository.delete(filijala);
+	}
 }

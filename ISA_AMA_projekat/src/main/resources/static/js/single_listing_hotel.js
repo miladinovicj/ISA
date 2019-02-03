@@ -100,11 +100,11 @@ function showHotel(hotel)
     			let buttonAdd;
     			var token = localStorage.getItem('jwtToken');
         		if(token!=null)
-        			{
+        		{
         			buttonAdd = $('<span class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
         			buttonAdd.click(clickAddUsluga(usluga));
         			li.append(buttonAdd);
-        			}
+        		}
         		else
         			buttonAdd = $('<span hidden="true" class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
     			

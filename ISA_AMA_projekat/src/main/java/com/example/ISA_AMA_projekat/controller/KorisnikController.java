@@ -177,6 +177,7 @@ public class KorisnikController {
 		return this.korisnikService.findByEmail(user.getName());
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN')")
 	@RequestMapping(
 			value = "/registruj_admina/{uloga}",
 			method = RequestMethod.POST,
@@ -279,6 +280,7 @@ public class KorisnikController {
 				
 			}else if(uloga == 3) {
 				
+				System.out.println("Ovde usao da registruje admina");
 				RentacarServis rental = rentacarService.findById(korisnik.getAdmin_id()).get();
 				rental.setId_admin(novi_korisnik.getId());
 				rentacarService.updateAdmin(rental.getId(), novi_korisnik.getId());

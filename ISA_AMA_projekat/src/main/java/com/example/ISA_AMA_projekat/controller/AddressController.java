@@ -78,5 +78,49 @@ public class AddressController {
 		System.out.println("[AddessController: checkAddress] adresa.id: " + adresa.getId());
 		return new ResponseEntity<Adresa>(adresa, HttpStatus.OK);
 	}
+	
+	@RequestMapping(
+			value = "/check/{city}/{street}/{number}/{latitude}/{longitude}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Adresa> checkWholeAddress(@PathVariable("city") String city, @PathVariable("street") String street, @PathVariable("number") String number, @PathVariable("longitude") double longitude, @PathVariable("latitude") double latitude){
+		
+		System.out.println("[AddessController: checkWholeAddress] grad: " + city + "; street: " + street + "; number: " + number +
+							"; latitude: " + latitude + "; longitude: " + longitude);
+		
+		Grad grad = gradService.findByNaziv(city);
+		if(grad == null) {
+			grad = new Grad(city);
+			grad = gradService.save(grad);
+		}
+		
+		List<Adresa> adrese = addressService.checkAddress(grad.getId(), street,number);
+		
+		Adresa adresa = null;
+		
+		if(adrese.isEmpty()) {
+			Adresa newAddress = new Adresa();
+			newAddress.setGrad(grad);
+			newAddress.setUlica(street);
+			newAddress.setBroj(number);
+			newAddress.setLongitude(longitude);
+			newAddress.setLatitude(latitude);
+			
+			adresa = addressService.save(newAddress);
+		}else {
+			adresa = adrese.get(0);
+		}
+		
+		System.out.println("[AddessController: checkAddress] adresa.id: " + adresa.getId());
+		return new ResponseEntity<Adresa>(adresa, HttpStatus.OK);
+	}
+	
+	static class CheckAddress {
+		public String City;
+		public String Street;
+		public String Number;
+		public String Longitude;
+		public String Latitude;
+	}
 
 }

@@ -1,34 +1,66 @@
 $(document).ready(function(){
-	var token=localStorage.getItem('jwtToken');
-	$.ajaxSetup({
-	    headers:{
-	        'Authorization': 'Bearer ' + token
-	    }
-	});
+	token=localStorage.getItem('jwtToken');
+	
+	
 	
 	$.post({
 		url: "/auth/userprofile",
-		headers: 'Authorization',
+		headers: {"Authorization": "Bearer " + token},
 		contentType: 'application/json',
 		data : token,
 		  
 		success: function(user) {
-			korisnik = user;
 			
-			document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
-			document.getElementById("name_profile").value  = user.ime;
-			document.getElementById("lastname_profile").value  = user.prezime;
-			document.getElementById("email_profile").value  = user.email;
-			document.getElementById("phone_profile").value  = user.telefon;
-			document.getElementById("city_profile").value  = user.grad.naziv;
-			document.getElementById("bonus_profile").value  = user.bonuspoeni;
+			if(user != "")
+			{
+				korisnik = user;
+				
+				if(korisnik.authority.authority!="ROLE_SYSADMIN")
+				{
+					$("#div_buttons").hide();
+					$("#div_buttons_admin").hide();
+					$("#div_buttons_system_admin").hide();
+					
+				}
+				else
+				{
+					$("#div_buttons").show();
+					$("#div_buttons_admin").show();
+					$("#div_buttons_system_admin").show();
+					
+				}
+				
+				document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
+				document.getElementById("name_profile").value  = user.ime;
+				document.getElementById("lastname_profile").value  = user.prezime;
+				document.getElementById("email_profile").value  = user.email;
+				document.getElementById("phone_profile").value  = user.telefon;
+				document.getElementById("city_profile").value  = user.grad.naziv;
+				document.getElementById("bonus_profile").value  = user.bonuspoeni;
+			}
+			else
+			{
+				localStorage.clear();
+				window.location.href = 'index.html';
+			}
+			
 		},
 		
 		error: function() {
-			alert('Error');
+			//alert('Error');
+			console.log('istekao je token');
+			localStorage.clear();
+			window.location.href = 'index.html';
+			
 		}
 	
 	});
+	
+	/*
+	$('textarea').on('keyup', function(){
+  	  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
+	});
+	*/
 	
 	$('#add_form').submit(function(event) {
 		console.log('add_form submit');
@@ -40,7 +72,7 @@ $(document).ready(function(){
 		number = $('input[name="new_street_number"]').val();
 		latitude = $('input[name="new_latitude"]').val();
 		longitude = $('input[name="new_longitude"]').val();
-		description = $('input[name="new_description"]').val();
+		description = $('textarea[name="new_description"]').val();
 		
 		let ispravno = true;
 		
@@ -91,7 +123,7 @@ $(document).ready(function(){
 		
 		if(!(/^[0-9.]+$/.test(latitude)))
 		{
-			document.getElementById("error_new_latitude").innerHTML = "Field Latitude number must contains only numbers.";
+			document.getElementById("error_new_latitude").innerHTML = "Field Latitude must contains only numbers.";
 			document.getElementById("error_new_latitude").style.display  = 'block';
 			ispravno=false;
 		}
@@ -104,7 +136,7 @@ $(document).ready(function(){
 		
 		if(!(/^[0-9.]+$/.test(longitude)))
 		{
-			document.getElementById("error_new_longitude").innerHTML = "Field Latitude number must contains only numbers.";
+			document.getElementById("error_new_longitude").innerHTML = "Field Latitude must contains only numbers.";
 			document.getElementById("error_new_longitude").style.display  = 'block';
 			ispravno=false;
 		}
@@ -254,6 +286,7 @@ $(document).ready(function(){
 			$.post({
 				url: "/api/users/registruj_admina/" + uloga,
 				data: JSON.stringify({email: email_admin, lozinka: pass_admin, ime: name_admin, prezime: last_name_admin, grad: city_admin, telefon: phone_admin, admin_id: option}),
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {
 					if(data == null || data == ""){
@@ -278,6 +311,7 @@ $(document).ready(function(){
 		event.preventDefault();
 		
 		var attr = $('#passChange').attr('pomoc');
+		let email_profile = $("#email_profile").val();
 		
 		if($('input[value=edit]').val() == 'edit' && (typeof attr == typeof undefined || attr == false))
 		{
@@ -313,6 +347,7 @@ $(document).ready(function(){
 			
 			let ispravno = true;
 			
+			$('#error_old_pass_profile').hide();
 			let old_password = $("#old_password_profile").val();
 			let new_password = $("#new_password_profile").val();
 			let confirm_new_password = $("#confirm_new_password_profile").val();
@@ -329,19 +364,37 @@ $(document).ready(function(){
 			{
 				$.post({
 					url: "/auth/change_password/",
+					headers: {"Authorization": "Bearer " + token},
 					data: JSON.stringify({oldPassword: old_password, newPassword: new_password}),
 					contentType: 'application/json',
 					success: function(data) {
-						console.log('uspesna promena lozinke korisnika');
 						
-						$('#passChange').removeAttr('pomoc');
-						$("#old_password_profile").prop('required', false);
-				        $("#new_password_profile").prop('required', false);
-				        $("#confirm_new_password_profile").prop('required', false);
-				        
-						window.location.href = 'profil.html';
+						if(data.result == 'success')
+						{
+							console.log('uspesna promena lozinke korisnika');
+							
+							$('#passChange').removeAttr('pomoc');
+							$("#old_password_profile").prop('required', false);
+					        $("#new_password_profile").prop('required', false);
+					        $("#confirm_new_password_profile").prop('required', false);
+					        $('#error_old_pass_profile').hide();
+					        
+							loginAgain(email_profile, new_password);
+						}
+						else
+						{
+							$('#error_old_pass_profile').show();
+						}
+						
+					},
+					error: function(data)
+					{
+						console.log('greska prilikom menjanja lozinke');
 					}
 				});
+				
+					
+				
 			}
 			
 			
@@ -351,6 +404,54 @@ $(document).ready(function(){
 		
 	});
 });
+/*
+function refresh()
+{
+	$.post({
+		url: "/auth/refresh",
+		headers: 'Authorization',
+		contentType: 'application/json',
+		  
+		success: function(res) {
+			if(res!="" && res.accessToken != null)
+			{
+				localStorage.setItem('jwtToken', res.accessToken);
+			}
+			else
+			{
+				localStorage.removeItem('jwtToken');
+			}
+		},
+		
+		error: function() {
+			console.log('greska prilikom refresh-ovanja tokena');
+		}
+	
+	});
+}
+*/
+function loginAgain(email, pass)
+{
+	$.post({
+		url: "/auth/login",
+		data: JSON.stringify({email: email, lozinka: pass}),
+		contentType: 'application/json',
+		headers: 'Authorization',
+		  
+		success: function(res) {
+			if(res!="" && res.accessToken != null)
+			{
+				localStorage.setItem('jwtToken', res.accessToken);
+				window.location.href="profil.html";
+			}
+			else
+			{
+				console.log('greska prilikom logovanja sa novom lozinkom');
+			}
+				
+		}
+	});
+}
 
 function newAirline()
 {
@@ -361,6 +462,10 @@ function newAirline()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add airline';
+	
+	var el = document.getElementById('div_new');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function newHotel()
@@ -372,6 +477,10 @@ function newHotel()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add hotel';
+	
+	var el = document.getElementById('div_new');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function newRental()
@@ -383,6 +492,10 @@ function newRental()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add car rental';
+	
+	var el = document.getElementById('div_new');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function back()
@@ -390,6 +503,10 @@ function back()
 	console.log('[profil.js: back()]');
 	document.getElementById("div_new").style.display  = 'none';
 	document.getElementById("div_buttons").style.display  = 'block';
+	
+	var el = document.getElementById('div_buttons');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 /*
@@ -492,7 +609,7 @@ function finalAdd(address)
 			url: "/rest/airline/save",
 			data: JSON.stringify({naziv: name, opis: description, adresa: address}),
 			contentType: 'application/json',
-			  
+			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
 				console.log('aviokompanija uspesno uneta');
 				var url = window.location.search='';
@@ -510,7 +627,7 @@ function finalAdd(address)
 			url: "/api/hotels/save",
 			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
 			contentType: 'application/json',
-			  
+			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
 				console.log('hotel uspesno unet');
 				var url = window.location.search='';
@@ -527,6 +644,7 @@ function finalAdd(address)
 		$.post({
 			url: "/api/rents/save",
 			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			  
 			success: function(airline) {
@@ -554,8 +672,14 @@ function newAirlineAdmin()
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Airlines:';
 	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -50);
+	
 	$.get({
 		url: "/rest/airline/all_admin",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(airlines) {
 
 			if(airlines == null || airlines.length == 0)
@@ -600,8 +724,14 @@ function newHotelAdmin()
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Hotels: ';
 	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -50);
+	
 	$.get({
 		url: "/api/hotels/all_admin",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(hoteli) {
 
 			if(hoteli == null || hoteli.length == 0)
@@ -646,8 +776,14 @@ function newRentalAdmin()
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Car rentals: ';
 	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -50);
+	
 	$.get({
 		url: "/api/rents/all_admin",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(rentals) {
 
 			if(rentals == null || rentals.length == 0)
@@ -690,6 +826,10 @@ function newSystemAdmin()
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add system administrator';
 	document.getElementById('admin_sys_close').style.display = 'none';
+	
+	var el = document.getElementById('div_new_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
 }
 
 function backAdmin()
@@ -697,8 +837,13 @@ function backAdmin()
 	console.log('[profil.js: backAdmin()]');
 	document.getElementById("div_new_admin").style.display  = 'none';
 	document.getElementById("div_buttons_admin").style.display  = 'block';
+	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById("no_one").style.display  = 'none';
 	document.getElementById("button_back_admin2").style.display  = 'none';
+	
+	var el = document.getElementById('div_buttons_admin');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -250);
 }
 
 function changePassword()

@@ -22,4 +22,15 @@ public class UslugaService {
 	public Optional<Usluga> findById(Integer id) {
 		return uslugaRepository.findById(id);
 	}
+	
+	public void updateCena(double cena, Integer id){
+		uslugaRepository.updateUsluga(cena, id);
+	}
+	
+	public Usluga save(Usluga usluga, Integer id_hotel){
+		Usluga u = uslugaRepository.save(usluga);
+		
+		uslugaRepository.addToHotel(id_hotel, u.getId());
+		return u;
+	}
 }

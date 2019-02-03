@@ -17,4 +17,12 @@ public class SobaService {
 	public Optional<Soba> findById(Integer id){
 		return sobaRepository.findById(id);
 	}
+	
+	public Soba save(Soba soba) {
+		return sobaRepository.save(soba);
+	}
+	
+	public void deleteRoom(Soba soba) {
+		sobaRepository.delete(soba);
+	}
 }

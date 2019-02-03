@@ -223,12 +223,14 @@ $(document).ready(function()
 	
 	var search = window.location.search;
 	var splitted = search.split('&');
-	
+	let token=localStorage.getItem('jwtToken');
     let id = splitted[0].substring(4);
     
 	$.ajax({
         type: 'GET',
         url: 'api/rents/admin/' + id,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
         success: function (rentacar)
 		{
             let servis=rentacar;
@@ -288,8 +290,10 @@ $(document).ready(function()
 		
 		if(ispravno==true)
 			{
+			
 			$.post({
 				url: '/api/rents/admin/izmenaRent/' + id + '/' + naziv + '/' + ulica + '/' + broj + '/' + grad + '/' + opis,
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {
 					if(data==null || data==""){
