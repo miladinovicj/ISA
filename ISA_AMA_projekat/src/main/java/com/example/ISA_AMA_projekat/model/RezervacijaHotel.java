@@ -49,7 +49,7 @@ public class RezervacijaHotel {
 	@Column
 	private boolean aktivirana;
 	
-	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
 	@ManyToOne

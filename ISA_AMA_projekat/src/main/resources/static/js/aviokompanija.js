@@ -93,11 +93,14 @@ function setUpForAirline(airline)
                         		    	    	var $poletanje = $item_element.find("#vremePoletanja");
                         		    	    	var $sletanje = $item_element.find("#vremeSletanja");
                         		    	    	var $cenaPopust = $item_element.find("#cenaPopust");
+                        		    	    	var $rezButton = $item_element.find("#rezButton");
+
 
                         		    	    	//parsiranje teksta vremena
                         		    	    	$poletanje.text(flight.vremePoletanja.substring(0,16).replace("T","   "));
                         		    	    	$sletanje.text(flight.vremeSletanja.substring(0,16).replace("T","   "));            		    	    	
-                        		    	        $selektovaniLetovi.append($item_element.prop('outerHTML'));
+                        		    	    	$rezButton.attr("href", "rezervacija.html?id=" + flight.id);
+                        		    	    	$selektovaniLetovi.append($item_element.prop('outerHTML'));
             		    	    	    	}
             		    	    });
             		    

@@ -94,7 +94,8 @@ public class Korisnik implements Serializable, UserDetails
 	private Integer admin_id;
 	
 	
-	public Korisnik() {
+	public Korisnik() 
+	{
 		super();
 		this.bonuspoeni=0;
 	}
@@ -131,7 +132,8 @@ public class Korisnik implements Serializable, UserDetails
 
 	//GET & SET:
 
-	public Integer getId() {
+	public Integer getId() 
+	{
 		return id;
 	}
 

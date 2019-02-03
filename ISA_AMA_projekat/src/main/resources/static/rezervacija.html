@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title id="titl_aviokompanija">asd</title>
+<title id="titl_aviokompanija">Make a Rezervation</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
@@ -20,8 +20,6 @@
 </head>
 
 <body>
-
-<script src="js/jquery-3.3.1.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
 <script src="js/mustache.js"></script>
 <script src="plugins/Isotope/isotope.pkgd.min.js"></script>
@@ -33,7 +31,7 @@
 <script src="plugins/easing/easing.js"></script>
 
 <script src="js/single_listing_custom.js"></script>
-<script src="js/aviokompanija.js"></script>
+<script src="js/rezervacija.js"></script>
 <script src="js/offers_custom.js"></script>
 
 
@@ -137,74 +135,16 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/single_background.jpg"></div>
 		<div class="home_content">
-			<div class="home_title" id="aviokompanija_ime">Ime aviokompanije</div>
+			<div class="home_title" style="text-align:center; margin-top:500px" id="flightLocationTittle1">Ime aviokompanije</div>
+			<div class="home_title" style="text-align:center">TO</div>
+			<div class="home_title" style="text-align:center" id="flightLocationTittle2">Ime aviokompanije</div>
+			
 		</div>
 	</div>
 
 	<!-- Offers -->
 
 	<div class="listing">
-
-		<!-- Search -->
-
-		<div class="search">
-			<div class="search_inner">
-
-				<!-- Search Contents -->
-
-				<div class="container fill_height no-padding">
-					<div class="row fill_height no-margin">
-						<div class="col fill_height no-padding">
-
-							<!-- Search Tabs -->
-
-
-
-							<!-- Search Panel -->
-
-							<div class="search_panel active">
-								<form style="width: 100%;" action="#" id="search_form_3" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-									<div style="width: 31%;" class="search_item">
-										<div>From</div>
-										<input type="text" class="destination search_input" required="required">
-									</div>
-
-									<div style="width: 31%;" class="search_item">
-										<div>To</div>
-										<input type="text" class="destination search_input" required="required">
-									</div>
-
-									<div class="search_item">
-										<div>check in</div>
-										<input type="text" class="check_in search_input" placeholder="YYYY-MM-DD">
-									</div>
-									<div class="search_item">
-										<div>check out</div>
-										<input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
-									</div>
-									<div class="search_item">
-										<div>adults</div>
-										<select name="adults" id="adults_3" class="dropdown_item_select search_input">
-											<option>01</option>
-											<option>02</option>
-											<option>03</option>
-										</select>
-									</div>
-									<div class="search_item" style="width: 50%;">
-
-									</div>
-
-
-									<button class="button search_button">search flights<span></span><span></span><span></span></button>
-								</form>
-							</div>
-
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
 
 
@@ -216,160 +156,87 @@
 				<div   class="col-lg-12">
 					<div id="defaultAirlineView" class="single_listing">
 
-								<!-- DESTINACIJE -->
 
-
-						<br>
-						<h1 class="hotel_title">Destinations</h1>
-
-
-						<div class="rooms">
-						<ul style="list-style-type:none" id="destination_list">
-								<template id="destination_template">
-									<div class="room">
-		
-										<!-- Room -->
-											<div class="row">
-												<div class="col-lg-2">
-													<div class="room_image"></div>
-												</div>
-												<div class="col-lg-7">
-													<div class="room_content">
-		
-														<div style="font-size: x-large; margin-top: 7%;margin-left: -29%" class="room_text">{{dokle}}</div>
-													</div>
-												</div>
-												<div class="col-lg-3 text-lg-right">
-													<div class="room_button">
-														<div style="margin-top: 3%" class="button book_button trans_200"><a href="javascript:void(0)" class="selektovanjeDestinacije" id="">show flights<span></span><span></span><span></span></a></div>
-													</div>
-												</div>
-		
-											</div>
-		
-										<hr>	
-									</div>
-								</template>
-							</ul>
-
-
-							<!-- Room -->
-							<div class="room">
-
-
-							</div>
-
-						</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-						<!-- Letovi na akciji -->
-						<br>
-								<br>
-								<h1 class="hotel_title">Special Offers</h1>
-								<br>
 								<div class="rooms">
-									<ul style="list-style-type:none" id="action_list">
-										<!-- Room -->
-										<template id="action_template">
-											<div class="room">
-												<!-- Room -->
-												<div class="row">
-													<div class="col-lg-2">
-														<div class="room_image"><img src="images/departure.png" style="height: 40%;width: 40%; margin-top: 35%; margin-left: 35%" alt=""></div>
-													</div>
-													<div class="col-lg-7">
-														<div class="room_content">
-															<div class="room_title">{{odakle}}</div>
-															<div class="room_price" id="vremePoletanja" style="margin-top: 0%">{{vremePoletanja}}</div>
-															<br>
-															<div class="room_title">{{dokle}}</div>
-															<div class="room_price" id="vremeSletanja" style="margin-top: 0%">{{vremeSletanja}}</div>
-																<div style="font-size: x-large" id="cenaPopust" class="room_text">{{cena}}</div>
-														</div>
-													</div>
-													<div class="col-lg-3 text-lg-right">
-														<div class="room_button">
-															<div style="margin-top: 0%" class="button book_button trans_200"><a href="#">book<span></span><span></span><span></span></a></div>
-														</div>
-													</div>
-		
+									<ul style="list-style-type:none" id="personsList">									
+										<template id="personTemplate">
+											<li id="listTag">
+												<h1 id="personIndex" class="hotel_title">PERSON ON FLIGHT:</h1>
+												<br>
+												<div style="margin: 0; color: #31124A;"><b>SELECT FRIEND FROM FRIEND LIST: </b></div>
+												<select class="selectFriendList" style="height: 45px; width: 49%;border-color: #31124A; border-style: solid;" id="friends">
+												</select>
+												<br><br>
+												<div style="width: 100%;">
+											
+													<div style="margin-bottom: 60px; margin-bottom: 80px;" id="div_new">
+														<form action="#" id="add_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+															<div style="height: 121px; width: 49%; margin-top: 5%" class="search_item">
+																<div style="margin: 0; color: #31124A;" >Name: </div>
+																<input id="imePersone" style="border-color: #31124A; border-style: solid;" type="text" name="new_name" class="search_input" required="required">
+																<p id="errorName" hidden style="color:red">Please insert correct name.</p>
+																<br>
+															</div>
+															<div style="height: 121px; width: 49%;  margin-top: 5%" class="search_item">
+																<div style="margin: 0; color: #31124A;">Last name: </div>
+																<input id="przPersone" style="border-color: #31124A; border-style: solid;" type="text" name="new_city" class="search_input" required="required">
+																<p id="errorLastname" hidden style="color:red">Please insert correct lastname.</p>
+																<br>
+															</div>
+															<div style="height: 121px; width: 49%; margin-top: 0%" class="search_item">
+																<div style="margin: 0; color: #31124A;" >email: </div>
+																<input id="emailPersone" style="border-color: #31124A; border-style: solid;" type="text" name="new_street" class="search_input" required="required">
+																<p id="errorEmail" hidden style="color:red">Please insert correct email.</p>
+																<br>
+															</div>
+															<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
+																<div style="margin: 0; color: #31124A;">Passport number: </div>
+																<input id="passPersone" style="border-color: #31124A; border-style: solid;" type="text" name="new_street_number" class="search_input" required="required">
+																<p id="errorPass" hidden style="color:red">Please insert correct passport number.</p>
+																<br>
+															</div>
+														</form>
+													</div>	
+													
+													<!-- PRTLJAG -->
+													
+													<h3 style="text-align: center;">CHOOSE BAGGAGE SIZE:</h3>
+													<div style="margin-bottom: 60px; margin-bottom: 30px; margin-left: 7%;" >
+														<form id="radioButtonForm" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+															<div style="height: 121px; width: 33%; margin-top: 5%" class="search_item">
+																<input type="radio" name="radioButton" value="0"> CARRY ON<br>
+															</div>
+															<div style="height: 121px; width: 33%; margin-top: 5%" class="search_item">
+																<input checked type="radio" name="radioButton" value="1"> STANDARDN SIZE - 20kg max<br>
+															</div>
+															<div style="height: 121px; width: 33%; margin-top: 5%" class="search_item">
+																<input type="radio" name="radioButton" value="2"> SUPERSIZED - 35kg max<br>
+															</div>
+														</form>
+													</div>	
+													<h3 style="text-align: center; margin-top:5%;">CHOOSE A FREE SEAT:</h3>
+													<br>
+													
+													
+													
+													
+													<div>
 												</div>
-		
-												<hr>
-											</div>
+													<!-- PRTLJAG -->
+												</div>				
+												<hr>		
+											</li>				
 										</template>
-
-	
-									 	</ul>
-									</div>
+									</ul>									
 								</div>
-
-					<div id="searchListing" class="single_listing">
-	
-						
-						<h1  class="hotel_title" id="naslovListing" ></h1>
-		
-						
-						<br><br>
-						
-						<ul style="list-style-type:none" id="selektovaniLetovi">
-									<template id="pretragaTemplate">
-											<div class="room">
-												<!-- Room -->
-												<div class="row">
-													<div class="col-lg-2">
-														<div class="room_image"><img src="images/departure.png" style="height: 40%;width: 40%; margin-top: 35%; margin-left: 35%" alt=""></div>
-													</div>
-													<div class="col-lg-7">
-														<div class="room_content">
-															<div class="room_title">{{odakle}}</div>
-															<div class="room_price" id="vremePoletanja" style="margin-top: 0%">{{vremePoletanja}}</div>
-															<br>
-															<div class="room_title">{{dokle}}</div>
-															<div class="room_price" id="vremeSletanja" style="margin-top: 0%">{{vremeSletanja}}</div>
-																<div style="font-size: x-large" id="cenaPopust" class="room_text">{{cena}}</div>
-														</div>
-													</div>
-													<div class="col-lg-3 text-lg-right">
-														<div class="room_button">
-															<div style="margin-top: 0%" class="button book_button trans_200"><a id="rezButton" href="rezervacija.html">book<span></span><span></span><span></span></a></div>
-														</div>
-													</div>
-		
-												</div>
-		
-												<hr>
-											</div>
-										</template>
-							
-						</ul>
-
+								
+								<button id="inserNewPerson" class="button search_button">Add a person<span></span><span></span><span></span></button>
+								<div style="float:right; margin-top: 35px; margin-bottom: 60px">
+								<h3 style="margin-left:30px; color:black">TOTAL COST: </h3>
+								<hr>
+								<h2 style="text-align:center" id="price"></h2>
+								<button id="makeReservation" class="button search_button">BOOK FLIGHT<span></span><span></span><span></span></button>
+								</div>
 					</div>
 
 		</div>
@@ -404,22 +271,20 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		</div>
 	</div>
 
-</div>
 
 
 <!--FRAMEWORKS-->
 
 <script src="js/jquery-3.2.1.min.js"></script>
-<script src="styles/bootstrap4/popper.js"></script>
 <script src="styles/bootstrap4/bootstrap.min.js"></script>
 <script src="plugins/Isotope/isotope.pkgd.min.js"></script>
 <script src="plugins/easing/easing.js"></script>
-<script src="plugins/parallax-js-master/parallax.min.js"></script>
 <script src="js/offers_custom.js"></script>
 
 
 
 
+<!-- TEMPLATE -->
 
 
 </body>

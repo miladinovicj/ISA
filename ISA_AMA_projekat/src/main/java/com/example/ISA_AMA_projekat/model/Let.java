@@ -62,6 +62,12 @@ public class Let
 	@CollectionTable(name ="presedanja")
 	private List<String> presedanja = new ArrayList<String>();
 	
+	
+	@ElementCollection
+	@CollectionTable(name ="zauzetaSedista")
+	private List<Integer> zauzetaSedista = new ArrayList<Integer>();
+	
+	
 	@OneToMany(cascade={ALL}, fetch=LAZY)
 	private List<Rating> rejtinzi = new ArrayList<Rating>();
 

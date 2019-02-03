@@ -2,6 +2,8 @@ package com.example.ISA_AMA_projekat.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Authority;
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
+import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
@@ -317,7 +320,14 @@ public class KorisnikController {
 		korisnikService.updateKorisnik(stari.getId(), stari.getIme(), stari.getPrezime(), stari.getEmail(), stari.getTelefon(), stari.getGrad());
 		
 		System.out.println("[KorisnikController: changeData] korisnik uspesno update-ovan.");
-			
+	}
+	
+	
+	@RequestMapping(value = "/friendsOf/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Korisnik>> getAllFriendsOf(@PathVariable("id") int userID)
+	{
+		Collection<Korisnik> list = korisnikService.getAllFriendsOfUser(userID);
 		
+		return new ResponseEntity<Collection<Korisnik>>(list,HttpStatus.OK);
 	}
 }
