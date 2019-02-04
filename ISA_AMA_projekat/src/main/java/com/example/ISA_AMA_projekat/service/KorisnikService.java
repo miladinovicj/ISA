@@ -3,6 +3,7 @@ package com.example.ISA_AMA_projekat.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -154,6 +155,25 @@ public class KorisnikService implements UserDetailsService{
 		korisnikRepository.save(user);
 		
 		return true;
+	}
+	
+	public boolean areFriends(Korisnik k1, Korisnik k2)
+	{
+		boolean retVal = false;
+		
+		Set<FriendRequest> k1Friends = k1.getPrijateljstva();
+		for( FriendRequest fr : k1Friends)
+		{
+			if(fr.getPrima().equals(k2) || fr.getSalje().equals(k2))
+			{
+				if(fr.getStanje() == 0)
+				{
+					retVal = true;
+				}
+			}
+		}
+		
+		return retVal;
 	}
 	
 

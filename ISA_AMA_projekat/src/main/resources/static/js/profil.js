@@ -1,3 +1,6 @@
+var korisnik = null;
+
+
 $(document).ready(function(){
 	token=localStorage.getItem('jwtToken');
 	
@@ -37,6 +40,10 @@ $(document).ready(function(){
 				document.getElementById("phone_profile").value  = user.telefon;
 				document.getElementById("city_profile").value  = user.grad.naziv;
 				document.getElementById("bonus_profile").value  = user.bonuspoeni;
+				
+				
+				
+				console.log(korisnik.rezervacijeUcestvovanje)
 			}
 			else
 			{

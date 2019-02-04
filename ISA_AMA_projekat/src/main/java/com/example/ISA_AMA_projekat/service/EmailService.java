@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.ISA_AMA_projekat.model.Korisnik;
+import com.example.ISA_AMA_projekat.model.Rezervacija;
 
 
 
@@ -23,7 +24,8 @@ public class EmailService {
 
 	
 	@Async
-	public void sendNotificaitionAsync(Korisnik korisnik) throws MailException, InterruptedException {
+	public void sendNotificaitionAsync(Korisnik korisnik) throws MailException, InterruptedException 
+	{
 
 		//Simulacija duze aktivnosti da bi se uocila razlika
 		//Thread.sleep(2500);
@@ -41,5 +43,30 @@ public class EmailService {
 
 		System.out.println("Email poslat!");
 	}
+	
+	
+	@Async
+	public void sendReservationExpensesConformation(Korisnik korisnik, Rezervacija rez) throws MailException, InterruptedException
+	{
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setSubject("New Flight Invitation");
+		mail.setTo(korisnik.getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setText("Hello " + korisnik.getIme() + ",\n\nYou have been invited by " + rez.getKorisnik().getIme() + " " + rez.getKorisnik().getPrezime() + " on a flight from: " + rez.getLet().getOdakle() + " to: " + rez.getLet().getDokle() + ".\nGo to your WhereTo profile page to accept or decline your share of expenses for this invitation.\n\nYours sincerely,\nWhereTo");		
+		javaMailSender.send(mail);
+	}
+	
+	
+	@Async
+	public void sendReservationConformation(Korisnik korisnik, Rezervacija rez) throws MailException, InterruptedException
+	{
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setSubject("New Flight Invitation");
+		mail.setTo(korisnik.getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setText("Hello " + korisnik.getIme() + ",\n\nYou have been invited by " + rez.getKorisnik().getIme() + " " + rez.getKorisnik().getPrezime() + " on a flight from: " + rez.getLet().getOdakle() + " to: " + rez.getLet().getDokle() + ".\nAll the expenses have been covered by the reserver. After you you become WhereTo friends, you will you be able to preview the reservation.\n\nYours sincerely,\n WhereTo");		
+		javaMailSender.send(mail);
+	}
+
 
 }
