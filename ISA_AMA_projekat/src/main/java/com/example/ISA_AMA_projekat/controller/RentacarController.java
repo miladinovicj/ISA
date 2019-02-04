@@ -33,11 +33,13 @@ import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
+import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
+import com.example.ISA_AMA_projekat.service.RezervacijaService;
 import com.example.ISA_AMA_projekat.service.RezervacijaVozilaService;
 import com.example.ISA_AMA_projekat.service.VoziloService;
 
@@ -56,6 +58,10 @@ public class RentacarController {
 	
 	@Autowired
 	private AddressService addressService; 
+	
+	@Autowired
+	private RezervacijaService rezervacijaService; 
+	 
 	
 	@Autowired
 	private RezervacijaVozilaService rezervacijaVozilaService;
@@ -469,12 +475,12 @@ public class RentacarController {
 	}
 	
 	@RequestMapping(
-			value = "/book_car/{vozilo_id}",
+			value = "/book_car/{vozilo_id}/{id_rez}",
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Vozilo> bookCar(@PathVariable("vozilo_id") Integer vozilo_id, @RequestBody RezervacijaVozila rezervacijaVozila) throws ParseException{
+	public ResponseEntity<Vozilo> bookCar(@PathVariable("vozilo_id") Integer vozilo_id, @RequestBody RezervacijaVozila rezervacijaVozila, @PathVariable("id_rez") Integer id_rez) throws ParseException{
 		
 		//RezervacijaHotel rezervacijaHotel = (RezervacijaHotel) request.getSession().getAttribute("rezervacijaHotel");
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
@@ -495,6 +501,10 @@ public class RentacarController {
 		
 		rezervacijaVozila = rezervacijaVozilaService.save(rezervacijaVozila);
 		rezervacijaVozilaService.insertRezervacijaVozila(rezervacijaVozila.getId(), vozilo.getId());
+		rezervacijaService.updateRezVozila(rezervacijaVozila.getId(), id_rez);
+		Rezervacija rez = rezervacijaService.findById(id_rez).get();
+		Date datum_rez = rez.getDatumRezervacije();
+		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);
 	}
 	
@@ -673,11 +683,11 @@ public class RentacarController {
 	}
 	
 	@RequestMapping(
-			value = "/book_car_special/{vozilo_id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}",
+			value = "/book_car_special/{vozilo_id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}/{id_rez}",
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vozilo> bookRoomSpecial(@PathVariable("vozilo_id") Integer vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out_string,@PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers, @RequestBody Popust popust) throws ParseException {
+	public ResponseEntity<Vozilo> bookRoomSpecial(@PathVariable("vozilo_id") Integer vozilo_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_in_town") String check_in_town, @PathVariable("check_out") String check_out_string,@PathVariable("check_out_town") String check_out_town, @PathVariable("passengers") int passengers, @RequestBody Popust popust, @PathVariable("id_rez") Integer id_rez) throws ParseException {
 		
 		
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
@@ -710,7 +720,10 @@ public class RentacarController {
 		rezervacijaVozila.setUkupna_cena(cena_rez);
 		rezervacijaVozila = rezervacijaVozilaService.save(rezervacijaVozila);
 		rezervacijaVozilaService.insertRezervacijaVozila(rezervacijaVozila.getId(), vozilo.getId());
-		
+		rezervacijaService.updateRezVozila(rezervacijaVozila.getId(), id_rez);
+		Rezervacija rez = rezervacijaService.findById(id_rez).get();
+		Date datum_rez = rez.getDatumRezervacije();
+		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
 		
 		
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);

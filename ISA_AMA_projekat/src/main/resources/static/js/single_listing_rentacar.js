@@ -1,3 +1,4 @@
+var id_rez=null;
 $(document).ready(function()	
 {
 	
@@ -12,6 +13,7 @@ $(document).ready(function()
     check_out_town = splitted[4].substring(15);
     check_out_town=check_out_town.split('+').join(' ');
     passengers = splitted[5].substring(11);
+    id_rez=splitted[6].substring(7);
     console.log('[single_listing_rent: document.ready()]: id hotela: ' + id_presented);
 
 	$.ajax({
@@ -166,7 +168,8 @@ function addSpecialPrice(vozilo)
             }
         	var popust_cena = vozilo.cena_dan * 0.01 * (100 - popust.popust);
         	document.getElementById("cena_autasp").innerHTML = 'Regular price: $' + vozilo.cena_dan + '/day\r\nPrice with discount: $' + popust_cena + '/day';
-        	
+        	if(id_rez!=0)
+        		{
         	$(".button_book_carrsp").addClass('vozilo_id_' + vozilo.id);
         	var elements = document.getElementsByClassName('button_book_carsp');
         	for(element of elements)
@@ -174,6 +177,7 @@ function addSpecialPrice(vozilo)
         		$(element).removeClass('button_book_carsp');
         		$(element).click(bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo.id));
         	}
+        		}
 		}
     });
 	
@@ -188,14 +192,14 @@ function bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo_id)
 		
 		console.log('book car special, id vozila: ' + vozilo_id + '; popust id: ' + pronadjen_popust.id);
 		$.ajax({
-			url: 'api/rents/book_car_special/' + vozilo_id + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers,
+			url: 'api/rents/book_car_special/' + vozilo_id + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers + '/' + id_rez,
 			type: 'PUT',
 			data: JSON.stringify(pronadjen_popust),
 			contentType: 'application/json; charset=utf-8',
 			success: function(vozilo) {
 				console.log("uspesna brza rezervacija vozila sa id: " + vozilo.id);
-				alert('uspesna brza rezervacija vozila sa id: ' + vozilo.id);
-				window.location.href = 'index.html';
+				alert('uspesna brza rezervacija vozila sa id: ' + vozilo.id + " dodata u rez: " + id_rez);
+				window.location.href = 'rezervacijaPreview.html?id=' + id_rez;
 			}
 		});
 	};
@@ -312,13 +316,23 @@ function addVozilo(car)
     
     if(number_of_days != 0)
 	{
-		$(".button_book_car").addClass('auto_id_' + car.id);
-		var elements = document.getElementsByClassName('button_book_car');
-		for(element of elements)
-		{
-			$(element).removeClass('button_book_car');
-			$(element).click(bookCar(car.id));
-		}
+    	if(id_rez!=0)
+    	{
+			$(".button_book_car").addClass('auto_id_' + car.id);
+			var elements = document.getElementsByClassName('button_book_car');
+			for(element of elements)
+			{
+				$(element).removeClass('button_book_car');
+				$(element).click(bookCar(car.id));
+			}
+    	}else
+    	{
+    			var elements = document.getElementsByClassName('button_book_car');
+    			for(element of elements)
+    			{
+    				element.parentElement.style.display = 'none';
+    			}
+    	}
 	}
     else
     {
@@ -335,14 +349,14 @@ function bookCar(id)
 	return function(){
 		
 		$.ajax({
-			url: 'api/rents/book_car/' + id,
+			url: 'api/rents/book_car/' + id  + '/' + id_rez,
 			type: 'PUT',
 			data: JSON.stringify(rezervacijaVozila),
 			contentType: 'application/json; charset=utf-8',
 			success: function(vozilo) {
 				console.log("uspesna rezervacija vozila sa id_vozila: " + vozilo.id);
-				alert('uspesna rezervacija vozila sa id_vozila: ' + vozilo.id);
-				window.location.href = 'index.html';
+				alert('uspesna rezervacija vozila sa id_vozila: ' + vozilo.id + " dodata u rez: " + id_rez);
+				window.location.href = 'rezervacijaPreview.html?id=' + id_rez;
 			}
 		});
 	};

@@ -1,6 +1,9 @@
 delete from rating;
 delete from user_authority;
 delete from AUTHORITY;
+
+delete from osoba_iz_rez;
+delete from rezervacija;
 delete from aviokompanija_brzi_letovi;
 delete from let;
 delete from aviokompanija;
@@ -28,6 +31,8 @@ delete from usluga;
 delete from popust;
 delete from soba;
 delete from hotel;
+
+
 
 delete from adresa;
 delete from grad;
@@ -74,6 +79,8 @@ insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (2,250,'Milano - ITA', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1);
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (3,500,'Washington DC - USA', ' Nis - SRB', 0, 15, 15000,'2019-1-15 02:59:59.999999','2019-1-15 23:59:59.999999',1);
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 15000,'2018-12-25 3:00:00.999999','2018-12-25 6:00:00.999999',1);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 15000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1);
+
 
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,1);
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,2);
@@ -199,10 +206,4 @@ insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
 insert into user_authority (user_id, authority_id) values (4, 5);
 
-
-insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
-insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
-
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
-insert into user_authority (user_id, authority_id) values (4, 5);
 

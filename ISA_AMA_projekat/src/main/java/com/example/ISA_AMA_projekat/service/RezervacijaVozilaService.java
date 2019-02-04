@@ -1,5 +1,6 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,10 @@ public class RezervacijaVozilaService {
 	public List<RezervacijaVozila> getAll()
 	{
 		return rezervacijaVozilaRepository.findAll();
+	}
+	
+	public void updateDatumRez(Date datum_rez, Integer id)
+	{
+		rezervacijaVozilaRepository.updateDatumRez(datum_rez, id);
 	}
 }

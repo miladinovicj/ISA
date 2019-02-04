@@ -2,12 +2,38 @@ var rezervacija = null;
 var korisnik = null;
 var flight = null;
 
+
 $(document).ready(function(){
 	
-	getKorisnik();
+			getKorisnik();
+	
+			$('form#rentacar').submit(function(event){
+				event.preventDefault();
+				 datum = $('input[name="check_out_car"]').val();
+				 mesto = $('input[name="check_out_town"]').val();
+				 let split = flight.dokle.split("-");
+				 let check_in_town=split[0];
+				 check_in_town=check_in_town.substring(0, check_in_town.length-1);
+				let check_in_date = flight.vremeSletanja.substring(0,10);
+				 let passengers = rezervacija.osobe.length;
+				console.log(datum);
+				console.log(mesto);
+				//window.location.replace("index.html");
+				preusmeri(check_in_town, check_in_date, datum, mesto, passengers);
+			});
+			
+	
+	
 	
 });
 
+function preusmeri(check_in_town, check_in_date, datum, mesto, passengers)
+{
+	//alert("Usao u preusmeri");
+	
+	var idiNa = "index.html?name_location_rentacar=" + check_in_town + "&check_in_car=" + check_in_date + "&check_in_town=" + check_in_town + "&check_out_car=" + datum + "&check_out_town=" + mesto + "&passengers_rent=" + passengers + "&id_rez=" + rezervacija.id;
+	window.location.href = idiNa;
+}
 
 function getKorisnik()
 {
@@ -15,7 +41,7 @@ function getKorisnik()
 	$.post
 	({
 		url: "/auth/userprofile",
-		headers: 'Authorization',
+		headers: {"Authorization": "Bearer " + token},
 		contentType: 'application/json',
 		data : token,
 		  
@@ -40,7 +66,8 @@ function getKorisnik()
 function getRezervacija()
 {
 	var url = window.location.toString();
-	var rezID = url[url.length-1]
+	var splitstr = url.split("=");
+	var rezID = splitstr[1];
 	
     $.ajax({
         type: 'GET',
@@ -92,10 +119,27 @@ function initWindow()
 	{
 		$("#noHotel").prop("hidden",false);
 	}
+	
 	if(rezervacija.rezervacijaVozila == null)
 	{
 		$("#noRental").prop("hidden",false);
+		$("#hasCar").attr("hidden", true);
 	}
+	else
+	{
+	 $("#noRental").prop("hidden",true);
+	 $("#hasCar").attr("hidden", false);
+	 $("#check_in").text("Check in date and town: " + rezervacija.rezervacijaVozila.datum_preuzimanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_preuzimanja.naziv);
+	 $("#check_out").text("Check out date and town: " + rezervacija.rezervacijaVozila.datum_vracanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_vracanja.naziv);
+	 $("#cost").text("Cost: $" + rezervacija.rezervacijaVozila.ukupna_cena);
+	}
+}
+
+function rezervisiVozilo()
+{
+	$("#noRental").attr("hidden", true);
+	$("#hocuVozilo").attr("hidden", false);
+	
 }
 
 
