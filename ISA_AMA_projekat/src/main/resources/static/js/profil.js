@@ -434,9 +434,9 @@ function loginAgain(email, pass)
 {
 	$.post({
 		url: "/auth/login",
+		headers: {"Authorization": "Bearer " + token},
 		data: JSON.stringify({email: email, lozinka: pass}),
 		contentType: 'application/json',
-		headers: 'Authorization',
 		  
 		success: function(res) {
 			if(res!="" && res.accessToken != null)

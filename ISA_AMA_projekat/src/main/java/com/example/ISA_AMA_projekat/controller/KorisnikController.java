@@ -2,7 +2,6 @@ package com.example.ISA_AMA_projekat.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Authority;
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
-import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
@@ -234,6 +232,7 @@ public class KorisnikController {
 				}
 				
 				novi_korisnik.setAdmin_id(null);
+				novi_korisnik.setAktiviran(false);
 				
 			}else if(uloga == 1) {
 				auth = authorityService.findByName("ROLE_AVIOADMIN");

@@ -98,11 +98,12 @@ insert into hotel_usluge (hotel_id, usluge_id) values (6, 1);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 2);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 3);
 
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (1, '2018-12-25', '2018-02-01', 1, 2, false, 10, true, 0);
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (2, '2018-12-25', '2019-02-03', 3, 3, false, 10, true, 0);
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (3, '2018-12-20', '2018-02-03', 3, 4, false, 10, true, 0);
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (4, '2018-12-25', '2018-02-05', 3, 3, false, 10, true, 0);
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (5, '2018-12-20', '2018-01-05', 3, 4, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (1, '2018-12-25', '2019-02-01', 1, 2, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (2, '2018-12-25', '2019-01-25', 1, 3, false, 15, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (3, '2018-12-20', '2019-02-04', 1, 4, false, 20, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (4, '2018-12-25', '2019-01-04', 1, 3, false, 25, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (5, '2018-12-20', '2019-01-30', 1, 4, false, 30, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (6, '2018-12-20', '2019-02-05', 1, 4, false, 30, true, 0);
 
 insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 1);
 insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 2);
@@ -177,7 +178,7 @@ insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (2, 6);
 insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (4, 7);
 
 
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (2, 'mojmejl@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Endzi', 'Jeremic', 1, '062522006', 0, true, 1);
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (2, 'mojmejl@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Endzi', 'Jeremic', 1, '062522006', 0, false, 1);
 insert into AUTHORITY (id, name) values (2, 'ROLE_RENTADMIN');
 insert into user_authority (user_id, authority_id) values (2, 2);
 update rentacar_servis rs set rs.id_admin = 2 where rs.id = 1;
@@ -191,17 +192,9 @@ insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
 
 
-
 insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
 insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
 
-
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
-insert into user_authority (user_id, authority_id) values (4, 5);
-
-
-insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
-insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
 insert into user_authority (user_id, authority_id) values (4, 5);
