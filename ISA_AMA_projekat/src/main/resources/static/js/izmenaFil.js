@@ -236,6 +236,8 @@ $(document).ready(function()
         	$('input[name="fil_adresa"]').val(fil.adresa.ulica);
         	$('input[name="fil_broj"]').val(fil.adresa.broj);
         	$('input[name="fil_grad"]').val(fil.adresa.grad.naziv);
+        	$('input[name="fil_latitude"]').val(fil.adresa.latitude);
+        	$('input[name="fil_longitude"]').val(fil.adresa.longitude);
         	
         	
 		}
@@ -250,11 +252,13 @@ $(document).ready(function()
 		let ulica = $('input[name="fil_adresa"]').val();
 		let broj = $('input[name="fil_broj"]').val();
 		let grad = $('input[name="fil_grad"]').val();
+		let latitude = $('input[name="fil_latitude"]').val();
+		let longitude = $('input[name="fil_longitude"]').val();
 		
 		$('#uspesno').text("");
 		$('#neuspesno').text("");
 		
-		if(!ulica || !grad || !broj){
+		if(!ulica || !grad || !broj || !latitude || !longitude){
 			$('#neuspesno').text('All fields must be filled!');
 			ispravno=false;
 		}
@@ -275,6 +279,24 @@ $(document).ready(function()
 			}
 		else
 			$('#validacijaGrad').text("");
+			
+			if(!(/^[0-9.]+$/.test(latitude)))
+			{
+			$('#validacijaLatitude').text("Field Latitude must contains only numbers!");
+			ispravno=false;
+			
+			}
+			else
+			$('#validacijaLatitude').text("");
+			
+			if(!(/^[0-9.]+$/.test(longitude)))
+			{
+			$('#validacijaLongitude').text("Field Longitude must contains only numbers!");
+			ispravno=false;
+			
+			}
+			else
+			$('#validacijaLongitude').text("");
 		
 			}
 		
@@ -282,7 +304,7 @@ $(document).ready(function()
 			{
 			let token=localStorage.getItem('jwtToken');
 			$.post({
-				url: '/api/filijale/admin/izmenaFil/' + id + '/'  + ulica + '/' + broj + '/' + grad,
+				url: '/api/filijale/admin/izmenaFil/' + id + '/'  + ulica + '/' + broj + '/' + grad + '/' + latitude + '/' + longitude,
 				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {

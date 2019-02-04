@@ -739,12 +739,13 @@ public class RentacarController {
 	
 	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
-			value = "/admin/izmenaRent/{id}/{naziv}/{ulica}/{broj}/{grad}/{opis}",
+			value = "/admin/izmenaRent/{id}/{naziv}/{ulica}/{broj}/{grad}/{opis}/{latitude}/{longitude}",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public RentacarServis editServis(@PathVariable("id") Integer id, @PathVariable("naziv") String naziv,
-			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("opis") String opis)
+			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("opis") String opis,
+			 @PathVariable("latitude") double latitude,  @PathVariable("longitude") double longitude)
 	{
 		System.out.println("[RentacarControler]: editServis");
 		RentacarServis ser = rentService.findById(id).get();
@@ -767,6 +768,8 @@ public class RentacarController {
 			adr.setGrad(grad);
 			adr.setUlica(ulica);
 			adr.setBroj(broj);
+			adr.setLatitude(latitude);
+			adr.setLongitude(longitude);
 			addressService.save(adr);
 		}
 		else

@@ -76,6 +76,7 @@ var token = localStorage.getItem('jwtToken');
 				localStorage.clear();
 				window.location.href = 'index.html';
 			}
+
 		
 		});
 		

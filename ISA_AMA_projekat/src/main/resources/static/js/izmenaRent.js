@@ -238,6 +238,8 @@ $(document).ready(function()
         	$('input[name="rent_adresa"]').val(servis.adresa.ulica);
         	$('input[name="rent_broj"]').val(servis.adresa.broj);
         	$('input[name="rent_grad"]').val(servis.adresa.grad.naziv);
+        	$('input[name="rent_latitude"]').val(servis.adresa.latitude);
+        	$('input[name="rent_longitude"]').val(servis.adresa.longitude);
         	$('input[name="rent_opis"]').val(servis.promotivni_opis);
         	
 		}
@@ -252,12 +254,14 @@ $(document).ready(function()
 		let ulica = $('input[name="rent_adresa"]').val();
 		let broj = $('input[name="rent_broj"]').val();
 		let grad = $('input[name="rent_grad"]').val();
+		let latitude = $('input[name="rent_latitude"]').val();
+		let longitude = $('input[name="rent_longitude"]').val();
 		let opis = $('input[name="rent_opis"]').val();
 		
 		$('#uspesno').text("");
 		$('#neuspesno').text("");
 		
-		if(!naziv || !ulica || !grad || !opis || !broj){
+		if(!naziv || !ulica || !grad || !opis || !broj || !latitude || !longitude){
 			$('#neuspesno').text('All fields must be filled!');
 			ispravno=false;
 		}
@@ -285,6 +289,24 @@ $(document).ready(function()
 			}
 		else
 			$('#validacijaGrad').text("");
+			
+			if(!(/^[0-9.]+$/.test(latitude)))
+			{
+			$('#validacijaLatitude').text("Field Latitude must contains only numbers!");
+			ispravno=false;
+			
+			}
+			else
+			$('#validacijaLatitude').text("");
+			
+			if(!(/^[0-9.]+$/.test(longitude)))
+			{
+			$('#validacijaLongitude').text("Field Longitude must contains only numbers!");
+			ispravno=false;
+			
+			}
+			else
+			$('#validacijaLongitude').text("");
 		
 			}
 		
@@ -292,7 +314,7 @@ $(document).ready(function()
 			{
 			
 			$.post({
-				url: '/api/rents/admin/izmenaRent/' + id + '/' + naziv + '/' + ulica + '/' + broj + '/' + grad + '/' + opis,
+				url: '/api/rents/admin/izmenaRent/' + id + '/' + naziv + '/' + ulica + '/' + broj + '/' + grad + '/' + opis + '/' + latitude + '/' + longitude,
 				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(data) {

@@ -196,10 +196,21 @@ insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonusp
 insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
 
+
+
 insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
 insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
 insert into friend_request (id, stanje, salje_id, prima_id) values (3, 0, 5, 1);
 
 
+
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
 insert into user_authority (user_id, authority_id) values (4, 5);
+
+
+insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
+insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
+
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
+insert into user_authority (user_id, authority_id) values (4, 5);
+

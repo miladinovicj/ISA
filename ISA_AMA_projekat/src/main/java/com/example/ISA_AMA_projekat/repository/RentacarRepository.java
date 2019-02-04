@@ -20,6 +20,7 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		
 		
 		@Modifying
+		@Transactional
 		@Query(value = "update RentacarServis rs set rs.naziv = ?1, rs.adresa_id=?2, rs.promotivni_opis=?3 where rs.id = ?4", nativeQuery = true)
 		public void updateAktiviran(String naziv, Integer adresa_id, String promotivni_opis, Integer id);
 		
@@ -28,6 +29,7 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		@Query(value = "update rentacar_servis rs set rs.id_admin = ?2 where rs.id = ?1", nativeQuery = true)
 		public void updateAdmin(Integer rentalID, Integer adminID);
 
+		@Modifying
 		@Transactional
 		@Query("update RentacarServis rs set rs.naziv = ?1 , rs.adresa.id = ?2 , rs.promotivni_opis = ?3 where rs.id = ?4")
 		public void updateServis(String naziv, Integer adresa_id, String promotivni_opis,  Integer id);

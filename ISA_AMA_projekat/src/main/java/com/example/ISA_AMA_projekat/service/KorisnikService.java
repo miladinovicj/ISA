@@ -18,8 +18,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.controller.AuthenticationController;
+
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.repository.FriendRequestRepository;
@@ -40,8 +42,14 @@ public class KorisnikService implements UserDetailsService{
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
+
+
 	@Autowired 
 	private FriendRequestRepository requestRepository;
+
+
+
+
 	@Autowired
 	AuthenticationController authController;
 
@@ -119,6 +127,7 @@ public class KorisnikService implements UserDetailsService{
 	}
 	
 
+
 	public boolean changePassword(String oldPassword, String newPassword) {
 
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
@@ -153,7 +162,7 @@ public class KorisnikService implements UserDetailsService{
 		//user.setPassword(passwordEncoder.encode(newPassword));
 		user.setLozinka(passwordEncoder.encode(newPassword));
 		korisnikRepository.save(user);
-		
+
 		return true;
 	}
 	
