@@ -56,8 +56,8 @@ public class FriendRequest implements Serializable
 		this.id = id;
 	}
 
-	public Stanje getStanje() {
-		return stanje;
+	public int getStanje() {
+		return stanje.ordinal();
 	}
 
 	public void setStanje(Stanje stanje) {
