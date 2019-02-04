@@ -138,10 +138,16 @@ public class AuthenticationController {
 		
 		System.out.println("[AuthenticationController: changePassword] oldPassword: " + passwordChanger.oldPassword + "; newPassword: " + passwordChanger.newPassword);
 		
-		userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
+		boolean uspesno = userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 		
 		Map<String, String> result = new HashMap<>();
-		result.put("result", "success");
+		
+		if(uspesno) {
+			result.put("result", "success");
+		}else {
+			result.put("result", "error");
+		}
+		
 		return ResponseEntity.accepted().body(result);
 	}
 

@@ -130,28 +130,16 @@ function setPageInfo()
 	// koristi 
 	
 	//dodaj korisnika koji je izabrao opciju rezervisi kao prvog u listi
-	insertUser(korisnik, function(){
-		
+	insertUser(korisnik, function()
+	{	
 		fillAllFields("");
 	});
-	$("#friends").val("1");
-	$("#friends").attr("disabled", true); 
-	$("#friends").change(function() 
-	{
-		index = $("#friends").prop('selectedIndex');
-		if(index != 0)
-		{
-		    $("#imePersone").val(friend_list[index-1].ime)
-		    $("#przPersone").val(friend_list[index-1].prezime)
-		    $("#emailPersone").val(friend_list[index-1].email)
-		}
-		else
-		{
-			$("#imePersone").val("");
-		    $("#przPersone").val("");
-		    $("#emailPersone").val("");
-		}
-	});
+	
+	
+
+	$("#friends").prop("hidden", true);
+	$("#personIndex").prop("hidden", true);
+
 }
 
 
@@ -271,10 +259,7 @@ function getFriendListForUser(korisnikId, callback)
 		if(data == null)
 		{
 			console.log("nullcina");
-		}
-		
-		friend_list.push(korisnik)
-		
+		}		
 		for(let friend of data)
 		{
 			friend_list.push(friend);
@@ -293,16 +278,16 @@ function getFriendListForUser(korisnikId, callback)
 
 function fillAllFields(number)
 {
-	
-	var friendListElement = document.getElementById("friends" + number)
-	var $friendListElement = $(friendListElement);
-		
-	$friendListElement.append('<option value="null"></option>')
-	for (i = 0; i < friend_list.length; i++)
-	{
-		
-		$friendListElement.append('<option value="' + friend_list[i].id +'">'  + friend_list[i].ime + ' ' + friend_list[i].prezime + '</option>')
-	}
+
+		var friendListElement = document.getElementById("friends" + number)
+		var $friendListElement = $(friendListElement);
+			
+		$friendListElement.append('<option value="null"></option>')
+		for (i = 0; i < friend_list.length; i++)
+		{
+			
+			$friendListElement.append('<option value="' + friend_list[i].id +'">'  + friend_list[i].ime + ' ' + friend_list[i].prezime + '</option>')
+		}
 }
 
 function validateFields()
@@ -382,18 +367,23 @@ function validateSemantic()
 	correct = true;
 	
 	temp_list = [];
+	temp_list2 = [];
 	var passText = $("#passPersone").val();
+	var emailText = $("#emailPersone").val();
 	temp_list.push(passText);
+	temp_list2.push(emailText);
 	
 	for(var i = 1 ; i < personCount ; i++)
 	{
 		passText = $("#passPersone" + i).val();
-		if($.inArray(passText, temp_list) != -1)
+		emailText = $("#emailPersone" + i).val();
+		if($.inArray(passText, temp_list) != -1 || $.inArray(emailText, temp_list2) != -1)
 		{
-			alert("Error: There are two passengers with the same passport number.");
+			alert("Error: All pasengers must be unique.");
 			correct = false;	
 		}
 		temp_list.push(passText);
+		temp_list2.push(emailText);	
 	}
 	
 	return correct;

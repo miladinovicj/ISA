@@ -1,6 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,9 @@ public class RezervacijaHotelService {
 	
 	public void insertRezervacijaSoba(Integer rezervacija_id, Integer soba_id) {
 		rezervacijaHotelRepository.insertRezervacijaSoba(rezervacija_id, soba_id);
+	}
+	
+	public List<RezervacijaHotel> getAll(){
+		return rezervacijaHotelRepository.findAll();
 	}
 }

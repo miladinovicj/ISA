@@ -23,6 +23,7 @@ import com.example.ISA_AMA_projekat.model.Let;
 import com.example.ISA_AMA_projekat.model.OsobaIzRez;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.security.TokenUtils;
+import com.example.ISA_AMA_projekat.service.EmailService;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
 import com.example.ISA_AMA_projekat.service.LetService;
 import com.example.ISA_AMA_projekat.service.OsobaIzRezService;
@@ -50,6 +51,9 @@ public class RezervacijaController
 	
 	@Autowired
 	private OsobaIzRezService osobaIzRezService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	
 	@RequestMapping(
@@ -142,20 +146,45 @@ public class RezervacijaController
 			if(osoba.getEmail().equals(korisnik.getEmail()))
 			{
 				osoba.setPotvrdjeno(true);
+				osoba.setKorisnikUcesnik(korisnik);
 			}
 			else
 			{	
 				Korisnik tempKorisnik = korisnikService.findByEmail(osoba.getEmail());
 				if(tempKorisnik == null) //ako ne postoji korisnik nase aplikacije sa ovim mejlom
 				{
-					osoba.setPotvrdjeno(false);
+					//potvrdjeno zanci korisnik placa
+					osoba.setPotvrdjeno(true);
 				}
 				else
 				{
-					//TODO: SLANJE EMAILA
-					osoba.setPotvrdjeno(false);
+					if(korisnikService.areFriends(korisnik, tempKorisnik))
+					{
+						//ukoliko se informacije ne poklapaju
+						if(!osoba.getIme().equals(tempKorisnik.getIme()))
+						{
+							return null;
+						}
+						if(!osoba.getPrezime().equals(tempKorisnik.getPrezime()))
+						{
+							return null;
+						}
+						//salje se takav mejl koji govori da prijatelj moze da prihvati svoj deo troskova 
+						
+						
+						boolean poslatMejl= sendRezervationInfo(tempKorisnik, rez, true);
+						osoba.setPotvrdjeno(false);	
+						osoba.setKorisnikUcesnik(tempKorisnik);
+					}
+					else
+					{
+						//salje se mejl da je rezevisao i da su troskovi na korisnika koji je rezervisao
+						boolean poslatMejl= sendRezervationInfo(tempKorisnik, rez, false);
+						osoba.setPotvrdjeno(true);	
+					}
 				}
 			}
+			
 			
 			OsobaIzRez new_osoba = osobaIzRezService.save(osoba);
 			new_osobe.add(new_osoba);
@@ -182,6 +211,26 @@ public class RezervacijaController
 			System.out.println("ispao");
 			return null; 	
 		}
+	}
+	
+	
+	public boolean sendRezervationInfo(Korisnik korisnik, Rezervacija rez, boolean friend)
+	{
+
+		//slanje emaila
+		try 
+		{	
+			if(friend)
+				emailService.sendReservationExpensesConformation(korisnik, rez);
+			else
+				emailService.sendReservationConformation(korisnik, rez);
+		}catch( Exception e )
+		{
+			System.out.println("Greska prilikom slanja emaila: " + e.getMessage());
+			return false;
+		}
+
+		return true;
 	}
 	
 }

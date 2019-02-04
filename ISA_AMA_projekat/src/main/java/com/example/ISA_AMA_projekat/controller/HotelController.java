@@ -3,9 +3,12 @@ package com.example.ISA_AMA_projekat.controller;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -750,6 +753,600 @@ public class HotelController {
 		
 		return new ResponseEntity<Soba>(pronadjena, HttpStatus.OK);
 		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/total_earnings/{hotel_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> totalEarnings(@PathVariable("hotel_id") Integer hotel_id) throws ParseException{
+		System.out.println("[HotelController: totalEarnings]: usao u metodu totalEarnings");
+		
+		Hotel hotel = hotelService.findById(hotel_id).get();
+		
+		Map<String, Double> result = new HashMap<>();
+		
+		ArrayList<Integer> sobeID = new ArrayList<Integer>();
+		for (Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();){
+			
+			Soba soba = iteratorSoba.next();
+			sobeID.add(soba.getId());
+		}
+		
+		List<RezervacijaHotel> sve_rez = rezervacijaHotelService.getAll();
+		List<RezervacijaHotel> rez = new ArrayList<RezervacijaHotel>();
+		
+		for(Iterator<RezervacijaHotel> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();){
+			
+			RezervacijaHotel rezHotel = iteratorSveRez.next();
+			for(int i = 0; i<sobeID.size();i++){
+				if(rezHotel.getSoba().getId() == sobeID.get(i)){
+					
+					rez.add(rezHotel);
+				}
+			}
+		}
+		
+		System.out.println("[HotelController: totalEarnings]: Rezervacija ima: " + rez.size());
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today_str = format.format(new Date());
+		Date today = format.parse(today_str);
+		System.out.println("[HotelController: totalEarnings]: danasnji datum: " + today);
+		
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		String today7_str = format.format(cal.getTime());
+		Date today7 = format.parse(today7_str);
+		System.out.println("[HotelController: totalEarnings]: datum pre 7 dana: " + today7);
+
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -30);
+		String today30_str = format.format(cal.getTime());
+		Date today30 = format.parse(today30_str);
+		System.out.println("[HotelController: totalEarnings]: datum pre mesec dana: " + today30);
+		
+		double totalDay=0, totalWeek=0, totalMonth=0;
+		
+		for(Iterator<RezervacijaHotel> iteratorRez = rez.iterator(); iteratorRez.hasNext();){
+			
+			RezervacijaHotel rezervacija = iteratorRez.next();
+			System.out.println("[HotelController: totalEarnings]: rezervacija " + rezervacija.getId() + " ima ukupnu cenu: " + rezervacija.getUkupna_cena());
+			System.out.println("[HotelController: totalEarnings]: datum odlaska: " + rezervacija.getDatum_odlaska());
+			
+			if(today.equals(rezervacija.getDatum_odlaska())){
+				
+				System.out.println("Datum vracanja je danas za rez: " + rezervacija.getId());
+				totalDay += rezervacija.getUkupna_cena();
+			}
+			
+			if(today7.equals(rezervacija.getDatum_odlaska()) || (today7.before(rezervacija.getDatum_odlaska()) && today.after(rezervacija.getDatum_odlaska()))
+					|| today.equals(rezervacija.getDatum_odlaska())){
+				
+				System.out.println("Datum vracanja je u toku prethodne nedelje za rez: " + rezervacija.getId());
+				totalWeek += rezervacija.getUkupna_cena();
+			}
+			
+			if(today30.equals(rezervacija.getDatum_odlaska()) || (today30.before(rezervacija.getDatum_odlaska()) && today.after(rezervacija.getDatum_odlaska()))
+					|| today.equals(rezervacija.getDatum_odlaska())){
+				
+				System.out.println("Datum vracanja je u toku prethodnog meseca za rez: " + rezervacija.getId());
+				totalMonth += rezervacija.getUkupna_cena();
+			}
+		}
+		
+		result.put("day", totalDay);
+		result.put("week", totalWeek);
+		result.put("month", totalMonth);
+		
+		return ResponseEntity.accepted().body(result);
+		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/daily_report/{hotel_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> dailyReport(@PathVariable("hotel_id") Integer hotel_id) throws ParseException{
+		System.out.println("[HotelController: dailyReport]: usao u metodu dailyReport");
+		
+		Hotel hotel = hotelService.findById(hotel_id).get();
+		
+		Map<String, Double> result = new HashMap<>();
+		double ret = 0;
+		
+		ArrayList<Integer> sobeID = new ArrayList<Integer>();
+		for (Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();){
+			
+			Soba soba = iteratorSoba.next();
+			sobeID.add(soba.getId());
+		}
+		
+		List<RezervacijaHotel> sve_rez = rezervacijaHotelService.getAll();
+		List<RezervacijaHotel> rez = new ArrayList<RezervacijaHotel>();
+		
+		for(Iterator<RezervacijaHotel> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();){
+			
+			RezervacijaHotel rezHotel = iteratorSveRez.next();
+			for(int i = 0; i<sobeID.size();i++){
+				if(rezHotel.getSoba().getId() == sobeID.get(i)){
+					
+					rez.add(rezHotel);
+				}
+			}
+		}
+		
+		System.out.println("[HotelController: dailyReport]: Rezervacija ima: " + rez.size());
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today_str = format.format(new Date());
+		Date today = format.parse(today_str);
+		System.out.println("[HotelController: dailyReport]: danasnji datum: " + today);
+		
+		int broj_rez=0;
+		
+		for(Iterator<RezervacijaHotel> iteratorRez = rez.iterator(); iteratorRez.hasNext();){
+			
+			RezervacijaHotel rezervacija = iteratorRez.next();
+			
+			if(today.equals(rezervacija.getDatum_dolaska()) || (rezervacija.getDatum_odlaska().after(today) && rezervacija.getDatum_dolaska().before(today))
+					|| today.equals(rezervacija.getDatum_odlaska())){
+				
+				broj_rez+=1;
+			}
+			
+		}
+		System.out.println("[HotelController: dailyReport]: broj_rez: " + broj_rez + " broj_soba: " + sobeID.size());
+		
+		
+		ret = (double) broj_rez / sobeID.size();
+		ret = ret * 100;
+		System.out.println("[HotelController: dailyReport]: ret: " + ret);
+		
+		result.put("ret", ret);
+		
+		return ResponseEntity.accepted().body(result);
+		
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/weekly_report/{hotel_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> weeklyReport(@PathVariable("hotel_id") Integer hotel_id) throws ParseException{
+		
+		Hotel hotel = hotelService.findById(hotel_id).get();
+		
+		Map<String, Integer> result = new HashMap<>();
+		
+		ArrayList<Integer> sobeID = new ArrayList<Integer>();
+		for (Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();){
+			
+			Soba soba = iteratorSoba.next();
+			sobeID.add(soba.getId());
+		}
+		
+		List<RezervacijaHotel> sve_rez = rezervacijaHotelService.getAll();
+		List<RezervacijaHotel> rez = new ArrayList<RezervacijaHotel>();
+		
+		for(Iterator<RezervacijaHotel> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();){
+			
+			RezervacijaHotel rezHotel = iteratorSveRez.next();
+			for(int i = 0; i<sobeID.size();i++){
+				if(rezHotel.getSoba().getId() == sobeID.get(i)){
+					
+					rez.add(rezHotel);
+				}
+			}
+		}
+		
+		System.out.println("[HotelController: weeklyReport]: Rezervacija ima: " + rez.size());
+		
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today_str = format.format(new Date());
+		Date today = format.parse(today_str);
+		System.out.println("[HotelController: weeklyReport]: danasnji datum: " + today);
+		
+		
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -7);
+		String today6_str = format.format(cal.getTime());
+		Date today6 = format.parse(today6_str);
+		System.out.println("[HotelController: weeklyReport]: datum6: " + today6);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -6);
+		String today5_str = format.format(cal.getTime());
+		Date today5 = format.parse(today5_str);
+		System.out.println("[HotelController: weeklyReport]: datum5: " + today5);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -5);
+		String today4_str = format.format(cal.getTime());
+		Date today4 = format.parse(today4_str);
+		System.out.println("[HotelController: weeklyReport]: datum4: " + today4);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -4);
+		String today3_str = format.format(cal.getTime());
+		Date today3 = format.parse(today3_str);
+		System.out.println("[HotelController: weeklyReport]: datum3: " + today3);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -3);
+		String today2_str = format.format(cal.getTime());
+		Date today2 = format.parse(today2_str);
+		System.out.println("[HotelController: weeklyReport]: datum2: " + today2);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -2);
+		String today1_str = format.format(cal.getTime());
+		Date today1 = format.parse(today1_str);
+		System.out.println("[HotelController: weeklyReport]: datum1: " + today1);
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		String today0_str = format.format(cal.getTime());
+		Date today0 = format.parse(today0_str);
+		System.out.println("[HotelController: weeklyReport]: datum0: " + today0);
+		
+		
+		int day7 = 0, day6 = 0 , day5 = 0, day4 = 0, day3 = 0, day2 = 0, day1 = 0;
+		
+		for(Iterator<RezervacijaHotel> iteratorRez = rez.iterator(); iteratorRez.hasNext();){
+			
+			RezervacijaHotel rezervacija = iteratorRez.next();
+			
+			if(today6.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today6) && rezervacija.getDatum_dolaska().before(today6))
+					|| today6.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY7 REZ" + rezervacija.getId());
+				day7 += 1;
+			}
+			
+			if(today5.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today5) && rezervacija.getDatum_dolaska().before(today5))
+					|| today5.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY6 REZ" + rezervacija.getId());
+				day6 += 1;
+			}
+			
+			if(today4.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today4) && rezervacija.getDatum_dolaska().before(today4))
+					|| today4.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY5 REZ" + rezervacija.getId());
+				day5 += 1;
+			}
+			
+			if(today3.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today3) && rezervacija.getDatum_dolaska().before(today3))
+					|| today3.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY4 REZ" + rezervacija.getId());
+				day4 += 1;
+			}
+			
+			if(today2.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today2) && rezervacija.getDatum_dolaska().before(today2))
+					|| today2.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY3 REZ" + rezervacija.getId());
+				day3 += 1;
+			}
+			
+			if(today1.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today1) && rezervacija.getDatum_dolaska().before(today1))
+					|| today1.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY2 REZ" + rezervacija.getId());
+				day2 += 1;
+			}
+			
+			if(today0.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today0) && rezervacija.getDatum_dolaska().before(today0))
+					|| today0.equals(rezervacija.getDatum_dolaska()))
+			{
+				System.out.println("DAY1 REZ" + rezervacija.getId());
+				day1 += 1;
+			}
+			
+		}
+		
+		System.out.println("[HotelController: weeklyReport]: day7 " + day7);
+		System.out.println("[HotelController: weeklyReport]: day6 " + day6);
+		System.out.println("[HotelController: weeklyReport]: day5 " + day5);
+		System.out.println("[HotelController: weeklyReport]: day4 " + day4);
+		System.out.println("[HotelController: weeklyReport]: day3 " + day3);
+		System.out.println("[HotelController: weeklyReport]: day2 " + day2);
+		System.out.println("[HotelController: weeklyReport]: day1 " + day1);
+		
+		result.put("day7", day7);
+		result.put("day6", day6);
+		result.put("day5", day5);
+		result.put("day4", day4);
+		result.put("day3", day3);
+		result.put("day2", day2);
+		result.put("day1", day1);
+		
+		return ResponseEntity.accepted().body(result);
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/monthly_report/{hotel_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> monthlyReport(@PathVariable("hotel_id") Integer hotel_id) throws ParseException{
+		
+		Hotel hotel = hotelService.findById(hotel_id).get();
+		
+		Map<String, Integer> result = new HashMap<>();
+		
+		ArrayList<Integer> sobeID = new ArrayList<Integer>();
+		for (Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();){
+			
+			Soba soba = iteratorSoba.next();
+			sobeID.add(soba.getId());
+		}
+		
+		List<RezervacijaHotel> sve_rez = rezervacijaHotelService.getAll();
+		List<RezervacijaHotel> rez = new ArrayList<RezervacijaHotel>();
+		
+		for(Iterator<RezervacijaHotel> iteratorSveRez = sve_rez.iterator(); iteratorSveRez.hasNext();){
+			
+			RezervacijaHotel rezHotel = iteratorSveRez.next();
+			for(int i = 0; i<sobeID.size();i++){
+				if(rezHotel.getSoba().getId() == sobeID.get(i)){
+					
+					rez.add(rezHotel);
+				}
+			}
+		}
+		
+		System.out.println("[HotelController: monthlyReport]: Rezervacija ima: " + rez.size());
+		
+		
+		int year = Year.now().getValue();
+		boolean prestupna = false;
+		
+		if(year % 4 == 0){
+			prestupna=true;
+		}
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = new GregorianCalendar();
+		
+		cal.set(year, 0, 1);
+		String jan1_str = format.format(cal.getTime());
+		Date jan1 = format.parse(jan1_str);
+		System.out.println("JAN1 " + jan1);
+		
+		cal.set(year, 0, 31);
+		String jan31_str = format.format(cal.getTime());
+		Date jan31 = format.parse(jan31_str);
+		System.out.println("JAN31 " + jan31);
+		
+		cal.set(year, 1, 1);
+		String feb1_str = format.format(cal.getTime());
+		Date feb1 = format.parse(feb1_str);
+		System.out.println("FEB1 " + feb1);
+		
+		String febkraj_str="";
+		if(prestupna){
+			cal.set(year, 1, 29);
+			febkraj_str=format.format(cal.getTime());
+		}
+		else{
+			cal.set(year, 1, 28);
+			febkraj_str=format.format(cal.getTime());
+		}
+		Date febkraj = format.parse(febkraj_str);
+		
+		cal.set(year, 2, 1);
+		String mart1_str = format.format(cal.getTime());
+		Date mart1 = format.parse(mart1_str);
+		
+		cal.set(year, 2, 31);
+		String mart31_str = format.format(cal.getTime());
+		Date mart31 = format.parse(mart31_str);
+		
+		cal.set(year, 3, 1);
+		String apr1_str = format.format(cal.getTime());
+		Date apr1 = format.parse(apr1_str);
+		
+		cal.set(year, 3, 30);
+		String apr30_str = format.format(cal.getTime());
+		Date apr30 = format.parse(apr30_str);
+		
+		cal.set(year, 4, 1);
+		String maj1_str = format.format(cal.getTime());
+		Date maj1 = format.parse(maj1_str);
+		
+		cal.set(year, 4, 31);
+		String maj31_str = format.format(cal.getTime());
+		Date maj31 = format.parse(maj31_str);
+		
+		cal.set(year, 5, 1);
+		String jun1_str = format.format(cal.getTime());
+		Date jun1 = format.parse(jun1_str);
+		System.out.println("JUN1 " + jun1);
+		
+		cal.set(year, 5, 30);
+		String jun30_str = format.format(cal.getTime());
+		Date jun30 = format.parse(jun30_str);
+		
+		cal.set(year, 6, 1);
+		String jul1_str = format.format(cal.getTime());
+		Date jul1 = format.parse(jul1_str);
+		
+		cal.set(year, 6, 31);
+		String jul31_str = format.format(cal.getTime());
+		Date jul31 = format.parse(jul31_str);
+		
+		cal.set(year, 7, 1);
+		String avg1_str = format.format(cal.getTime());
+		Date avg1 = format.parse(avg1_str);
+		
+		cal.set(year, 7, 31);
+		String avg31_str = format.format(cal.getTime());
+		Date avg31 = format.parse(avg31_str);
+		
+		cal.set(year, 8, 1);
+		String sep1_str = format.format(cal.getTime());
+		Date sep1 = format.parse(sep1_str);
+		
+		cal.set(year, 8, 30);
+		String sep30_str = format.format(cal.getTime());
+		Date sep30 = format.parse(sep30_str);
+		System.out.println("SEP30 " + sep30);
+		
+		cal.set(year, 9, 1);
+		String okt1_str = format.format(cal.getTime());
+		Date okt1 = format.parse(okt1_str);
+		
+		cal.set(year, 9, 31);
+		String okt31_str = format.format(cal.getTime());
+		Date okt31 = format.parse(okt31_str);
+		
+		cal.set(year, 10, 1);
+		String nov1_str = format.format(cal.getTime());
+		Date nov1 = format.parse(nov1_str);
+		
+		cal.set(year, 10, 30);
+		String nov30_str = format.format(cal.getTime());
+		Date nov30 = format.parse(nov30_str);
+		
+		cal.set(year, 11, 1);
+		String dec1_str = format.format(cal.getTime());
+		Date dec1 = format.parse(dec1_str);
+		
+		cal.set(year, 11, 31);
+		String dec31_str = format.format(cal.getTime());
+		Date dec31 = format.parse(dec31_str);
+	
+		int jan = 0, feb = 0 , mart = 0, apr = 0, maj = 0, jun = 0, jul = 0, avg = 0, sep = 0, okt = 0, nov = 0, dec =0;
+		
+		for(Iterator<RezervacijaHotel> iteratorRez = rez.iterator(); iteratorRez.hasNext();){
+			
+			RezervacijaHotel rv2 = iteratorRez.next();
+			Calendar start = Calendar.getInstance();
+			start.setTime(rv2.getDatum_dolaska());
+			Calendar end = Calendar.getInstance();
+			end.setTime(rv2.getDatum_odlaska());
+			System.out.println("START: " + start.getTime() + " END: " + end.getTime());
+			for(Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime())
+			{
+				
+				if(jan1.equals(date) || jan31.equals(date) || (jan1.before(date) && jan31.after(date)))
+				{
+					jan+=1;
+				}
+				
+				if(feb1.equals(date) || febkraj.equals(date) || (feb1.before(date) && febkraj.after(date)))
+				{
+					feb+=1;
+				}
+				
+				if(mart1.equals(date) || mart31.equals(date) || (mart1.before(date) && mart31.after(date)))
+				{
+					mart+=1;
+				}
+				
+				if(apr1.equals(date) || apr30.equals(date) || (apr1.before(date) && apr30.after(date)))
+				{
+					apr+=1;
+				}
+				
+				if(maj1.equals(date) || maj31.equals(date) || (maj1.before(date) && maj31.after(date)))
+				{
+					maj+=1;
+				}
+				
+				if(jun1.equals(date) || jun30.equals(date) || (jun1.before(date) && jun30.after(date)))
+				{
+					jun+=1;
+				}
+				
+				if(jul1.equals(date) || jul31.equals(date) || (jul1.before(date) && jul31.after(date)))
+				{
+					jul+=1;
+				}
+				
+				if(avg1.equals(date) || avg31.equals(date) || (avg1.before(date) && avg31.after(date)))
+				{
+					avg+=1;
+				}
+				
+				if(sep1.equals(date) || sep30.equals(date) || (sep1.before(date) && sep30.after(date)))
+				{
+					sep+=1;
+				}
+				
+				if(okt1.equals(date) || okt31.equals(date) || (okt1.before(date) && okt31.after(date)))
+				{
+					okt+=1;
+				}
+				
+				if(nov1.equals(date) || nov30.equals(date) || (nov1.before(date) && nov30.after(date)))
+				{
+					nov+=1;
+				}
+				
+				if(dec1.equals(date) || dec31.equals(date) || (dec1.before(date) && dec31.after(date)))
+				{
+					dec+=1;
+				}	
+				
+				
+			}
+			
+			
+		}
+		
+		int[] meseci = new int[12]; 
+		meseci[0]=jan;
+		System.out.println(meseci[0]);
+		meseci[1]=feb;
+		System.out.println(meseci[1]);
+		meseci[2]=mart;
+		System.out.println(meseci[2]);
+		meseci[3]=apr;
+		System.out.println(meseci[3]);
+		meseci[4]=maj;
+		System.out.println(meseci[4]);
+		meseci[5]=jun;
+		System.out.println(meseci[5]);
+		meseci[6]=jul;
+		System.out.println(meseci[6]);
+		meseci[7]=avg;
+		System.out.println(meseci[7]);
+		meseci[8]=sep;
+		System.out.println(meseci[8]);
+		meseci[9]=okt;
+		System.out.println(meseci[9]);
+		meseci[10]=nov;
+		System.out.println(meseci[10]);
+		meseci[11]=dec;
+		System.out.println(meseci[11]);
+		
+		result.put("jan", jan);
+		result.put("feb", feb);
+		result.put("mar", mart);
+		result.put("apr", apr);
+		result.put("may", maj);
+		result.put("jun", jun);
+		result.put("jul", jul);
+		result.put("aug", avg);
+		result.put("sep", sep);
+		result.put("oct", okt);
+		result.put("nov", nov);
+		result.put("dec", dec);
+		
+		return ResponseEntity.accepted().body(result);
 	}
 	
 	public Hotel pretraga_hotel(Hotel hotel, Date check_in, Date check_out, int adults){

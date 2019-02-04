@@ -45,7 +45,7 @@ public class Rezervacija implements Serializable{
 	
 	
 	//SLOZENI ATRIBUTI:
-	@JsonManagedReference
+	@JsonManagedReference (value = "rezervacija_osoba")
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="rezervacija")
 	private List<OsobaIzRez> osobe = new ArrayList<OsobaIzRez>();	
 	

@@ -88,6 +88,11 @@ public class Korisnik implements Serializable, UserDetails
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnik")
 	@JsonManagedReference
 	private Set<Poziv> pozivi = new HashSet<Poziv>();
+	
+
+	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnikUcesnik")
+	@JsonManagedReference (value = "korisnik_ucestvovanje")
+	private List<OsobaIzRez> rezervacijeUcestvovanje = new ArrayList<OsobaIzRez>();
 
 	
 	@Column(nullable=true)
@@ -318,29 +323,32 @@ public class Korisnik implements Serializable, UserDetails
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
 		return lozinka;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return email;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return aktiviran;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		List<Authority> authorities= new ArrayList<Authority>();
 		authorities.add(this.authority);
 		return authorities;
 	}
 
+	public List<OsobaIzRez> getRezervacijeUcestvovanje() {
+		return rezervacijeUcestvovanje;
+	}
+
+	public void setRezervacijeUcestvovanje(List<OsobaIzRez> rezervacijeUcestvovanje) {
+		this.rezervacijeUcestvovanje = rezervacijeUcestvovanje;
+	}
     
 }

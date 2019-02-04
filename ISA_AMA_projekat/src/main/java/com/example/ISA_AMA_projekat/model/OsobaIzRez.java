@@ -54,13 +54,14 @@ public class OsobaIzRez implements Serializable{
 
 	@ManyToOne
 	@JoinColumn(referencedColumnName="id", nullable=false)
-	@JsonBackReference
+	@JsonBackReference (value = "rezervacija_osoba")
 	private Rezervacija rezervacija;
 	
 	//nullable ako je pozvan korisnik koji nema acc
 	@ManyToOne
-	@JoinColumn(referencedColumnName="id", nullable=true)
-	private Korisnik korisnik;
+	@JoinColumn(name="korisnik_id", referencedColumnName="id", nullable=true)
+	@JsonBackReference (value = "korisnik_ucestvovanje")
+	private Korisnik korisnikUcesnik;
 	
 	
 	//GET & SET:
@@ -129,12 +130,12 @@ public class OsobaIzRez implements Serializable{
 		this.rezervacija = rezervacija;
 	}
 
-	public Korisnik getKorisnik() {
-		return korisnik;
+	public Korisnik getKorisnikUcesnik() {
+		return korisnikUcesnik;
 	}
 
-	public void setKorisnik(Korisnik korisnik) {
-		this.korisnik = korisnik;
+	public void setKorisnikUcesnik(Korisnik korisnik) {
+		this.korisnikUcesnik = korisnik;
 	}
 	
 	

@@ -1,6 +1,7 @@
 $(document).ready(function()	
 {
 	token = localStorage.getItem('jwtToken');
+	provera = false;
 	
 	var search = window.location.search;
     id_presented = search.substring(4);
@@ -385,6 +386,7 @@ function showHotel(hotel)
     $("#title_hotel").text(hotel.naziv);
     $("#hotel_name").text(hotel.naziv);
     $('#hotel_info_text').text(hotel.promotivni_opis);
+    $('#average_rating').text(hotel.prosecna_ocena);
     $('#adresa_hotel').text(hotel.adresa.ulica + ' ' + hotel.adresa.broj + ', ' + hotel.adresa.grad.naziv);
     
     if(hotel.sobe.length == 0)
@@ -463,7 +465,7 @@ function addSoba(soba)
 	broj_soba = broj_soba + 1;
 	temp.content.getElementById("broj_kreveta").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
 	temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night';
-	temp.content.getElementById("prosecna_ocena").innerHTML = soba.prosecna_ocena;
+	temp.content.getElementById("prosecna_ocena").innerHTML = 'Rating: ' + soba.prosecna_ocena;
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_sobe_template").appendChild(a);
@@ -592,22 +594,6 @@ function editingRoom(soba)
 	$('input[id=button_click_room]').val('Edit');
 }
 
-function initMap()
-{
-	var map = new ol.Map({
-        target: 'map',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([longitude, latitude]),
-          zoom: 17
-        })
-      });
-}
-
 function editHotel()
 {
 	$('input[name=hotel_name').val(moj_hotel.naziv);
@@ -666,6 +652,7 @@ function backEdit()
 	$('#div_edit_services').hide();
 	$('.new_additional_service').hide();
 	$('#div_add_room').hide();
+	$('#div_report').hide();
 	
 	$('#button_hotel_back').attr('pritisnuto', 'true');
 	
@@ -708,6 +695,199 @@ function addService()
 	$('input[name=new_price_service]').prop('required',true);
 	$('input[name=new_service]').prop('required',true);
 	
+}
+
+function showReport()
+{
+	console.log('show report');
+	
+	$('#div_report').show();
+	var el = document.getElementById('div_report');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -100);
+    
+    if(provera == false)
+    {
+        document.getElementById("bar-chart-day").height=70;
+        document.getElementById("bar-chart-week").height=70;
+        document.getElementById("bar-chart-month").height=70;
+    }
+    
+    provera = true;
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/total_earnings/' + id_presented,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (data)
+		{
+        	console.log('day: ' + data.day);
+        	console.log('week: ' + data.week);
+        	console.log('month: ' + data.month);
+        	
+        	$("#totalDay").text("Total earnings today: $" + data.day);
+        	$("#totalWeek").text("Total earnings in last week: $" + data.week);
+        	$("#totalMonth").text("Total earnings in last month: $" + data.month);
+        	
+        	
+        	
+		}
+    });	
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/daily_report/' + id_presented,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (result)
+		{
+        	
+        	let day = new Chart(document.getElementById("bar-chart-day"), {
+	        	type: 'pie',
+	        	data: {
+	        	labels:['Reserved', 'Unreserved'],
+	        	datasets: [{
+	        	        	
+	        	        	data : [result.ret, 100-result.ret],
+	        	        	backgroundColor: ['#ffce56', '#cc65fe'] ,
+	        	        	
+	        	           }]
+	        	},
+	        	options: {
+	                
+	        		title : {
+	        			display : true,
+	        			text : "Today's reservations in percentages",
+	        			fontSize : 25
+	        			
+	        		}
+        	}
+        	});
+		}
+    });
+	
+	var today = new Date();
+	var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+	
+	var day1 = new Date(today);
+	day1.setDate(today.getDate() - 1);
+	var day1_str = months[day1.getMonth()] + ' ' + day1.getDate();
+	
+	var day2 = new Date(today);
+	day2.setDate(today.getDate() - 2);
+	var day2_str = months[day2.getMonth()] + ' ' + day2.getDate();
+	
+	var day3 = new Date(today);
+	day3.setDate(today.getDate() - 3);
+	var day3_str = months[day3.getMonth()] + ' ' + day3.getDate();
+	
+	
+	var day4 = new Date(today);
+	day4.setDate(today.getDate() - 4);
+	var day4_str = months[day4.getMonth()] + ' ' + day4.getDate();
+	
+	
+	var day5 = new Date(today);
+	day5.setDate(today.getDate() - 5);
+	var day5_str = months[day5.getMonth()] + ' ' + day5.getDate();
+	
+	
+	var day6 = new Date(today);
+	day6.setDate(today.getDate() - 6);
+	var day6_str = months[day6.getMonth()] + ' ' + day6.getDate();
+	
+	
+	var day7 = new Date(today);
+	day7.setDate(today.getDate() - 7);
+	var day7_str = months[day7.getMonth()] + ' ' + day7.getDate();
+
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/weekly_report/' + id_presented,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (result)
+		{
+        	
+        	let week = new Chart(document.getElementById("bar-chart-week"), {
+        	type: 'bar',
+        	data: {
+        	labels:[day7_str, day6_str, day5_str, day4_str, day3_str, day2_str, day1_str],
+        	datasets: [{
+        	        	label : 'Reservations' ,
+        	        	data : [result.day7, result.day6, result.day5, result.day4, result.day3, result.day2, result.day1],
+        	        	backgroundColor: '#ffce56',
+        	        	borderWidth : 4,
+        	        	borderColor : 'black'
+        	           }]
+        	},
+        	options: {
+        		 scales: {
+                    
+                     yAxes: [{
+                             display: true,
+                             ticks: {
+                                 beginAtZero: true,
+                             }
+                         }]
+                 },
+        		title : {
+        			display : true,
+        			text : 'Reservations in last 7 days',
+        			fontSize : 25
+        			
+        		}
+        	}
+        	});
+        	
+        
+		}
+    });
+	
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/monthly_report/' + id_presented,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (result)
+		{
+        	
+        	let month = new Chart(document.getElementById("bar-chart-month"), {
+        	type: 'bar',
+        	data: {
+        	labels:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        	datasets: [{
+        	        	label : 'Reservations' ,
+        	        	data : [result.jan, result.feb, result.mar, result.apr, result.may, result.jun, result.jul, result.aug, result.sep, result.oct, result.nov, result.dec],
+        	        	backgroundColor: '#cc65fe',
+        	        	borderWidth : 4,
+        	        	borderColor : 'black'
+        	           }]
+        	},
+        	options: {
+        		 scales: {
+                    
+                     yAxes: [{
+                             display: true,
+                             ticks: {
+                                 beginAtZero: true,
+                             }
+                         }]
+                 },
+        		title : {
+        			display : true,
+        			text : 'Reservations in this year',
+        			fontSize : 25
+        			
+        		}
+        	}
+        	});
+        	
+        
+		}
+    });
 }
 
 function initMap()

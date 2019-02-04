@@ -16,6 +16,7 @@
 <link rel="stylesheet" type="text/css" href="styles/single_listing_hotel_styles.css">
 <link rel="stylesheet" type="text/css" href="styles/single_listing_responsive.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 </head>
 
 <body>
@@ -136,9 +137,10 @@
 							<!-- dugmad za izmenu hotela -->
 							<div style="width: 100%; margin-top: 25px;">
 								<div id="div_changing_buttons">
-									<button id="button_edit_hotel" style="margin-right: 10%; margin-left: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editHotel()">Edit hotel</button>
-									<button id="button_edit_services" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:editServices()">Edit additional services</button>
-									<button id="button_add_rooms" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:addRoom()">Add room</button>
+									<button id="button_edit_hotel" style="margin-right: 5%; margin-left: 5%; margin-top: 0px;" class="button search_button" onclick="javascript:editHotel()">Edit hotel</button>
+									<button id="button_edit_services" style="margin-right: 5%; margin-top: 0px;" class="button search_button" onclick="javascript:editServices()">Edit additional services</button>
+									<button id="button_add_rooms" style="margin-right: 5%; margin-top: 0px;" class="button search_button" onclick="javascript:addRoom()">Add room</button>
+									<button id="button_report" style="margin-right: 5%; margin-top: 0px;" class="button search_button" onclick="javascript:showReport()">Show report</button>
 								</div>
 							
 							</div>
@@ -147,6 +149,10 @@
 							
 							<div class="hotel_info_text" style="padding-bottom: 20px;">
 								<p id="hotel_info_text" style="font-size: 20px; color: #4d0066; text-align: justify;">promotivni opis hotela</p>
+							</div>
+							<div style="width: 250px;">
+								<p id="text_average_rating" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Average rating: </p>
+								<span class="span_room room_rating review_rating" id="average_rating" style="bottom: 0px; width: 55px; height: 40px; padding-left: 10px; padding-top: 0px; padding-right: 0px; padding-bottom: 10px;"></span>
 							</div>
 							<div>
 								<span class="contact_info_icon" style="float: left;"><img src="images/placeholder.svg" alt="" height="20" width="20"></span>
@@ -161,39 +167,7 @@
 									</div>
 								</div>
 							</div>
-							
-							<div id="special_price" style="display: none; margin-top: 40px;">
-								<a id="special_price_a" onclick="javascript:clickSpecialPrice()" style="margin-top: 20px; font-size: 25px; font-weight: bold; color: #4d0066; cursor: pointer;">Special prices (click to see)</a>
-								<div id="special_price_div" style="display: none;">
-									<template id="template_special_price">
-									<div id="ubaci_special_price">
-										
-										<div class="row">
-											<div style="text-align: center; width: 100%;">
-												<span class="span_room room_name" id="nazivsp" style="font-size: 20pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
-												<span class="span_room room_price" id="broj_krevetasp" style="margin-top: -10px; white-space: pre; width: 30%; float: left; font-size: 10pt"></span>
-												<span class="span_room room_price" id="cena_nocenjasp" style="margin-top: -10px; float: left; white-space: pre; font-size: 12pt"></span>
-												<span class="span_room room_rating review_rating" id="prosecna_ocenasp" style="float: left; bottom: 15px; width: 65px; position: relative"></span>
-												<span hidden="true" class="span_room button book_button trans_200" id="button_book_roomsp" style="margin-right:10%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_book_roomsp" style="cursor: pointer; color: white;">book<span></span><span></span><span></span></a></span>
-											</div>
-											<!-- 
-											<div style="width: 100%;"">
-												<p id="text_discount_list" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Discount list: </p>
-												<ul id="discount_list" style="margin-left: 60px; font-size: 15px; list-style-type: disc; margin-top: 10px;">
-												</ul>
-											</div>
-											 -->
-											<div>
-												<p id="text_services_included_list" style="font-size: 15pt; font-weight: bold; color: #4d0066;">Additional services included: </p>
-												<ul id="services_included_list" style="margin-left: 60px; font-size: 15px; list-style-type: disc; margin-top: 10px;">
-												</ul>
-											</div>
-										</div>	
-									</div>
-								</template>
-								</div>
-								<span class="span_room button book_button trans_200" id="button_back_roomsp" style="display: none; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a onclick="javascript:hideSpecialPrice()" style="cursor: pointer; color: white;">back</a></span>
-							</div>
+
 							
 							<!-- Hotel Info Tags -->
 							<div class="hotel_info_tags" id="additional_services">
@@ -219,7 +193,7 @@
 												<span class="span_room room_name" id="naziv" style="font-size: 20pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
 												<span class="span_room room_price" id="broj_kreveta" style="margin-top: -10px; white-space: pre; width: 30%; float: left; font-size: 10pt"></span>
 												<span class="span_room room_price" id="cena_nocenja" style="margin-top: 5px; float: left; white-space: pre; font-size: 12pt"></span>
-												<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 0px; width: 65px; position: relative"></span>
+												<span class="span_room room_rating review_rating" id="prosecna_ocena" style="float: left; bottom: 4px; position: relative"></span>
 												<span class="span_room button book_button trans_200" id="button_edit_room" style="bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_edit_room" style="padding-left: 25px; cursor: pointer; color: white;">Edit room</a></span>
 												<span class="span_room button book_button trans_200" id="button_delete_room" style="margin-right:5%; float: right; bottom: -7px; top: 5px; padding: 0px; width: 120px;"><a class="button_delete_room" style="padding-left: 15px; cursor: pointer; color: white;">Delete room</a></span>
 											</div>
@@ -354,6 +328,24 @@
 								</div>
 							</form>
 						</div>
+						
+						<div id="div_report" style=" width: 100%; margin-top: 30px; margin-bottom: 60px; display: none;">
+							
+							<canvas id="bar-chart-day" style="height: 70;"></canvas>
+							<div id="totalDay" style="font-size:20pt; font-weight:bold; color:green;"></div>
+							<br/><br/><br/>
+							
+							<canvas id="bar-chart-week" style="height: 70;"></canvas>
+							<div id="totalWeek" style="font-size:20pt; font-weight:bold; color:green;"></div>
+							<br/><br/><br/>
+							
+							<canvas id="bar-chart-month" style="height: 70;"></canvas>
+							<div id="totalMonth" style="font-size:20pt; font-weight:bold; color:green;"></div>
+							<br/><br/><br/>
+							<button type="button" id="button_hotel_back" style="width: 24%; margin-bottom: 15px; margin-top: 20px; float: right; position: relative;" class="button search_button" onclick="javascript:backEdit()">Back</button>
+						
+						</div>
+						
 						
 					</div>
 				</div>
