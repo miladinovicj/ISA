@@ -72,44 +72,7 @@ public class RezervacijaController
 		
 		System.out.println("Size of the list: " + osobe.size());
 		
-		for(int i = 0 ; i < osobe.size() ; i ++ )
-		{
-			OsobaIzRez osoba = osobe.get(i);
-			System.out.println("ID OSOBE:" + osoba.getId() + " " + osoba.getEmail());
-			
-			if( !Pattern.matches("[a-zA-Z]{1,}", osoba.getIme() ) )
-			{
-				System.out.println("BEKEND VALIDACIJA IZBACILA ZBOG PASOSA: " + osoba.getIme());
-				return null;
-			}
-			if( !Pattern.matches("[a-zA-Z]{1,}", osoba.getPrezime() ) )
-			{
-				System.out.println("BEKEND VALIDACIJA IZBACILA ZBOG PASOSA: " + osoba.getPrezime());
-				return null;
-			}
-			if( !Pattern.matches("[0-9]{2,}", osoba.getBrojPasosa() ) )
-			{
-				System.out.println("BEKEND VALIDACIJA IZBACILA ZBOG PASOSA: " + osoba.getBrojPasosa());
-				return null;
-			}
-			if( !Pattern.matches("[a-zA-Z0-9_-[.]]{2,}@[a-zA-Z0-9_-]{2,}[.][a-zA-Z]{2,4}", osoba.getEmail() ) )
-			{
-				System.out.println("BEKEND VALIDACIJA IZBACILA ZBOG EMAIL-A: " + osoba.getEmail());
-				return null;
-			}
-			
-
-			if(osoba.getPrtljag() > 2 || osoba.getPrtljag() < 0)
-			{
-				System.out.println("BEKEND VALIDACIJA IZBACILA ZBOG PTRLJAGA");
-				return null;
-			}
-			
-			//TODO: validacija sedista aviona - proveri sa avionom da li je oke sve
-			{
-				
-			}
-		}
+		
 		Let let = null;
 		try
 		{
@@ -119,6 +82,56 @@ public class RezervacijaController
 		{
 			System.err.println("NO FLIGHT FOUND: " + flightID);
 		}
+		
+		
+		
+		for(int i = 0 ; i < osobe.size() ; i ++ )
+		{
+			OsobaIzRez osoba = osobe.get(i);
+			System.out.println("ID OSOBE:" + osoba.getId() + " " + osoba.getEmail());
+			
+			if( !Pattern.matches("[a-zA-Z]{1,}", osoba.getIme() ) )
+			{
+				System.err.println("BEKEND VALIDACIJA IZBACILA ZBOG PASOSA: " + osoba.getIme());
+				return null;
+			}
+			if( !Pattern.matches("[a-zA-Z]{1,}", osoba.getPrezime() ) )
+			{
+				System.err.println("BEKEND VALIDACIJA IZBACILA ZBOG PASOSA: " + osoba.getPrezime());
+				return null;
+			}
+			if( !Pattern.matches("[0-9]{2,}", osoba.getBrojPasosa() ) )
+			{
+				System.err.println("BEKEND VALIDACIJA IZBACILA ZBOG PASOSA: " + osoba.getBrojPasosa());
+				return null;
+			}
+			if( !Pattern.matches("[a-zA-Z0-9_-[.]]{2,}@[a-zA-Z0-9_-]{2,}[.][a-zA-Z]{2,4}", osoba.getEmail() ) )
+			{
+				System.err.println("BEKEND VALIDACIJA IZBACILA ZBOG EMAIL-A: " + osoba.getEmail());
+				return null;
+			}
+			
+
+			if(osoba.getPrtljag() > 2 || osoba.getPrtljag() < 0)
+			{
+				System.err.println("BEKEND VALIDACIJA IZBACILA ZBOG PTRLJAGA");
+				return null;
+			}
+			
+			//provera sedista
+			if(osoba.getSediste() < 1 || osoba.getSediste() > let.getMaxKapacitet())
+			{
+				System.err.println("Nevalidno numerisano sediste.");
+				return null;
+			}
+			if(let.getZauzetaSedista().contains(osoba.getSediste()))
+			{
+				System.err.println("Pokusaj rezervacije zauzetog sedista.");
+				return null;
+			}
+			//ubacivanje sedista
+			let.getZauzetaSedista().add(osoba.getSediste());
+		}	
 		
 		System.out.println("Korisnik: " + korisnik.getId() + " Let: " + let.getId());		
 		//* * * BEKEND VALIDACIJA INFO O OSOBAMA U REZERVACIJI END* * *
@@ -190,6 +203,8 @@ public class RezervacijaController
 			new_osobe.add(new_osoba);
 			System.out.println("UPISANA NOVA OSOBA:" + new_osoba.getId() + " " + new_osoba.getEmail());
 		}
+		//sacuvaj let
+		Let l = letService.save(let);
 				
 		return rez.getId().toString();
 	}

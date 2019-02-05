@@ -56,7 +56,9 @@ public class Let
 	
 	@Column(nullable = true)
 	private int popust; //u %
-
+	
+	@Column(nullable = false)
+	private int maxKapacitet;
 	
 	//SLOZENI ATRIBUTI:
 
@@ -70,6 +72,8 @@ public class Let
 	private List<Integer> zauzetaSedista = new ArrayList<Integer>();
 	
 	
+
+
 	@OneToMany(cascade={ALL}, fetch=LAZY)
 	private List<Rating> rejtinzi = new ArrayList<Rating>();
 
@@ -200,6 +204,23 @@ public class Let
 		this.aviokompanija = aviokompanija;
 	}
 	
+	public int getMaxKapacitet() {
+		return maxKapacitet;
+	}
+
+
+	public void setMaxKapacitet(int maxKapacitet) {
+		this.maxKapacitet = maxKapacitet;
+	}
+
+	public List<Integer> getZauzetaSedista() {
+		return zauzetaSedista;
+	}
+
+	public void setZauzetaSedista(List<Integer> zauzetaSedista) {
+		this.zauzetaSedista = zauzetaSedista;
+	}
+
 	
 		
 }

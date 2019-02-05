@@ -171,9 +171,22 @@ public class KorisnikService implements UserDetailsService{
 		boolean retVal = false;
 		
 		Set<FriendRequest> k1Friends = k1.getPrijateljstva();
+		Set<FriendRequest> k2Friends = k2.getPrijateljstva();
+		
 		for( FriendRequest fr : k1Friends)
 		{
 			if(fr.getPrima().equals(k2) || fr.getSalje().equals(k2))
+			{
+				if(fr.getStanje() == 0)
+				{
+					retVal = true;
+				}
+			}
+		}
+		
+		for( FriendRequest fr : k2Friends)
+		{
+			if(fr.getPrima().equals(k1) || fr.getSalje().equals(k1))
 			{
 				if(fr.getStanje() == 0)
 				{

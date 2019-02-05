@@ -30,5 +30,10 @@ td
   vertical-align: middle;
   align-content: center;
   text-align: center;
-  
  }
+ 
+ 
+ div.scrollmenu {
+  overflow: auto;
+  white-space: nowrap;
+}
