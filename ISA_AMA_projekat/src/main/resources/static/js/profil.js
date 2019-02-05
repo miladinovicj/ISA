@@ -33,7 +33,6 @@ $(document).ready(function(){
 					
 				}
 				
-				document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
 				document.getElementById("name_profile").value  = user.ime;
 				document.getElementById("lastname_profile").value  = user.prezime;
 				document.getElementById("email_profile").value  = user.email;

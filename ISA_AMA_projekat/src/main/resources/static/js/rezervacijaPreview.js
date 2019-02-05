@@ -111,7 +111,7 @@ function initWindow()
 	$("#flightDuration").text("Duration: " + flight.trajanje + " hours");
 	$("#flightDeparture").text("Departure time: " + processTime(flight.vremePoletanja));
 	$("#flightArrival").text("Arrival time: " + processTime(flight.vremeSletanja));
-	
+	$("#flightReserver").text("Reservation made by: " + korisnik.ime + " " + korisnik.prezime);
 	fillPasengerInfo();
 	
 	
@@ -206,5 +206,10 @@ function fillPasengerInfo()
     
     
     
+}
+
+function odjava()
+{
+	localStorage.clear();
 }
 
