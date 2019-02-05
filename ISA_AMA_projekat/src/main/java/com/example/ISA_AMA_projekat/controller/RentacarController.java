@@ -529,6 +529,10 @@ public class RentacarController {
 		Rezervacija rez = rezervacijaService.findById(id_rez).get();
 		Date datum_rez = rez.getDatumRezervacije();
 		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
+		double cena = rez.getCena();
+		cena+=rezervacijaVozila.getUkupna_cena();
+		rezervacijaService.updateCenaRez(cena, rez.getId());
+		
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);
 	}
 	
@@ -748,6 +752,9 @@ public class RentacarController {
 		Rezervacija rez = rezervacijaService.findById(id_rez).get();
 		Date datum_rez = rez.getDatumRezervacije();
 		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
+		double cena = rez.getCena();
+		cena+=rezervacijaVozila.getUkupna_cena();
+		rezervacijaService.updateCenaRez(cena, rez.getId());
 		
 		
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);

@@ -23,4 +23,14 @@ public class LetService
 	{
 		return letRepository.save(let);
 	}
+	
+	public void deleteZauzetoSediste(Integer let_id, int sediste)
+	{
+		letRepository.deleteZauzetoSediste(let_id, sediste);
+	}
+	
+	public void updateProsecna(double prosecna_ocena, Integer let_id)
+	{
+		letRepository.updateProsecna(prosecna_ocena, let_id);
+	}
 }

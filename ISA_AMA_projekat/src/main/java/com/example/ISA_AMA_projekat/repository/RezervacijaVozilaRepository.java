@@ -20,4 +20,14 @@ public interface RezervacijaVozilaRepository extends JpaRepository<RezervacijaVo
 	@Transactional
 	@Query("update RezervacijaVozila rv set rv.datum_rezervacije = ?1 where rv.id = ?2")
 	public void updateDatumRez(Date datum_rez,  Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "delete from rezervacija_vozila where rezervacija_vozila.id=?1", nativeQuery = true)
+	void deleteRezV(Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "delete from vozilo_rezervacije where vozilo_rezervacije.rezervacije_id=?1", nativeQuery = true)
+	void deleteVoziloRez(Integer id);
 }

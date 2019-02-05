@@ -47,6 +47,9 @@ public class Aviokompanija implements Serializable {
 	@Column(nullable = true)
 	private Integer id_admin;
 	
+	@Column(nullable = true)
+	private double prosecna_ocena;
+	
 	//SLOZENI ATRIBUTI:
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="aviokompanija")
 	private List<Let> letovi = new ArrayList<Let>();
@@ -167,6 +170,16 @@ public class Aviokompanija implements Serializable {
 
 	public void setId_admin(Integer id_admin) {
 		this.id_admin = id_admin;
+	}
+
+
+	public double getProsecna_ocena() {
+		return prosecna_ocena;
+	}
+
+
+	public void setProsecna_ocena(double prosecna_ocena) {
+		this.prosecna_ocena = prosecna_ocena;
 	}
 	
 	

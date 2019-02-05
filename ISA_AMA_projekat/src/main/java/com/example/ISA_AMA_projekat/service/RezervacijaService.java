@@ -49,4 +49,27 @@ public class RezervacijaService
 		rezervacijaRepository.updateCenaRez(cena, id_rez);
 	}
 	
+	public void deleteRez(Rezervacija rez)
+	{
+		rezervacijaRepository.delete(rez);
+	}
+	
+	public void updateVoziloId(Integer id_rez)
+	{
+		rezervacijaRepository.updateVoziloId(id_rez);
+	}
+	
+	
+	public void updateHotelId(Integer id_rez)
+	{
+		rezervacijaRepository.updateHotelId(id_rez);
+	}
+	
+	public void zavrsiRez(Integer id_rez)
+	{
+		rezervacijaRepository.zavrsiRez(id_rez);
+	}
+	
+	
+	
 }

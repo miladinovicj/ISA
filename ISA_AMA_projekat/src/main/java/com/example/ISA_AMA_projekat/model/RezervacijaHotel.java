@@ -52,7 +52,7 @@ public class RezervacijaHotel {
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JsonBackReference(value = "RezervacijaHotel-Soba")
 	private Soba soba;
 	

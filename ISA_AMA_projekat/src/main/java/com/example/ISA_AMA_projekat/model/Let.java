@@ -60,6 +60,9 @@ public class Let
 	@Column(nullable = false)
 	private int maxKapacitet;
 	
+	@Column(nullable = true)
+	private double prosecna_ocena;
+	
 	//SLOZENI ATRIBUTI:
 
 	@ElementCollection
@@ -219,6 +222,14 @@ public class Let
 
 	public void setZauzetaSedista(List<Integer> zauzetaSedista) {
 		this.zauzetaSedista = zauzetaSedista;
+	}
+
+	public double getProsecna_ocena() {
+		return prosecna_ocena;
+	}
+
+	public void setProsecna_ocena(double prosecna_ocena) {
+		this.prosecna_ocena = prosecna_ocena;
 	}
 
 	
