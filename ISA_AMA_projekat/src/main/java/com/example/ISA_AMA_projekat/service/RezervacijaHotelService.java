@@ -1,6 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,5 +51,9 @@ public class RezervacijaHotelService {
 	
 	public List<RezervacijaHotel> getAll(){
 		return rezervacijaHotelRepository.findAll();
+	}
+	
+	public void updateDatumRez(Date datum_rez, Integer id){
+		rezervacijaHotelRepository.updateDatumRez(datum_rez, id);
 	}
 }

@@ -18,4 +18,14 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Intege
 	@Transactional
 	@Query(value = "update Rezervacija r set r.rezervacija_vozila_id = ?1 where r.id = ?2", nativeQuery = true)
 	public void updateRezVozila(Integer id_rezVozila, Integer id_rez);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update Rezervacija r set r.rezevacija_hotel_id = ?1 where r.id = ?2", nativeQuery = true)
+	public void updateRezHotel(Integer id_rezHotel, Integer id_rez);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update Rezervacija r set r.cena = ?1 where r.id = ?2", nativeQuery = true)
+	public void updateCenaRez(double cena, Integer id_rez);
 }

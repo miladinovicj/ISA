@@ -29,11 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Popust;
+import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.Soba;
 import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.service.HotelService;
 import com.example.ISA_AMA_projekat.service.RezervacijaHotelService;
+import com.example.ISA_AMA_projekat.service.RezervacijaService;
 import com.example.ISA_AMA_projekat.service.SobaService;
 import com.example.ISA_AMA_projekat.service.UslugaService;
 
@@ -53,6 +55,9 @@ public class HotelController {
 	
 	@Autowired
 	private SobaService sobaService;
+	
+	@Autowired
+	private RezervacijaService rezervacijaService; 
 	
 	@RequestMapping(
 			value = "/all",
@@ -432,12 +437,12 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "/book_room/{soba_id}",
+			value = "/book_room/{soba_id}/{id_rez}",
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Soba> bookRoom(@PathVariable("soba_id") Integer soba_id, @RequestBody RezervacijaHotel rezervacijaHotel){
+	public ResponseEntity<Soba> bookRoom(@PathVariable("soba_id") Integer soba_id, @PathVariable("id_rez") Integer id_rez, @RequestBody RezervacijaHotel rezervacijaHotel){
 		
 		Soba soba =  sobaService.findById(soba_id).get();
 		rezervacijaHotel.setSoba(soba);
@@ -464,6 +469,12 @@ public class HotelController {
 		rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 		rezervacijaHotelService.insertRezervacijaSoba(rezervacijaHotel.getId(), soba.getId());
 		
+		rezervacijaService.updateRezHotel(rezervacijaHotel.getId(), id_rez);
+		Rezervacija rezervacija = rezervacijaService.findById(id_rez).get();
+		rezervacijaService.updateCenaRez(rezervacija.getCena() + rezervacijaHotel.getUkupna_cena(), id_rez);
+		Date datum_rez = rezervacija.getDatumRezervacije();
+		rezervacijaHotelService.updateDatumRez(datum_rez, rezervacijaHotel.getId());
+		
 		for(int i=0; i<usluge.size(); i++) {
 			Usluga usluga = usluge.get(i);
 			System.out.println("[HotelController: bookRoom]: dodavanje usluge: " + usluga.getNaziv());
@@ -480,11 +491,11 @@ public class HotelController {
 	}
 	
 	@RequestMapping(
-			value = "/book_room_special/{soba_id}/{check_in}/{check_out}",
+			value = "/book_room_special/{soba_id}/{check_in}/{check_out}/{rez_id}",
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Soba> bookRoomSpecial(@PathVariable("soba_id") Integer soba_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string, @RequestBody Popust popust) throws ParseException {
+	public ResponseEntity<Soba> bookRoomSpecial(@PathVariable("soba_id") Integer soba_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string, @PathVariable("rez_id") Integer rez_id, @RequestBody Popust popust) throws ParseException {
 		
 		/*
 		RezervacijaHotel rezervacijaHotel = rezervacijaHotelService.findById(rezervacija_id).get();
@@ -523,6 +534,12 @@ public class HotelController {
 		rezervacijaHotel.setUkupna_cena(cena_rez);
 		rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 		rezervacijaHotelService.insertRezervacijaSoba(rezervacijaHotel.getId(), soba.getId());
+		
+		rezervacijaService.updateRezHotel(rezervacijaHotel.getId(), rez_id);
+		Rezervacija rezervacija = rezervacijaService.findById(rez_id).get();
+		rezervacijaService.updateCenaRez(rezervacija.getCena() + rezervacijaHotel.getUkupna_cena(), rez_id);
+		Date datum_rez = rezervacija.getDatumRezervacije();
+		rezervacijaHotelService.updateDatumRez(datum_rez, rezervacijaHotel.getId());
 		
 		for(Iterator<Usluga> iteratorUsluga = popust.getUsluge().iterator(); iteratorUsluga.hasNext();) {
 			Usluga usluga = iteratorUsluga.next();
@@ -1346,6 +1363,24 @@ public class HotelController {
 		result.put("nov", nov);
 		result.put("dec", dec);
 		
+		return ResponseEntity.accepted().body(result);
+	}
+	
+	@RequestMapping(
+			value = "/get_room/{id_rez_hotel}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getRezervacija(@PathVariable("id_rez_hotel") Integer id_rez_hotel) throws ParseException{
+		
+		RezervacijaHotel rezervacijaHotel = rezervacijaHotelService.findById(id_rez_hotel).get();
+		Soba soba = rezervacijaHotel.getSoba();
+		Hotel hotel = soba.getHotel();
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("soba", soba);
+		result.put("hotel", hotel);
+			
 		return ResponseEntity.accepted().body(result);
 	}
 	

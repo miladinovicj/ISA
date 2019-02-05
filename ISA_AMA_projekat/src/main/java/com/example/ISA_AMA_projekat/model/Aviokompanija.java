@@ -41,9 +41,6 @@ public class Aviokompanija implements Serializable {
 	@Column(nullable = true)
 	private String info;
 	
-	@Column(nullable = true)
-	private int maxKapacitet;
-	
 	@OneToOne
 	private Adresa adresa;
 	
@@ -52,7 +49,6 @@ public class Aviokompanija implements Serializable {
 	
 	//SLOZENI ATRIBUTI:
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="aviokompanija")
-    @JsonManagedReference
 	private List<Let> letovi = new ArrayList<Let>();
 	 
 	
@@ -141,16 +137,6 @@ public class Aviokompanija implements Serializable {
 
 	public void setInfo(String info) {
 		this.info = info;
-	}
-
-
-	public int getMaxKapacitet() {
-		return maxKapacitet;
-	}
-
-
-	public void setMaxKapacitet(int maxKapacitet) {
-		this.maxKapacitet = maxKapacitet;
 	}
 
 	

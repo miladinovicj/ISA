@@ -3,28 +3,41 @@ var korisnik = null;
 var flight = null;
 var vozilo = null;
 var rentacar_servis=null;
+
 $(document).ready(function(){
 	
-			getKorisnik();
+	getKorisnik();
 	
-			$('form#rentacar').submit(function(event){
-				event.preventDefault();
-				 datum = $('input[name="check_out_car"]').val();
-				 mesto = $('input[name="check_out_town"]').val();
-				 let split = flight.dokle.split("-");
-				 let check_in_town=split[0];
-				 check_in_town=check_in_town.substring(0, check_in_town.length-1);
-				let check_in_date = flight.vremeSletanja.substring(0,10);
-				 let passengers = rezervacija.osobe.length;
-				console.log(datum);
-				console.log(mesto);
-				//window.location.replace("index.html");
-				preusmeri(check_in_town, check_in_date, datum, mesto, passengers);
-			});
-			
+	$('form#rentacar').submit(function(event){
+		event.preventDefault();
+		 datum = $('input[name="check_out_car"]').val();
+		 mesto = $('input[name="check_out_town"]').val();
+		 let split = flight.dokle.split("-");
+		 let check_in_town=split[0];
+		 check_in_town=check_in_town.substring(0, check_in_town.length-1);
+		let check_in_date = flight.vremeSletanja.substring(0,10);
+		 let passengers = rezervacija.osobe.length;
+		console.log(datum);
+		console.log(mesto);
+		//window.location.replace("index.html");
+		preusmeri(check_in_town, check_in_date, datum, mesto, passengers);
+	});
 	
-	
-	
+	$('#hotel_form').submit(function(event){
+		event.preventDefault();
+		
+		check_out_date = $('input[name="check_out_hotel"]').val();
+		
+		let split = flight.dokle.split("-");
+		let check_in_town=split[0];
+		check_in_town = check_in_town.substring(0, check_in_town.length-1);
+		
+		let check_in_date = flight.vremeSletanja.substring(0,10);
+		let adults = rezervacija.osobe.length;
+		
+		preusmeriHotel(check_in_town, check_in_date, check_out_date, adults);
+	});
+		
 });
 
 function preusmeri(check_in_town, check_in_date, datum, mesto, passengers)
@@ -33,6 +46,11 @@ function preusmeri(check_in_town, check_in_date, datum, mesto, passengers)
 	
 	var idiNa = "index.html?name_location_rentacar=" + check_in_town + "&check_in_car=" + check_in_date + "&check_in_town=" + check_in_town + "&check_out_car=" + datum + "&check_out_town=" + mesto + "&passengers_rent=" + passengers + "&id_rez=" + rezervacija.id;
 	window.location.href = idiNa;
+}
+
+function preusmeriHotel(check_in_town, check_in_date, check_out_date, adults){
+	
+	window.location.href = "index.html?name_location_hotel=" + check_in_town + "&check_in_hotel=" + check_in_date + "&check_out_hotel=" + check_out_date + "&adults_hotel=" + adults + "&id_rez=" + rezervacija.id;
 }
 
 function getKorisnik()
@@ -47,8 +65,9 @@ function getKorisnik()
 		  
 		success: function(user) 
 		{
-			if(user == null)
+			if(user == null || user == "")
 			{
+				localStorage.clear();
 				window.location.replace("index.html");
 			}
 			
@@ -87,6 +106,9 @@ function getRezervacija()
             	rezervacija = data.responseJSON;
             	console.log(rezervacija);
             	flight = rezervacija.let;
+            	$('input[name=check_out_hotel]').attr("min", flight.vremeSletanja.substring(0,10));
+            	$('input[name=check_out_car]').attr("min", flight.vremeSletanja.substring(0,10));
+            	
             	if(rezervacija.korisnik.id != korisnik.id)
             	{
             		alert("Unauthorized.");
@@ -151,6 +173,50 @@ function initWindow()
 	if(rezervacija.rezevacijaHotel == null)
 	{
 		$("#noHotel").prop("hidden",false);
+		$("#hasHotelReservation").attr("hidden", true);
+	}
+	else
+	{
+		var id_rez_hotel = rezervacija.rezevacijaHotel.id;
+		
+		$.get({
+			url: "/api/hotels/get_room/" + id_rez_hotel,
+			  
+			success: function(data) {
+				if(data == null || data == "")
+				{
+					console.log('nije pronadjena soba');
+				}
+				else
+				{
+					console.log('pronadjena soba');
+					$("#hotel_res").text("Hotel: " + data.hotel.naziv);
+					$("#room_res").text("Number of beds in room: " + data.soba.broj_kreveta);
+				}
+			},
+			
+			error: function() {
+				alert('Error with loading room');
+			}
+		
+		});
+		
+		 $("#noHotel").prop("hidden",true);
+		 $("#hasHotelReservation").attr("hidden", false);
+		 
+		 var check_in = new Date(rezervacija.rezevacijaHotel.datum_dolaska.substring(0, 10) + "Z");
+	     var pravi = check_in.toString();
+	     var date_check_in = new Date(pravi);
+	     date_check_in.setDate(date_check_in.getDate()+1);
+	     
+	     var check_out = new Date(rezervacija.rezevacijaHotel.datum_odlaska.substring(0, 10) + "Z");
+	     var pravi = check_out.toString();
+	     var date_check_out = new Date(pravi);
+	     date_check_out.setDate(date_check_out.getDate()+1);
+		 
+		 $("#check_in_hotel_res").text("Check in date: " + date_check_in.toString().substring(0, 10));
+		 $("#check_out_hotel_res").text("Check out date: " + date_check_out.toString().substring(0, 10));
+		 $("#cost_hotel_res").text("Cost: $" + rezervacija.rezevacijaHotel.ukupna_cena);
 	}
 	
 	if(rezervacija.rezervacijaVozila == null)
@@ -160,16 +226,29 @@ function initWindow()
 	}
 	else
 	{
+
 		$.get({
 			url: '/api/rents/getVozilo/' + rezervacija.rezervacijaVozila.id,
 			success: function(auto) {
 				vozilo = auto;
 				console.log('auto uspesno vraceno');
-				$("#noRental").prop("hidden",true);
-				$("#hasCar").attr("hidden", false);
+				 $("#noRental").prop("hidden",true);
+				 $("#hasCar").attr("hidden", false);
+				 
+				 var check_in_car = new Date(rezervacija.rezervacijaVozila.datum_preuzimanja.substring(0, 10) + "Z");
+			     var pravi = check_in_car.toString();
+			     var date_check_in_car = new Date(pravi);
+			     date_check_in_car.setDate(date_check_in_car.getDate()+1);
+			     
+			     var check_out_car = new Date(rezervacija.rezervacijaVozila.datum_vracanja.substring(0, 10) + "Z");
+			     var pravi = check_out_car.toString();
+			     var date_check_out_car = new Date(pravi);
+			     date_check_out_car.setDate(date_check_out_car.getDate()+1);
+				 
+				 $("#check_in").text("Check in date and town: " + date_check_in_car.toString().substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_preuzimanja.naziv);
+				 $("#check_out").text("Check out date and town: " + date_check_out_car.toString().substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_vracanja.naziv);
+				 $("#cost").text("Cost: $" + rezervacija.rezervacijaVozila.ukupna_cena);
 				$("#car").text("Car: " + vozilo.marka + " " + vozilo.model + " " + vozilo.naziv + " " + vozilo.tip);
-				$("#check_in").text("Check in date and town: " + rezervacija.rezervacijaVozila.datum_preuzimanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_preuzimanja.naziv);
-				$("#check_out").text("Check out date and town: " + rezervacija.rezervacijaVozila.datum_vracanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_vracanja.naziv);
 				$("#cost").text("Cost: $" + rezervacija.rezervacijaVozila.ukupna_cena);
 				
 				var today = new Date();
@@ -228,6 +307,9 @@ function initWindow()
 			}
 		});
 	 
+
+	
+
 	}
 }
 
@@ -238,7 +320,12 @@ function rezervisiVozilo()
 	
 }
 
-
+function bookHotel(){ 
+	
+	$("#noHotel").attr("hidden", true);
+	$("#infoHotel").attr("hidden", false);
+	
+}
 
 
 function capitalize(string) 
