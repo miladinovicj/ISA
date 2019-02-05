@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title id="titl_aviokompanija">Make a Rezervation</title>
+<title id="titl_aviokompanija">Your reservation</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
@@ -205,12 +205,29 @@
 						<h3><b>Hotel Reservation:</b></h3>
 						<br>
 						<br>
-						<div hidden id="noHotel"  style="margin-left:auto; margin-right:auto">
-						
+						<div id="noHotel" style="margin-left:auto; margin-right:auto">
 						    <p style="margin-left:auto; margin-right:auto; align-content: center;text-align: center;" >No hotel reservations have been made.</p>
-							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" id="" class="button search_button">BOOK A HOTEL<span></span><span></span><span></span></button>
+							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:bookHotel()">BOOK A HOTEL<span></span><span></span><span></span></button>
+						</div>
+						<div id="infoHotel" hidden="true" style="display: inline;" >
+							<form id="hotel_form" style="align:center;">
+							<div  style="width: 20%; height: 40px; margin-left:40%;" class="search_item">
+								<div style="color:black;">check out date</div>
+									<input type="date" class="check_out search_input" name="check_out_hotel" placeholder="dd/mm/yyyy" required="required" style="border-style: solid;">
+								</div>
+								<button style="margin-top: 60px; margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" >Search<span></span><span></span><span></span></button>
+							</form>
 						</div>
 						
+						<div id="hasHotelReservation" hidden="true">
+							<ul style="list-style-type:circle; margin-left:15px">
+								<li><p id="check_in_hotel_res">Check in date: </p></li>
+								<li><p id="check_out_hotel_res">Check out date: </p></li>
+								<li><p id="hotel_res">Hotel: </p></li>
+								<li><p id="room_res">Number of beds in room: </p></li>
+								<li><p id="cost_hotel_res">Cost: $</p></li>
+							</ul>
+						</div>
 						
 						<br>
 						<br>

@@ -41,4 +41,12 @@ public class RezervacijaService
 		rezervacijaRepository.updateRezVozila(id_rezVozila, id_rez);
 	}
 	
+	public void updateRezHotel(Integer id_rezHotel, Integer id_rez){
+		rezervacijaRepository.updateRezHotel(id_rezHotel, id_rez);
+	}
+	
+	public void updateCenaRez(double cena, Integer id_rez){
+		rezervacijaRepository.updateCenaRez(cena, id_rez);
+	}
+	
 }

@@ -84,17 +84,21 @@ function singleListingHotel(hotel_id)
 		var check_out = check_out_fake.substring(0, 4) + '-' + check_out_fake.substring(5, 7) + '-' + check_out_fake.substring(8, 10);
 		
 		var adults = 0;
+		var id_rez = 0;
 		
 		if(splitted[3].length > 13)
 	    {
 	    	adults = splitted[3].substring(13);
 	    }
 		
-		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=' + check_in + '&check_out=' + check_out + '&adults=' + adults;
+		if(splitted.length > 4)
+			id_rez=splitted[4].substring(7);
+		
+		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=' + check_in + '&check_out=' + check_out + '&adults=' + adults + '&id_rez=' + id_rez;
 	}
 	else
 	{
-		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=0001-01-01&check_out=0001-01-01&adults=0';
+		window.location.href='single_listing_hotel.html?id=' + hotel_id +'&check_in=0001-01-01&check_out=0001-01-01&adults=0&id_rez=0';
 	}
 		
 }
@@ -249,6 +253,22 @@ $(document).ready(function()
 	    }
 	});
 	
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	 if(dd<10){
+	        dd='0'+dd
+	    } 
+	    if(mm<10){
+	        mm='0'+mm
+	    } 
+
+	today = yyyy+'-'+mm+'-'+dd;
+	$('input[name=check_in_hotel]').attr("min", today);
+	$('input[name=check_out_hotel]').attr("min", today);
+	$('input[name=check_in_car]').attr("min", today);
+	$('input[name=check_out_car]').attr("min", today);
 	
 	console.log('[search.js: showContentHotelSearch()]: document.ready()');
 	var search = window.location.search;
@@ -267,11 +287,15 @@ $(document).ready(function()
 		var check_in_fake = splitted[1].substring(15);
 		var check_out_fake = splitted[2].substring(16);
 		var adults = 0;
+		var id_rez = 0;
 		
 		if(splitted[3].length > 13)
 		{
 			adults = splitted[3].substring(13);
 		}
+		
+		if(splitted.length > 4)
+			id_rez=splitted[4].substring(7);
 		
 		var date_check_in = new Date(check_in_fake);
 		var date_check_out = new Date(check_out_fake);
@@ -383,7 +407,7 @@ $(document).ready(function()
 			
 		}
 		if(splitted.length > 6)
-		id_rez=splitted[6].substring(7);
+			id_rez=splitted[6].substring(7);
 		
 		
 		var date_check_in = new Date(check_in_fake);

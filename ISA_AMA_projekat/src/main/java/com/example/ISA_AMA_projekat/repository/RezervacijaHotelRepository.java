@@ -1,6 +1,7 @@
 package com.example.ISA_AMA_projekat.repository;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -40,4 +41,9 @@ public interface RezervacijaHotelRepository extends JpaRepository<RezervacijaHot
 	@Transactional
 	@Query(value = "insert into soba_rezervacije (rezervacije_id, soba_id) VALUES (?1, ?2)", nativeQuery = true)
 	void insertRezervacijaSoba(Integer rezervacija_id, Integer soba_id);
+	
+	@Modifying
+	@Transactional
+	@Query("update RezervacijaHotel rez set rez.datum_rezervacije = ?1 where rez.id = ?2")
+	public void updateDatumRez(Date datum_rez,  Integer id);
 }
