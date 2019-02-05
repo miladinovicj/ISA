@@ -80,6 +80,30 @@ public class RentacarController {
 		return new ResponseEntity<Collection<RentacarServis>>(rents, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/getVozilo/{rez_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Vozilo getCarFromRez(@PathVariable("rez_id") Integer rez_id){
+		
+			RezervacijaVozila rv = rezervacijaVozilaService.findById(rez_id).get();
+			Vozilo v = rv.getVozilo();
+			return v;
+	}
+	
+	@RequestMapping(
+			value = "/getRent/{rez_id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public RentacarServis getRentFromRez(@PathVariable("rez_id") Integer rez_id){
+		
+			RezervacijaVozila rv = rezervacijaVozilaService.findById(rez_id).get();
+			Vozilo v = rv.getVozilo();
+			Filijala fil = v.getFilijala();
+			RentacarServis rs = fil.getRentacar();
+			return rs;
+	}
+	
 	@PreAuthorize("hasRole('SYSADMIN')")
 	@RequestMapping(
 			value = "/all_admin",

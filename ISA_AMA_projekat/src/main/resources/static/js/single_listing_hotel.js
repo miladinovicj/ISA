@@ -1,3 +1,5 @@
+var id_rez = null;
+
 $(document).ready(function()	
 {
 	var search = window.location.search;
@@ -7,6 +9,7 @@ $(document).ready(function()
     check_in = splitted[1].substring(9);
     check_out = splitted[2].substring(10);
     adults = splitted[3].substring(7);
+    id_rez = splitted[4].substring(7);
     
     console.log('[single_listing_hotel: document.ready()]: id hotela: ' + id_presented);
 
@@ -211,13 +214,24 @@ function addSoba(soba)
     
     if(number_of_days != 0)
 	{
-		$(".button_book_room").addClass('soba_id_' + soba.id);
-		var elements = document.getElementsByClassName('button_book_room');
-		for(element of elements)
-		{
-			$(element).removeClass('button_book_room');
-			$(element).click(bookRoom(soba.id));
-		}
+    	if(id_rez != 0)
+    	{
+    		$(".button_book_room").addClass('soba_id_' + soba.id);
+    		var elements = document.getElementsByClassName('button_book_room');
+    		for(element of elements)
+    		{
+    			$(element).removeClass('button_book_room');
+    			$(element).click(bookRoom(soba.id));
+    		}
+    	}
+    	else
+    	{
+    		var elements = document.getElementsByClassName('button_book_room');
+    		for(element of elements)
+    		{
+    			element.parentElement.style.display = 'none';
+    		}
+    	}
 	}
     else
     {
@@ -234,14 +248,14 @@ function bookRoom(id)
 	return function(){
 		
 		$.ajax({
-			url: 'api/hotels/book_room/' + id,
+			url: 'api/hotels/book_room/' + id + '/' + id_rez,
 			type: 'PUT',
 			data: JSON.stringify(rezervacijaHotela),
 			contentType: 'application/json; charset=utf-8',
 			success: function(soba) {
 				console.log("uspesna rezervacija sobe sa id_sobe: " + soba.id);
 				alert('uspesna rezervacija sobe sa id_sobe: ' + soba.id);
-				window.location.href = 'index.html';
+				window.location.href = 'rezervacijaPreview.html?id=' + id_rez;
 			}
 		});
 	};
@@ -471,13 +485,16 @@ function addSpecialPrice(soba)
         	var popust_cena = soba.cena_nocenja * 0.01 * (100 - popust.popust);
         	document.getElementById("cena_nocenjasp").innerHTML = 'Regular price: $' + soba.cena_nocenja + '/night\r\nPrice with discount: $' + popust_cena + '/night';
         	
-        	$(".button_book_roomsp").addClass('soba_id_' + soba.id);
-        	var elements = document.getElementsByClassName('button_book_roomsp');
-        	for(element of elements)
-        	{
-        		$(element).removeClass('button_book_roomsp');
-        		$(element).click(bookRoomSpecial(check_in, check_out, pronadjen_popust, soba.id));
-        	}
+        	if(id_rez!=0)
+    		{
+		    	$(".button_book_roomsp").addClass('soba_id_' + soba.id);
+		    	var elements = document.getElementsByClassName('button_book_roomsp');
+		    	for(element of elements)
+		    	{
+		    		$(element).removeClass('button_book_roomsp');
+		    		$(element).click(bookRoomSpecial(check_in, check_out, pronadjen_popust, soba.id));
+		    	}
+    		}
 		}
     });
 	
@@ -492,14 +509,14 @@ function bookRoomSpecial(check_in, check_out, pronadjen_popust, soba_id)
 		
 		console.log('book room special, id sobe: ' + soba_id + '; popust id: ' + pronadjen_popust.id);
 		$.ajax({
-			url: 'api/hotels/book_room_special/' + soba_id + '/' + check_in + '/' + check_out,
+			url: 'api/hotels/book_room_special/' + soba_id + '/' + check_in + '/' + check_out + '/' + rez_id,
 			type: 'PUT',
 			data: JSON.stringify(pronadjen_popust),
 			contentType: 'application/json; charset=utf-8',
 			success: function(soba) {
 				console.log("uspesna rezervacija brze sobe sa id_sobe: " + soba.id);
 				alert('uspesna rezervacija brze sobe sa id_sobe: ' + soba.id);
-				window.location.href = 'index.html';
+				window.location.href = 'rezervacijaPreview.html?id=' + id_rez;
 			}
 		});
 	};

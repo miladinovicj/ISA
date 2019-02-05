@@ -42,7 +42,7 @@ $(document).ready(function(){
 				
 				
 				
-				console.log(korisnik.rezervacijeUcestvovanje)
+				getRezervacije();
 			}
 			else
 			{
@@ -878,4 +878,10 @@ function changePassword()
         $("#confirm_new_password_profile").prop('required', true);
     }
     
+}
+
+
+function getRezervacije()
+{
+	console.log(korisnik.rezervacijeUcestvovanje[0])
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title id="titl_aviokompanija">Make a Rezervation</title>
+<title id="titl_aviokompanija">Your reservation</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Travelix Project">
@@ -115,7 +115,8 @@
 					<div id="defaultAirlineView" class="single_listing">
 						<br>
 						<br>
-						<h3><b>Flight Information: </b></h3>
+						<h3><b>Flight Information: <button id="rate_flight" style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;vertical-align:center" class="button search_button">Rate flight</button><button style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_let">Cancel flight</button>
+						</b></h3>
 						<br>
 						<ul style="list-style-type:circle; margin-left:15px">
 							<li><p id="flightFrom">From: </p></li>
@@ -162,21 +163,41 @@
 						<br>
 						<br>
 						<br>
-						<h3><b>Hotel Reservation:</b></h3>
+						<h3><b>Hotel Reservation:<button style="margin-left:7%; margin-top:0px; margin-bottom:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_hotel">Cancel hotel reservation</button>
+						</b></h3><br>
 						<br>
 						<br>
-						<div hidden id="noHotel"  style="margin-left:auto; margin-right:auto">
-						
+						<br>
+						<div id="noHotel" style="margin-left:auto; margin-right:auto">
 						    <p style="margin-left:auto; margin-right:auto; align-content: center;text-align: center;" >No hotel reservations have been made.</p>
-							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" id="" class="button search_button">BOOK A HOTEL<span></span><span></span><span></span></button>
+							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:bookHotel()">BOOK A HOTEL<span></span><span></span><span></span></button>
+						</div>
+						<div id="infoHotel" hidden="true" style="display: inline;" >
+							<form id="hotel_form" style="align:center;">
+							<div  style="width: 20%; height: 40px; margin-left:40%;" class="search_item">
+								<div style="color:black;">check out date</div>
+									<input type="date" class="check_out search_input" name="check_out_hotel" placeholder="dd/mm/yyyy" required="required" style="border-style: solid;">
+								</div>
+								<button style="margin-top: 60px; margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" >Search<span></span><span></span><span></span></button>
+							</form>
 						</div>
 						
+						<div id="hasHotelReservation" hidden="true">
+							<ul style="list-style-type:circle; margin-left:15px">
+								<li><p id="check_in_hotel_res">Check in date: </p></li>
+								<li><p id="check_out_hotel_res">Check out date: </p></li>
+								<li><span id="hotel_res">Hotel: </span><button id="rate_hotel" style="margin-left:7%; margin-top:0px; height:40px;  align-content: center;text-align: center;" class="button search_button">Rate hotel</button></li><br><br>
+								<li><span id="room_res">Number of beds in room: </span><button id="rate_room" style="margin-left:18%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button">Rate room</button></li><br><br>
+								<li><p id="cost_hotel_res">Cost: $</p></li>
+							</ul>
+						</div>
 						
 						<br>
 						<br>
 						<br>
 						<br>
-						<h3><b>Rental Car Reservation:</b></h3>
+						<h3><b>Rental Car Reservation: <button style="margin-left:7%; margin-top:0px; margin-bottom:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_car">Cancel car reservation</button>
+						</b></h3><br><br>
 						<br>
 						<br>
 						<div id="noRental">
@@ -199,18 +220,22 @@
 							</div>
 							<div id="hasCar" hidden="true">
 							<ul style="list-style-type:circle; margin-left:15px">
+							<li><span id="servis">Rentacar: </span><button id="rate_rentacar" style="margin-left:7%; margin-top:0px; height:40px;  align-content: center;text-align: center;" class="button search_button">Rate rentacar</button></li><br><br>
+							<li><span id="car">Car: </span><button id="rate_car" style="margin-left:18%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button">Rate car</button></li><br><br>
 							<li><p id="check_in">Check in date and town: </p></li>
 							<li><p id="check_out">Check out date and town: </p></li>
 							<li><p id="cost">Cost: $</p></li>
 						</ul>
 						</div>
-						
+						<button style="margin-left:77%; align-content: center;text-align: center;" class="button search_button" >FINISH RESERVATION<span></span><span></span><span></span></button>
+	
 					</div>
-
+		
 		</div>
+				
 	</div>
 
-
+		
 </div>
 </div>
 </div>
