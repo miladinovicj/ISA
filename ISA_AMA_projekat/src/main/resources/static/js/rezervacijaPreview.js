@@ -3,6 +3,8 @@ var korisnik = null;
 var flight = null;
 var vozilo = null;
 var rentacar_servis=null;
+var soba=null;
+var hotel=null;
 
 $(document).ready(function(){
 	
@@ -174,6 +176,7 @@ function initWindow()
 	{
 		$("#noHotel").prop("hidden",false);
 		$("#hasHotelReservation").attr("hidden", true);
+		$("#cancel_hotel").attr("hidden", true);
 	}
 	else
 	{
@@ -189,6 +192,8 @@ function initWindow()
 				}
 				else
 				{
+					hotel=data.hotel;
+					soba=data.soba;
 					console.log('pronadjena soba');
 					$("#hotel_res").text("Hotel: " + data.hotel.naziv);
 					$("#room_res").text("Number of beds in room: " + data.soba.broj_kreveta);
@@ -217,12 +222,48 @@ function initWindow()
 		 $("#check_in_hotel_res").text("Check in date: " + date_check_in.toString().substring(0, 10));
 		 $("#check_out_hotel_res").text("Check out date: " + date_check_out.toString().substring(0, 10));
 		 $("#cost_hotel_res").text("Cost: $" + rezervacija.rezevacijaHotel.ukupna_cena);
+		 
+		 	var today_h = new Date();
+	    	today_h.setHours(0, 0, 0);
+	    	
+	    	var dolaz = rezervacija.rezevacijaHotel.datum_dolaska;
+	    	var date_dol = new Date(dolaz);
+	    	var pravi_dol = date_dol.toString();
+	    	var date_dolaska = new Date(pravi_dol);
+	    	date_dolaska.setDate(date_dolaska.getDate() - 2);
+	    	console.log(date_dolaska.toString());
+	    	
+	    	var odlaz = rezervacija.rezevacijaHotel.datum_odlaska;
+	    	var date_odl = new Date(odlaz);
+	    	var pravi_odl = date_odl.toString();
+	    	var date_odlaska = new Date(pravi_odl);
+	    	
+	    	if(today_h<date_dolaska)
+	    		{
+	    		$("#cancel_hotel").attr("hidden", false);
+	    		}
+	    	else
+	    		{
+	    		$("#cancel_hotel").attr("hidden", true);
+	    		}
+	    	
+	    	if(today_h>date_odlaska)
+	    		{
+	    		$("#rate_hotel").attr("hidden", false);
+	    		$("#rate_room").attr("hidden", false);
+	    		}
+	    	else
+	    		{
+	    		$("#rate_hotel").attr("hidden", true);
+	    		$("#rate_room").attr("hidden", true);
+	    		}
 	}
 	
 	if(rezervacija.rezervacijaVozila == null)
 	{
 		$("#noRental").prop("hidden",false);
 		$("#hasCar").attr("hidden", true);
+		$("#cancel_car").attr("hidden", true);
 	}
 	else
 	{
