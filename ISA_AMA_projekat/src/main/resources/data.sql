@@ -70,14 +70,14 @@ insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (13, 6
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (14, 2, 'Bulevar kralja Aleksandra', '56', 44.807612, 20.470238);
 
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Hotel Park', 1, 'hotel sa 4 zvezdice', 4.8);
-insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Hotel Novi Sad', 2, 'fantastican hotel', 3.79);
+insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Hotel Novi Sad', 2, 'fantastican hotel', 3.7);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (3, 'Hotel Moskva', 3, 'Svaka soba ima terasu.', 5);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (4, 'Hotel Stari krovovi', 3, 'Potpuno nov hotel sa svim mogucim uslugama.', 5);
-insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (5, 'Grand hotel', 4, 'Hotel u srcu Novog Sada', 3.87);
+insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (5, 'Grand hotel', 4, 'Hotel u srcu Novog Sada', 3.8);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (6, 'Rezidencija Makarica', 5, 'Luksuzna vila sa 4 apartmana. Svaki apartman poseduje tv, klima uredjaj, mini bar, terasu, kupatilo. Odlican Wi-Fi signal. Prostrano dvoriste i obezbedjen parking za goste. Najupecatljiviji utisak ostavljaju ljubaznost i gostoprimljivost domacina.', 4.99);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (7, 'Sole mio', 6, 'Hotel sa tradicijom dugom 78 godina.', 4.5);
 
-insert into aviokompanija(id, adresa_id, opis, max_kapacitet, naziv, ocena, info) values (1, 7,'Najjaci popusti najjace zezanje drugari',300, 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari');
+insert into aviokompanija(id, adresa_id, opis, naziv, ocena, info) values (1, 7,'Najjaci popusti najjace zezanje drugari', 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari');
 
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1);
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1);
@@ -87,6 +87,7 @@ insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 15000,'2019-12-25 3:00:00.999999','2019-12-25 6:00:00.999999',1);
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 15000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1);
 
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 15000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1,100);
 
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,1);
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,2);
@@ -209,6 +210,6 @@ insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
 insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
 insert into friend_request (id, stanje, salje_id, prima_id) values (3, 0, 5, 1);
 
+
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
 insert into user_authority (user_id, authority_id) values (4, 5);
-

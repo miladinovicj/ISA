@@ -17,6 +17,7 @@
 <link rel="stylesheet" type="text/css" href="styles/single_listing_responsive.css">
 	<link rel="stylesheet" type="text/css" href="styles/offers_styles.css">
 	<link rel="stylesheet" type="text/css" href="styles/offers_responsive.css">
+	<link rel="stylesheet" type="text/css" href="styles/moe.css">
 </head>
 
 <body>
@@ -29,7 +30,8 @@
 <script src="styles/bootstrap4/bootstrap.min.js"></script>
 <script src="plugins/parallax-js-master/parallax.min.js"></script>
 <script src="plugins/easing/easing.js"></script>
-
+<script src="plugins/easing/easing.js"></script>
+<script src="js/frameworks/fabric.min.js"></script>
 <script src="js/single_listing_custom.js"></script>
 <script src="js/rezervacija.js"></script>
 <script src="js/offers_custom.js"></script>
@@ -41,24 +43,6 @@
 
 	<header class="header">
 
-		<!-- Top Bar -->
-
-		<div class="top_bar">
-			<div class="container">
-				<div class="row">
-					<div class="col d-flex flex-row">
-						<div class="phone">+45 345 3324 56789</div>
-						<div class="social">
-
-						</div>
-						<div class="user_box ml-auto">
-							<div class="user_box_login user_box_link"><a href="#">login</a></div>
-							<div class="user_box_register user_box_link"><a href="#">register</a></div>
-						</div>
-					</div>
-				</div>
-			</div>		
-		</div>
 
 		<!-- Main Navigation -->
 
@@ -69,37 +53,15 @@
 						<div class="logo_container">
 							<div class="logo"><a href="#"><img src="images/logo.png" alt="">where to</a></div>
 						</div>
-						<div class="main_nav_container ml-auto">
+						<div style="margin-right:0%" class="main_nav_container ml-auto">
 							<ul class="main_nav_list">
 								<li class="main_nav_item"><a href="index.html">home</a></li>
-								<li class="main_nav_item"><a href="about.html">about us</a></li>
-								<li class="main_nav_item"><a href="offers.html">offers</a></li>
-								<li class="main_nav_item"><a href="blog.html">news</a></li>
-								<li class="main_nav_item"><a href="contact.html">contact</a></li>
+								<li class="main_nav_item"><a href="profil.html">PROFILE</a></li>
+								<li class="main_nav_item"><a onclick="javascript:odjava()" href="offers.html">log out</a></li>
 							</ul>
 						</div>
 						<div class="content_search ml-lg-0 ml-auto">
-							<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-							width="17px" height="17px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-								<g>
-									<g>
-										<g>
-											<path class="mag_glass" fill="#FFFFFF" d="M78.438,216.78c0,57.906,22.55,112.343,63.493,153.287c40.945,40.944,95.383,63.494,153.287,63.494
-											s112.344-22.55,153.287-63.494C489.451,329.123,512,274.686,512,216.78c0-57.904-22.549-112.342-63.494-153.286
-											C407.563,22.549,353.124,0,295.219,0c-57.904,0-112.342,22.549-153.287,63.494C100.988,104.438,78.439,158.876,78.438,216.78z
-											M119.804,216.78c0-96.725,78.69-175.416,175.415-175.416s175.418,78.691,175.418,175.416
-											c0,96.725-78.691,175.416-175.416,175.416C198.495,392.195,119.804,313.505,119.804,216.78z"/>
-										</g>
-									</g>
-									<g>
-										<g>
-											<path class="mag_glass" fill="#FFFFFF" d="M6.057,505.942c4.038,4.039,9.332,6.058,14.625,6.058s10.587-2.019,14.625-6.058L171.268,369.98
-											c8.076-8.076,8.076-21.172,0-29.248c-8.076-8.078-21.172-8.078-29.249,0L6.057,476.693
-											C-2.019,484.77-2.019,497.865,6.057,505.942z"/>
-										</g>
-									</g>
-								</g>
-							</svg>
+
 						</div>
 
 						<form id="search_form" class="search_form bez_1">
@@ -132,15 +94,6 @@
 
 	<!-- Home -->
 
-	<div class="home">
-		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/single_background.jpg"></div>
-		<div class="home_content">
-			<div class="home_title" style="text-align:center; margin-top:500px" id="flightLocationTittle1">Ime aviokompanije</div>
-			<div class="home_title" style="text-align:center">TO</div>
-			<div class="home_title" style="text-align:center" id="flightLocationTittle2">Ime aviokompanije</div>
-			
-		</div>
-	</div>
 
 	<!-- Offers -->
 
@@ -149,19 +102,40 @@
 
 
 		<!-- DEFAULTNI PRIKAZ PRILIKOM ULASKA NA STRANICU AVIO KOMPANIJE -->
-		<div class="container" style="margin-top: -5%">
+		<div  class="container" style="margin-top: 0%">
 			
-
+			<br>
+			<br>
+			<br>
 			<div class="row" >
 				<div   class="col-lg-12">
 					<div id="defaultAirlineView" class="single_listing">
+								<br>
+			<br>
+			<br>
+						<h1  class="hotel_title">Flight Information:</h1>
+						<br>
+						<ul style="list-style-type:circle; margin-left:15px">
+							<li><p id="flightFrom">From: </p></li>
+							<li><p id="flightTo">To: </p></li>
+							<li><p id="flightDuration">Duration: </p></li>
+							<li><p id="flightDeparture">Departure time: </p></li>
+							<li><p id="flightArrival">Arrival time: </p></li>
+						</ul>
 
 
 								<div class="rooms">
+									<br>
+									<br>
+									<h3 style="text-align:center">PLEASE FILL OUT THE FOLLOWING:</h3>
+									<br>
+									<br>
+									
 									<ul style="list-style-type:none" id="personsList">									
 										<template id="personTemplate">
 											<li id="listTag">
-												<h1  class="hotel_title">PERSON ON FLIGHT:</h1>
+												<br>
+												<h1 id="tajtl" class="hotel_title">Person on flight:</h1>
 												<br>
 												<div id="personIndex" style="margin: 0; color: #31124A;"><b>SELECT FRIEND FROM FRIEND LIST: </b></div>
 												<select class="selectFriendList" style="height: 45px; width: 49%;border-color: #31124A; border-style: solid;" id="friends">
@@ -216,9 +190,11 @@
 													</div>	
 													<h3 style="text-align: center; margin-top:5%;">CHOOSE A FREE SEAT:</h3>
 													<br>
-													
-													
-													
+													<div class="scrollmenu">
+														<canvas style="align-content:center; margin-left:auto; margin-right:auto; text-align: center;" id="seatCanvas" width="1500" height="300"></canvas>	
+													</div>
+													<br>
+													<p id="errorSeat" hidden style="color:red; align-content:center; text-align:center"> A seat must be selected. </p>
 													
 													<div>
 												</div>
@@ -250,20 +226,13 @@
 
 	<!-- Copyright -->
 
-	<div class="copyright">
-		<div class="container">
+	<div  class="copyright">
+		<div  class="container">
 			<div class="row">
-				<div class="col-lg-3 order-lg-1 order-2  ">
-					<div class="copyright_content d-flex flex-row align-items-center">
-						<div><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
-					</div>
-				</div>
-				<div class="col-lg-9 order-lg-2 order-1">
-					<div class="footer_nav_container d-flex flex-row align-items-center justify-content-lg-end">
-						<div class="footer_nav">
-
+				<div style="content-align:center" class="col-lg-3 order-lg-1 order-2  ">
+					<div  class="copyright_content d-flex flex-row align-items-center">
+						<div style="margin-left:0%;">
+							&copy; Internet software architecture project by: Milica, Andrijana and Aleksa 
 						</div>
 					</div>
 				</div>

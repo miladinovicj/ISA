@@ -18,4 +18,9 @@ public class LetService
 	{
 		return letRepository.findById(id);
 	}
+	
+	public Let save(Let let)
+	{
+		return letRepository.save(let);
+	}
 }
