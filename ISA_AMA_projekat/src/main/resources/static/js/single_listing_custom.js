@@ -115,7 +115,7 @@ var token = localStorage.getItem('jwtToken');
 	initListingSlider();
 	initLightbox();
 	//initGoogleMap();
-	initSearchForm();
+	//initSearchForm();
 
 	/* 
 
@@ -216,16 +216,21 @@ var token = localStorage.getItem('jwtToken');
 	{
 		if($('.search_tab').length)
 		{
-			$('.search_tab').on('click', function()
+			if(window.location.search.indexOf('id_rez') == -1)
 			{
-				$('.search_tab').removeClass('active');
-				$(this).addClass('active');
-				var clickedIndex = $('.search_tab').index(this);
-
-				var panels = $('.search_panel');
-				panels.removeClass('active');
-				$(panels[clickedIndex]).addClass('active');
-			});
+				$('.search_tab').on('click', function()
+				{
+					
+					$('.search_tab').removeClass('active');
+					$(this).addClass('active');
+					var clickedIndex = $('.search_tab').index(this);
+	
+					var panels = $('.search_panel');
+					panels.removeClass('active');
+					$(panels[clickedIndex]).addClass('active');
+					
+				});
+			}
 		}
 	}
 

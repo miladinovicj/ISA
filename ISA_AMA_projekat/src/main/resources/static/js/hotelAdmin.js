@@ -1,6 +1,8 @@
+token = localStorage.getItem('jwtToken');
+
 $(document).ready(function()	
 {
-	token = localStorage.getItem('jwtToken');
+	
 	provera = false;
 	
 	var search = window.location.search;
@@ -36,6 +38,36 @@ $(document).ready(function()
     $('input[name=price_service]').on('keyup', function(){
   	  $('#error_price_service').hide();
     });
+    
+    var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	 if(dd<10){
+	        dd='0'+dd
+	    } 
+	    if(mm<10){
+	        mm='0'+mm
+	    } 
+
+	today = yyyy+'-'+mm+'-'+dd;
+	
+	$('input[name=start_special_price]').attr("min", today);
+	$('input[name=end_special_price]').attr("min", today);
+	
+	$('input[name=start_special_price]').on('change', function(){
+		
+		var datum = $('input[name=start_special_price]').val();
+		$('input[name=end_special_price]').attr("min", datum);
+		
+		var date_start = new Date(datum);
+		var date_end = new Date($('input[name=end_special_price]').val());
+		
+		if(date_end < date_start)
+		{
+			$('input[name=end_special_price]').val(datum);
+		}
+	});
 	
 	$('#edit_hotel_form').submit(function(event) {
 		console.log('edit_hotel_form submit');
@@ -160,7 +192,7 @@ $(document).ready(function()
 	
 
 	$('#change_price_form').submit(function(event) {
-		console.log('add_form_admin submit');
+		console.log('change_price_form submit');
 		event.preventDefault();
 		
 		document.getElementById("error_price_service").style.display  = 'none';
@@ -181,6 +213,10 @@ $(document).ready(function()
 				
 				let service = $('input[name="new_service"]').val();
 				let price_service = $('input[name="new_price_service"]').val();
+				let discount = $('input[name=new_discount_service]').val();
+				
+				if(discount == "")
+					discount = 0;
 				
 				let ispravno = true;
 				
@@ -194,12 +230,22 @@ $(document).ready(function()
 					document.getElementById("error_new_price_service").style.display  = 'none';
 				}
 				
+				if(!(/^[0-9]+$/.test(discount)))
+				{
+					document.getElementById("error_new_discount_service").style.display  = 'block';
+					ispravno=false;
+				}
+				else
+				{
+					document.getElementById("error_new_discount_service").style.display  = 'none';
+				}
+				
 				if(ispravno == true)
 				{
 					console.log('dodaj novu uslugu zahtev');
 					
 					$.post({
-						url: '/api/usluge/dodaj_uslugu/' + service + '/'  + price_service + '/' + id_presented,
+						url: '/api/usluge/dodaj_uslugu/' + service + '/'  + price_service + '/' + discount + '/' + id_presented,
 						headers: {"Authorization": "Bearer " + token},
 						contentType: 'application/json',
 						success: function(data) {
@@ -217,6 +263,10 @@ $(document).ready(function()
 								$('input[name=new_price_service]').prop('required',false);
 								$('input[name=new_service]').prop('required',false);
 								
+								$('input[name=new_price_service]').val('');
+								$('input[name=new_service]').val('');
+								$('input[name=new_discount_service]').val('');
+								
 					    		var option = document.createElement("option");
 								option.text = data.naziv;
 								option.value = data.id;
@@ -224,8 +274,11 @@ $(document).ready(function()
 								
 								$('select[name=select_services]').val(data.id);
 								editServices();
-								
-								let li = $('<li><span>' + data.naziv + ' - $' + data.cena + '/per day</span></li>');
+					    		
+					    		if(data.popust != 0)
+					    			var li = $('<li><span>' + data.naziv + ' - $' + data.cena + '/per day - discount: ' + data.popust +'%</span></li>');
+					    		else
+					    			var li = $('<li><span>' + data.naziv + ' - $' + data.cena + '/per day</span></li>');
 					    		$('#usluge_hotela').append(li);
 							}
 						}
@@ -239,6 +292,10 @@ $(document).ready(function()
 		
 			let price = $('input[name=price_service]').val();
 			let id = $( "select[name=select_services] option:selected" ).val();
+			let discount = $('input[name=discount_service]').val();
+			
+			if(discount == "")
+				discount = 0;
 			
 			let ispravno = true;
 			
@@ -250,6 +307,16 @@ $(document).ready(function()
 			else
 			{
 				document.getElementById("error_price_service").style.display  = 'none';
+			}
+			
+			if(!(/^[0-9]+$/.test(discount)))
+			{
+				document.getElementById("error_discount_service").style.display  = 'block';
+				ispravno=false;
+			}
+			else
+			{
+				document.getElementById("error_discount_service").style.display  = 'none';
 			}
 			
 			if(ispravno == true)
@@ -266,11 +333,26 @@ $(document).ready(function()
 							
 							console.log('Cost of additional service successfully changed!');
 							window.location.href="hotelAdmin.html?id=" + id_presented;
-							//$('select[name=select_services]').val(data.id);
-							//editServices();
 						}
 					}
 				});
+				
+				$.post({
+					url: '/api/usluge/admin/izmenaPopustaUsluge/' + id + '/'  + discount,
+					headers: {"Authorization": "Bearer " + token},
+					contentType: 'application/json',
+					success: function(data) {
+						if(data==null || data==""){
+							console.log('Nije izmenjen popust usluge!');
+						}
+						else {
+							
+							console.log('Discount of additional service successfully changed!');
+							window.location.href="hotelAdmin.html?id=" + id_presented;
+						}
+					}
+				});
+				
 			}
 			
 		}
@@ -355,7 +437,71 @@ $(document).ready(function()
 		
 	});
 	
+
+	$('#special_price_form').submit(function(event) {
+		console.log('special_price_form submit');
+		event.preventDefault();
+		
+
+		$('#error_start_special_price').hide();
+		
+		let selected = $( "select[name=services_special_price]" ).val();
+		let date_start = $('input[name="start_special_price"]').val();
+		let date_end = $('input[name="end_special_price"]').val();
+		let discount = $('input[name="discount_special_price"]').val();
+		let id_soba = $('select[name="room_special_price"] option:selected').val();
+		
+		$.post({
+			url: '/api/hotels/add_special_price/' + id_soba,
+			headers: {"Authorization": "Bearer " + token},
+			data: JSON.stringify({pocetak_vazenja: date_start, kraj_vazenja: date_end, popust: discount}),
+			contentType: 'application/json',
+			success: function(data) {
+				if(data.result == 'success'){
+					console.log('Popust uspesno dodat');
+					window.location.href="hotelAdmin.html?id=" + id_presented;
+					dodajUsluge(data.popust_id, selected);
+				}
+				else 
+				{
+					console.log('Popust nije uspesno dodat');
+					$('#error_start_special_price').show();
+				}
+			}
+		});
+		
+		
+	});
 });
+
+function dodajUsluge(popust_id, usluge)
+{
+	for(var i = 0, size = usluge.length; i < size ; i++)
+	{
+		var usluga_id = usluge[i];
+		var id_popust = '' + popust_id + '';
+		
+		if(usluga_id != '0')
+		{
+			$.post({
+				url: '/api/hotels/add_usluga_special_price/' + id_popust + '/' + usluga_id,
+				headers: {"Authorization": "Bearer " + token},
+				contentType: 'application/json',
+				success: function(data) {
+					if(data.result == 'success'){
+						console.log('Popust uspesno dodat');
+						window.location.href="hotelAdmin.html?id=" + id_presented;
+					}
+					else 
+					{
+						console.log('Popust nije uspesno dodat');
+						
+					}
+				}
+			});
+		}
+	}	
+}
 
 function finalEdit(address)
 {
@@ -399,6 +545,9 @@ function showHotel(hotel)
     	$("#text_no_rooms").text("");
     	broj_soba = 1;
     
+    	select_soba = $('select[name=room_special_price]');
+    	select_soba.children().remove();
+    	
 		for (let soba of hotel.sobe) 
     	{
     		addSoba(soba);
@@ -416,18 +565,37 @@ function showHotel(hotel)
 	{
     	$("#text_no_services").text("Additional services: ");
     	
-    	var select = $('select[name=select_services]');
-		select.children().remove();
+    	var select_services = $('select[name=select_services]');
+		select_services.children().remove();
+		
+		var selectsp = $('select[name=services_special_price]');
+		selectsp.children().remove();
+		
+		var option = document.createElement("option");
+    	option.text = '';
+    	option.value = 0;
+    	selectsp.append(option);
+    	
+    	for (let usluga of hotel.usluge) 
+    	{
+    		var option = document.createElement("option");
+			option.text = usluga.naziv;
+			option.value = usluga.id;
+			select_services.append(option);
+    	}
 		
     	for (let usluga of hotel.usluge) 
     	{
-    		let li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span></li>');
+    		if(usluga.popust != 0)
+    			var li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day - discount: ' + usluga.popust +'%</span></li>');
+    		else
+    			var li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span></li>');
     		$('#usluge_hotela').append(li);
     		
     		var option = document.createElement("option");
 			option.text = usluga.naziv;
 			option.value = usluga.id;
-			select.append(option);
+			selectsp.append(option);
     	}
 	}
 
@@ -461,11 +629,57 @@ function addSoba(soba)
 		broj_kreveta_string = "Petokrevetna soba. ";
 	}
 	
-	temp.content.getElementById("naziv").innerHTML = 'Soba ' + broj_soba;
+	var inner = 'Soba ' + broj_soba;
+	temp.content.getElementById("naziv").innerHTML = inner;
+	
+	var option = document.createElement("option");
+	option.text = inner;
+	option.value = soba.id;
+	select_soba.append(option);
+	
 	broj_soba = broj_soba + 1;
 	temp.content.getElementById("broj_kreveta").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
 	temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night';
 	temp.content.getElementById("prosecna_ocena").innerHTML = 'Rating: ' + soba.prosecna_ocena;
+	
+	if(soba.popusti.length == 0)
+	{
+		temp.content.getElementById("text_discount_list").style.display = 'none';
+		temp.content.getElementById("discount_list").style.display = 'none';
+	}
+	
+	list = temp.content.getElementById("discount_list");
+	while (list.hasChildNodes()) 
+	{   
+		list.removeChild(list.firstChild);
+	}
+	
+	for (let popust of soba.popusti) 
+	{	
+		temp.content.getElementById("text_discount_list").style.display = 'block';
+		
+		list.style.display = 'block';
+		
+		let li = document.createElement("li");
+		var inner = '<span>' + popust.pocetak_vazenja.substring(0, 10) + '  -  ' + popust.kraj_vazenja.substring(0, 10) + '  -  ' + popust.popust + '%';
+		
+		var usluge_str = '';
+		for(let usluga of popust.usluge)
+		{
+			usluge_str += usluga.naziv + ', ';
+		}
+		
+		usluge_str = usluge_str.substring(0, usluge_str.length-2);
+		
+		if(popust.usluge.length >0)
+			inner += ' (' + usluge_str + ')';
+		
+		inner += '</span>';
+				
+		//li.innerHTML =	'<span>' + popust.pocetak_vazenja.substring(0, 10) + '  -  ' + popust.kraj_vazenja.substring(0, 10) + '  -  ' + popust.popust + '%</span>';
+		li.innerHTML = inner;
+		temp.content.getElementById("discount_list").appendChild(li);
+	}
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_sobe_template").appendChild(a);
@@ -606,6 +820,8 @@ function editHotel()
     
     $('#div_edit_services').hide();
 	$('#div_add_room').hide();
+	$('#div_report').hide();
+	$('#div_special_price').hide();
 	
 	$('#div_edit_hotel').show();
 	var el = document.getElementById('div_edit_hotel');
@@ -618,6 +834,8 @@ function editServices()
 	console.log('editing services');
 	$('#div_edit_hotel').hide();
 	$('#div_add_room').hide();
+	$('#div_report').hide();
+	$('#div_special_price').hide();
 	
 	$('input[name=price_service]').prop('required',true);
 	
@@ -635,6 +853,8 @@ function addRoom()
 	$('#div_add_room').show();
 	$('#div_edit_hotel').hide();
 	$('#div_edit_services').hide();
+	$('#div_report').hide();
+	$('#div_special_price').hide();
 	
 	var el = document.getElementById('div_add_room');
     el.scrollIntoView(true);
@@ -646,6 +866,22 @@ function addRoom()
 	$('input[id=button_click_room]').val('Add');
 }
 
+function addSpecialPrice()
+{
+	console.log('add special price');
+	
+	$('#div_special_price').show();
+
+	$('#div_edit_hotel').hide();
+	$('#div_edit_services').hide();
+	$('#div_add_room').hide();
+	$('#div_report').hide();
+	
+	var el = document.getElementById('div_special_price');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -150);
+}
+
 function backEdit()
 {
 	$('#div_edit_hotel').hide();
@@ -653,6 +889,7 @@ function backEdit()
 	$('.new_additional_service').hide();
 	$('#div_add_room').hide();
 	$('#div_report').hide();
+	$('#div_special_price').hide();
 	
 	$('#button_hotel_back').attr('pritisnuto', 'true');
 	
@@ -669,8 +906,9 @@ function changeSelection()
 	{
 		$.get({
 			url: "/api/usluge/get/" + id,
-			success: function(price) {
-				$('input[name=price_service]').val(price);
+			success: function(data) {
+				$('input[name=price_service]').val(data.cena);
+				$('input[name=discount_service]').val(data.popust);
 			},
 			
 			error: function(data) {
@@ -702,6 +940,13 @@ function showReport()
 	console.log('show report');
 	
 	$('#div_report').show();
+
+	$('#div_edit_hotel').hide();
+	$('#div_edit_services').hide();
+	$('.new_additional_service').hide();
+	$('#div_add_room').hide();
+	$('#div_special_price').hide();
+	
 	var el = document.getElementById('div_report');
     el.scrollIntoView(true);
     window.scrollBy(0, -100);

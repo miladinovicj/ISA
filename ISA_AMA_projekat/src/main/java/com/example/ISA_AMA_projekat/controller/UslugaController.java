@@ -1,7 +1,11 @@
 package com.example.ISA_AMA_projekat.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,15 +41,33 @@ public class UslugaController {
 	
 	@PreAuthorize("hasRole('HOTELADMIN')")
 	@RequestMapping(
-			value = "/dodaj_uslugu/{naziv}/{cena}/{id_hotel}",
+			value = "/admin/izmenaPopustaUsluge/{izabrano}/{popust}",
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Usluga dodajUsluga(@PathVariable("naziv") String naziv, @PathVariable("cena") double cena,  @PathVariable("id_hotel") Integer id_hotel){
+	public Usluga editPopustUsluga(@PathVariable("izabrano") Integer izabrano,
+			@PathVariable("popust") double popust)
+	{
+	
+		Usluga u = uslugaService.findById(izabrano).get();
+		System.out.println("[UslugaController]: usluga_id: " + u.getId());
+		
+		uslugaService.updatePopust(popust, u.getId());
+		return u;
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/dodaj_uslugu/{naziv}/{cena}/{popust}/{id_hotel}",
+			method = RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Usluga dodajUsluga(@PathVariable("naziv") String naziv, @PathVariable("cena") double cena, @PathVariable("popust") double popust,  @PathVariable("id_hotel") Integer id_hotel){
 	
 		Usluga u = new Usluga();
 		u.setNaziv(naziv);
 		u.setCena(cena);
+		u.setPopust(popust);
 		
 		u = uslugaService.save(u, id_hotel);
 		
@@ -57,12 +79,17 @@ public class UslugaController {
 			value = "/get/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public double getUsluga(@PathVariable("id") Integer id){
+	public ResponseEntity<?> getUsluga(@PathVariable("id") Integer id){
 	
 		Usluga u = uslugaService.findById(id).get();
 		System.out.println("[UslugaController]: usluga_id: " + u.getId());
 		
-		return u.getCena();
+		Map<String, Double> result = new HashMap<>();
+		
+		result.put("cena", u.getCena());
+		result.put("popust", u.getPopust());
+		
+		return ResponseEntity.accepted().body(result);
 	}
 	
 }

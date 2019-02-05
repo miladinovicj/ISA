@@ -22,6 +22,9 @@ public class Usluga {
 	@Column(nullable = false)
 	private double cena;
 	
+	@Column(nullable = true)
+	private double popust;
+	
 	public Usluga() {
 		super();
 	}
@@ -48,6 +51,14 @@ public class Usluga {
 
 	public void setCena(double cena) {
 		this.cena = cena;
+	}
+
+	public double getPopust() {
+		return popust;
+	}
+
+	public void setPopust(double popust) {
+		this.popust = popust;
 	}
 
 	@Override

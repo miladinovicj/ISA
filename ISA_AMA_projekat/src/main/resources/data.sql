@@ -1,10 +1,12 @@
 delete from rating;
+delete from bonus;
 delete from user_authority;
 delete from AUTHORITY;
 
 delete from osoba_iz_rez;
 delete from rezervacija;
 delete from aviokompanija_brzi_letovi;
+delete from zauzeta_sedista;
 delete from let;
 delete from aviokompanija;
 delete from friend_request;
@@ -94,30 +96,30 @@ insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, hotel_id, zauz
 insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, hotel_id, zauzeta, opis, cena_popust) values (2, 3.77, 53, 2, 6, false, 'Nalazi se na drugom spratu.\r\nTip: apartman.', 0);
 insert into soba (id, prosecna_ocena, cena_nocenja, broj_kreveta, hotel_id, zauzeta, opis, cena_popust) values (3, 4.8, 120.5, 3, 1, false, 'Nalazi se na prvom spratu.\r\nTip: apartman.', 0);
 
-insert into usluga (id, naziv, cena) values (1, 'air-conditioner', 5);
-insert into usluga (id, naziv, cena) values (2, 'Wi-Fi', 2);
-insert into usluga (id, naziv, cena) values (3, 'swimming pool', 3);
-insert into usluga (id, naziv, cena) values (4, 'gym', 2);
-insert into usluga (id, naziv, cena) values (5, 'sauna', 4);
-insert into usluga (id, naziv, cena) values (6, 'driver', 17);
-insert into usluga (id, naziv, cena) values (7, 'radio', 3);
-insert into usluga (id, naziv, cena) values (8, 'navigation', 7);
-insert into usluga (id, naziv, cena) values (9, 'anti-lock braking system', 12);
-insert into usluga (id, naziv, cena) values (10, 'automatic car parking system', 8);
-insert into usluga (id, naziv, cena) values (11, 'car video monitor', 10);
+insert into usluga (id, naziv, cena, popust) values (1, 'air-conditioner', 5, 0);
+insert into usluga (id, naziv, cena, popust) values (2, 'Wi-Fi', 2, 0);
+insert into usluga (id, naziv, cena, popust) values (3, 'swimming pool', 3, 0);
+insert into usluga (id, naziv, cena, popust) values (4, 'gym', 2, 0);
+insert into usluga (id, naziv, cena, popust) values (5, 'sauna', 4, 0);
+insert into usluga (id, naziv, cena, popust) values (6, 'driver', 17, 0);
+insert into usluga (id, naziv, cena, popust) values (7, 'radio', 3, 0);
+insert into usluga (id, naziv, cena, popust) values (8, 'navigation', 7, 0);
+insert into usluga (id, naziv, cena, popust) values (9, 'anti-lock braking system', 12, 0);
+insert into usluga (id, naziv, cena, popust) values (10, 'automatic car parking system', 8, 0);
+insert into usluga (id, naziv, cena, popust) values (11, 'car video monitor', 10, 0);
 
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 1);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 2);
 insert into hotel_usluge (hotel_id, usluge_id) values (6, 3);
 
-insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (1, '2018-12-25', '2019-02-01', 1, 2, false, 10, true, 0);
+insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (1, '2018-12-25', '2019-02-06', 2, 2, false, 10, true, 0);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (2, '2018-12-25', '2019-01-25', 1, 3, false, 15, true, 0);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (3, '2018-12-20', '2019-02-04', 1, 4, false, 20, true, 0);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (4, '2018-12-25', '2019-01-04', 1, 3, false, 25, true, 0);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (5, '2018-12-20', '2019-01-30', 1, 4, false, 30, true, 0);
 insert into rezervacija_hotel (id, datum_dolaska, datum_odlaska, soba_id, broj_nocenja, brza, ukupna_cena, aktivirana, popust) values (6, '2018-12-20', '2019-02-05', 1, 4, false, 30, true, 0);
 
-insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 1);
+insert into soba_rezervacije (soba_id, rezervacije_id) values (2, 1);
 insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 2);
 insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 3);
 insert into soba_rezervacije (soba_id, rezervacije_id) values (2, 4);
@@ -159,7 +161,7 @@ insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (1, '2019-
 insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (3, '2019-01-24', '2019-01-30', 25);
 
 insert into soba_popusti (soba_id, popusti_id) values (1, 1);
-insert into soba_popusti (soba_id, popusti_id) values (1, 2);
+insert into soba_popusti (soba_id, popusti_id) values (2, 2);
 insert into vozilo_popusti (vozilo_id, popusti_id) values (3, 3);
 
 insert into popust_usluge (popust_id, usluge_id) values (2, 1);

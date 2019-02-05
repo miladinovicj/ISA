@@ -221,7 +221,19 @@ function initWindow()
 		 
 		 $("#check_in_hotel_res").text("Check in date: " + date_check_in.toString().substring(0, 10));
 		 $("#check_out_hotel_res").text("Check out date: " + date_check_out.toString().substring(0, 10));
-		 $("#cost_hotel_res").text("Cost: $" + rezervacija.rezevacijaHotel.ukupna_cena);
+		 
+		 for(var i = 0, size = rezervacija.rezevacijaHotel.usluge.length; i < size ; i++)
+		 {
+			 let usluga = rezervacija.rezevacijaHotel.usluge[i];
+		
+			var li = $('<li><p>' + usluga.naziv + '</p></li>');
+	 		$('#included_services').append(li);
+		 }
+		 
+		 
+		//var li = $('<li><p>Cost: $' + rezervacija.rezevacijaHotel.ukupna_cena + '</p></li>');
+ 		//$('#list_hotel').append(li);
+		$("#cost_hotel_res").text("Cost: $" + rezervacija.rezevacijaHotel.ukupna_cena);
 		 
 		 	var today_h = new Date();
 	    	today_h.setHours(0, 0, 0);
