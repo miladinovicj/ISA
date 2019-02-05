@@ -1,8 +1,8 @@
 var rezervacija = null;
 var korisnik = null;
 var flight = null;
-
-
+var vozilo = null;
+var rentacar_servis=null;
 $(document).ready(function(){
 	
 			getKorisnik();
@@ -112,6 +112,39 @@ function initWindow()
 	$("#flightDeparture").text("Departure time: " + processTime(flight.vremePoletanja));
 	$("#flightArrival").text("Arrival time: " + processTime(flight.vremeSletanja));
 	
+	var vreme = flight.vremePoletanja;
+	var date = new Date(vreme);
+	var pravi = date.toString();
+	var date_pol = new Date(pravi);
+	var vr_pol = date_pol.getTime();
+	var vreme3=vr_pol-10800000;
+	
+	
+	var today = new Date();
+	var today_vreme = today.getTime();
+	
+	var vreme_sl = flight.vremeSletanja;
+	var date_sl = new Date(vreme_sl);
+	var pravi_sl = date_sl.toString();
+	var date_sletanja = new Date(pravi_sl);
+	if(today_vreme<=vreme3)
+		{
+		$('#cancel_let').attr("hidden", false);
+		}
+	else
+		{
+		$('#cancel_let').attr("hidden", true);
+		}
+	
+	if(today>date_sletanja)
+		{
+		$('#rate_flight').attr("hidden", false);
+		}
+	else
+		{
+		$('#rate_flight').attr("hidden", true);
+		}
+	
 	fillPasengerInfo();
 	
 	
@@ -127,11 +160,74 @@ function initWindow()
 	}
 	else
 	{
-	 $("#noRental").prop("hidden",true);
-	 $("#hasCar").attr("hidden", false);
-	 $("#check_in").text("Check in date and town: " + rezervacija.rezervacijaVozila.datum_preuzimanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_preuzimanja.naziv);
-	 $("#check_out").text("Check out date and town: " + rezervacija.rezervacijaVozila.datum_vracanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_vracanja.naziv);
-	 $("#cost").text("Cost: $" + rezervacija.rezervacijaVozila.ukupna_cena);
+		$.get({
+			url: '/api/rents/getVozilo/' + rezervacija.rezervacijaVozila.id,
+			success: function(auto) {
+				vozilo = auto;
+				console.log('auto uspesno vraceno');
+				$("#noRental").prop("hidden",true);
+				$("#hasCar").attr("hidden", false);
+				$("#car").text("Car: " + vozilo.marka + " " + vozilo.model + " " + vozilo.naziv + " " + vozilo.tip);
+				$("#check_in").text("Check in date and town: " + rezervacija.rezervacijaVozila.datum_preuzimanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_preuzimanja.naziv);
+				$("#check_out").text("Check out date and town: " + rezervacija.rezervacijaVozila.datum_vracanja.substring(0, 10) + " " + rezervacija.rezervacijaVozila.mesto_vracanja.naziv);
+				$("#cost").text("Cost: $" + rezervacija.rezervacijaVozila.ukupna_cena);
+				
+				var today = new Date();
+		    	today.setHours(0, 0, 0);
+		    	
+		    	var preuz = rezervacija.rezervacijaVozila.datum_preuzimanja;
+		    	var date_pr = new Date(preuz);
+		    	var pravi_pr = date_pr.toString();
+		    	var date_preuz = new Date(pravi_pr);
+		    	date_preuz.setDate(date_preuz.getDate() - 2);
+		    	console.log(date_preuz.toString());
+		    	
+		    	var vraca = rezervacija.rezervacijaVozila.datum_vracanja;
+		    	var date_vr = new Date(vraca);
+		    	var pravi_vr = date_vr.toString();
+		    	var date_vracanja = new Date(pravi_vr);
+		    	
+		    	if(today<date_preuz)
+		    		{
+		    		$("#cancel_car").attr("hidden", false);
+		    		}
+		    	else
+		    		{
+		    		$("#cancel_car").attr("hidden", true);
+		    		}
+		    	
+		    	if(today>date_vracanja)
+		    		{
+		    		$("#rate_rentacar").attr("hidden", false);
+		    		$("#rate_car").attr("hidden", false);
+		    		}
+		    	else
+		    		{
+		    		$("#rate_rentacar").attr("hidden", true);
+		    		$("#rate_car").attr("hidden", true);
+		    		}
+
+			},
+			error : function(data){
+				alert('Greska prilikom vracanja auta.');
+			}
+		});
+		
+		$.get({
+			url: '/api/rents/getRent/' + rezervacija.rezervacijaVozila.id,
+			success: function(servis) {
+				rentacar_servis = servis;
+				console.log('rent uspesno vraceno');
+				
+				$("#servis").text("Rentacar: " + rentacar_servis.naziv + ", " + rentacar_servis.adresa.ulica + " " + rentacar_servis.adresa.broj + " " +rentacar_servis.adresa.grad.naziv);
+				
+
+			},
+			error : function(data){
+				alert('Greska prilikom vracanja renta.');
+			}
+		});
+	 
 	}
 }
 

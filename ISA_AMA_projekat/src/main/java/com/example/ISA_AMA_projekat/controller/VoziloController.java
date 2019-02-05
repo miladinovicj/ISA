@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ISA_AMA_projekat.model.Filijala;
+import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.VoziloService;
 
@@ -39,6 +41,8 @@ public class VoziloController {
 			return null; 	
 		}
 	}
+	
+	
 	
 	@PreAuthorize("hasRole('RENTADMIN')")
 	@RequestMapping(
