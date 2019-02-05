@@ -269,7 +269,7 @@
 						
 						<div style=" width: 100%; margin-top: 60px; margin-bottom: 60px; display: none;" id="div_edit_services">
 							<form action="#" id="change_price_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-								<div style="height: 121px; width: 30%; margin-top: 0%" class="search_item">
+								<div style="height: 121px; width: 20%; margin-top: 0%" class="search_item">
 									<div id="div_services" style="width:100%; margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px;">Additional services: </div>
 									<select name="select_services" onchange="javascript:changeSelection()" style=" width:100%; height: 46px; border-color: #31124A; border-style: solid; border-width: 2px;">
 									</select>
@@ -279,7 +279,7 @@
 									<br>
 								</div>
 				
-								<div style="height: 121px; width: 30%;  margin-top: 0%" class="search_item">
+								<div style="height: 121px; width: 20%;  margin-top: 0%" class="search_item">
 									<div style="margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px;">Price: </div>
 									<input style="border-color: #31124A; border-style: solid;" type="text" name="price_service" class="search_input" required="required">
 									<p id="error_price_service" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field price must contains only numbers.</p>
@@ -291,10 +291,22 @@
 									<br>
 								</div>
 								
+								<div style="height: 121px; width: 20%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px;">Discount (in %): </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="discount_service" class="search_input">
+									<p id="error_discount_service" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field price must contains only numbers.</p>
+									<br>
+									
+									<div class="new_additional_service" style="margin: 0; color: #4d0066; font-size: 10pt; font-weight: bold; margin-bottom: 10px; margin-top: 30px;">Discount (in %): </div>
+									<input style="border-color: #31124A; border-style: solid;" type="text" name="new_discount_service" class="new_additional_service search_input">
+									<p id="error_new_discount_service" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Field new price must contains only numbers.</p>
+									<br>
+								</div>
+								
 								<div style=" width: 24%; float: right; margin-top: 105px">
 									<input id="button_change_price" value="Change price" type="submit" style="width: 100%;" class="button search_button">
-									<button id="button_add_service" style="width: 100%; margin-top: 20px;" class="button search_button" onclick="javascript:addService()">Add new service</button>
-									<button id="button_hotel_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
+									<button type="button" id="button_add_service" style="width: 100%; margin-top: 20px;" class="button search_button" onclick="javascript:addService()">Add new service</button>
+									<button type="button" id="button_hotel_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
 								</div>
 							</form>
 						</div>
