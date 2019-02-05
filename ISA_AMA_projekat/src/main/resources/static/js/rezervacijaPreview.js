@@ -111,7 +111,7 @@ function getRezervacija()
             	$('input[name=check_out_hotel]').attr("min", flight.vremeSletanja.substring(0,10));
             	$('input[name=check_out_car]').attr("min", flight.vremeSletanja.substring(0,10));
             	
-            	if(rezervacija.korisnik.id != korisnik.id)
+            	if(!nalaziURezervaciji(rezervacija))
             	{
             		alert("Unauthorized.");
             		window.location.replace("index.html");
@@ -437,3 +437,17 @@ function odjava()
 	localStorage.clear();
 }
 
+
+function nalaziURezervaciji(rezervacija)
+{
+	retVal = false;
+	for( var i = 0 ; i < rezervacija.osobe.length ; i ++ )
+	{
+		osoba = rezervacija.osobe[i];
+		if(osoba.email == korisnik.email)
+		{
+			retVal = true;
+		}
+	}
+	return retVal;
+}

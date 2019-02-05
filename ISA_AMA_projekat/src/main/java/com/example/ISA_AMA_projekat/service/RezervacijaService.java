@@ -1,5 +1,6 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.repository.RezervacijaRepository;
+import com.example.ISA_AMA_projekat.repository.OsobaIzRezRepository;
 
 @Service
 public class RezervacijaService 
 {
 	@Autowired
 	private RezervacijaRepository rezervacijaRepository;
+	
 	
 	public Rezervacija save(Rezervacija rez)
 	{

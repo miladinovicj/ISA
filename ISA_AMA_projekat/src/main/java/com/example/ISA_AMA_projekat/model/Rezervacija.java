@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 
 @Entity
 public class Rezervacija implements Serializable{
@@ -148,8 +149,5 @@ public class Rezervacija implements Serializable{
 
 	public void setRezervacijaVozila(RezervacijaVozila rezervacijaVozila) {
 		this.rezervacijaVozila = rezervacijaVozila;
-	}
-	
-	
-	
+	}	
 }
