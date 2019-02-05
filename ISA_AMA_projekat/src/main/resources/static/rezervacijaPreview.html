@@ -50,13 +50,13 @@
 				<div class="row">
 					<div class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
 						<div class="logo_container">
-							<div class="logo"><a href="#"><img src="images/logo.png" alt="">where to</a></div>
+							<div class="logo"><a href="index.html"><img src="images/logo.png" alt="">where to</a></div>
 						</div>
 						<div style="margin-right:0%" class="main_nav_container ml-auto">
 							<ul class="main_nav_list">
 								<li class="main_nav_item"><a href="index.html">home</a></li>
-								<li class="main_nav_item"><a href="about.html">about us</a></li>
-								<li class="main_nav_item"><a href="offers.html">offers</a></li>
+								<li class="main_nav_item"><a href="profil.html">profile</a></li>
+								<li class="main_nav_item"><a onclick="javascript:odjava()" href="index.html">log out</a></li>
 							</ul>
 						</div>
 						<div class="content_search ml-lg-0 ml-auto">
@@ -114,7 +114,9 @@
 					<div id="defaultAirlineView" class="single_listing">
 						<br>
 						<br>
-						<h3><b>Flight Information: <button id="rate_flight" style="margin-left:7%; margin-bottom:0px; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" onclick="javascript:oceniLet();">Rate flight</button><button id="rate_avio" style="margin-left:7%; margin-bottom:0px; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" onclick="javascript:oceniAvio();">Rate aviocompany</button><button style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_let" onclick="javascript:otkaziLet();">Cancel flight</button>
+
+						<h3><b>Flight Information: <button id="rate_flight" style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;vertical-align:center" class="button search_button">Rate flight</button><button style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_let">Cancel flight</button>
+
 						</b></h3>
 						<br>
 						
@@ -142,6 +144,7 @@
 							<li><p id="flightDuration">Duration: </p></li>
 							<li><p id="flightDeparture">Departure time: </p></li>
 							<li><p id="flightArrival">Arrival time: </p></li>
+							<li><p id="flightReserver">Reservation made by: </p></li>
 						</ul>
 					
 						<br>
@@ -295,20 +298,13 @@
 
 	<!-- Copyright -->
 
-	<div class="copyright">
-		<div class="container">
+	<div  class="copyright">
+		<div  class="container">
 			<div class="row">
-				<div class="col-lg-3 order-lg-1 order-2  ">
-					<div class="copyright_content d-flex flex-row align-items-center">
-						<div><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
-					</div>
-				</div>
-				<div class="col-lg-9 order-lg-2 order-1">
-					<div class="footer_nav_container d-flex flex-row align-items-center justify-content-lg-end">
-						<div class="footer_nav">
-
+				<div style="content-align:center" class="col-lg-3 order-lg-1 order-2  ">
+					<div  class="copyright_content d-flex flex-row align-items-center">
+						<div style="margin-left:0%;">
+							&copy; Internet software architecture project by: Milica, Andrijana and Aleksa 
 						</div>
 					</div>
 				</div>

@@ -1,7 +1,8 @@
 var korisnik = null;
 
 
-$(document).ready(function(){
+$(document).ready(function()
+		{
 	token=localStorage.getItem('jwtToken');
 	
 	
@@ -33,7 +34,6 @@ $(document).ready(function(){
 					
 				}
 				
-				document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
 				document.getElementById("name_profile").value  = user.ime;
 				document.getElementById("lastname_profile").value  = user.prezime;
 				document.getElementById("email_profile").value  = user.email;
@@ -43,7 +43,7 @@ $(document).ready(function(){
 				
 				
 				
-				console.log(korisnik.rezervacijeUcestvovanje)
+				getRezervacije();
 			}
 			else
 			{
@@ -60,6 +60,12 @@ $(document).ready(function(){
 			window.location.href = 'index.html';
 			
 		}
+		
+
+		
+		
+		
+		
 	
 	});
 	
@@ -410,6 +416,82 @@ $(document).ready(function(){
 		}
 		
 	});
+
+		
+		
+
+
+	function getRezervacije()
+	{
+		$.get({
+			url: "/api/rezervacija/getAllReservations/" + korisnik.id,
+			success: function(data) 
+			{
+				$.each(data, function( index, value ) 
+				{				
+					insertReservation(value);
+				});
+				if(data.length > 0)
+				{
+					$("#noRezervations").prop("hidden", true);
+				}
+			},
+		});
+	}
+
+
+
+	function insertReservation(rezervacija)
+	{
+		var $reservationTemplate = $('#reservationTemplate');
+	    var $item = $($reservationTemplate.html())
+	    
+	    $item.find("#fromTo").text(rezervacija.let.odakle + " to " + rezervacija.let.dokle);
+	    
+	    $item.find("#previewButton").prop("id","previewButton" + rezervacija.id);
+	    $item.find("#creator").text("created by: " + rezervacija.korisnik.ime + " " + rezervacija.korisnik.prezime);
+	  
+
+	    
+	    if(potvrdjenaRez(rezervacija))
+	    {
+	    	 $item.find("#nepotvrdjeaRez").prop("hidden",true);
+	    }
+	    else
+	    {
+	    	$item.find("#nepotvrdjeaRez").prop("hidden",false);
+	    }
+	    
+	    var $reservationList = $("#reservationList");
+	    $reservationList.append($item);
+	    
+		   $("#previewButton"+rezervacija.id).click(function(){
+			   window.location.replace("/rezervacijaPreview.html?id="+rezervacija.id);
+		   });
+
+	}
+
+
+
+	function potvrdjenaRez(rezervacija)
+	{
+		retVal = true;
+		
+		for(var i = 0 ; i < rezervacija.osobe.length ; i++)
+		{
+			osoba = rezervacija.osobe[i];
+			if(osoba.email == korisnik.email)
+			{
+				console.log("nasao potvrdu.")
+				return osoba.potvrdjeno;
+			}
+		}
+		
+	}
+
+		
+		
+		
 });
 /*
 function refresh()
@@ -880,3 +962,6 @@ function changePassword()
     }
     
 }
+
+
+

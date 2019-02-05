@@ -2,6 +2,7 @@ package com.example.ISA_AMA_projekat.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,8 @@ import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.UserTokenState;
 import com.example.ISA_AMA_projekat.security.TokenUtils;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
+import com.example.ISA_AMA_projekat.service.OsobaIzRezService;
+import com.example.ISA_AMA_projekat.service.RezervacijaService;
 
 
 @RestController
@@ -53,6 +56,11 @@ public class AuthenticationController {
 	
 	@Autowired
 	private KorisnikService korisnikService;
+	
+	@Autowired
+	private OsobaIzRezService osobaIzRezService;
+	
+	
 	
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -158,7 +166,8 @@ public class AuthenticationController {
 	
 	
 	@RequestMapping(value = "/userprofile", method = RequestMethod.POST)
-	public ResponseEntity<?> getProfile(@RequestBody String token) {
+	public ResponseEntity<?> getProfile(@RequestBody String token) 
+	{
 
 		System.out.println("IMA TOKEN: " + token);
 		String email = tokenUtils.getUsernameFromToken(token);
@@ -167,7 +176,7 @@ public class AuthenticationController {
 	    Korisnik user = (Korisnik) this.userDetailsService.loadUserByUsername(email);
 	    
 	    System.out.println("Korisnik: " + user.getEmail());
-		
+	    		
 		return  new ResponseEntity<Korisnik>(user, HttpStatus.OK);
 	}
 	

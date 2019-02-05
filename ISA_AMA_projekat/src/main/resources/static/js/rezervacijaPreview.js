@@ -114,7 +114,7 @@ function getRezervacija()
             	$('input[name=check_out_hotel]').attr("min", flight.vremeSletanja.substring(0,10));
             	$('input[name=check_out_car]').attr("min", flight.vremeSletanja.substring(0,10));
             	
-            	if(rezervacija.korisnik.id != korisnik.id)
+            	if(!nalaziURezervaciji(rezervacija))
             	{
             		alert("Unauthorized.");
             		window.location.replace("index.html");
@@ -132,6 +132,7 @@ function getRezervacija()
 
 function initWindow()
 { 
+<<<<<<< HEAD
 	if(rezervacija.zavrsena==true)
 		{
 		$("#zavrsena_dugme").hide();
@@ -141,11 +142,14 @@ function initWindow()
 	
 	
 	//info o letu
+=======
+>>>>>>> ad8aa3e3f2278497fc1a381281311f434504efb2
 	$("#flightFrom").text("From: " + capitalize(flight.odakle));
 	$("#flightTo").text("To: " + capitalize(flight.dokle));
 	$("#flightDuration").text("Duration: " + flight.trajanje + " hours");
 	$("#flightDeparture").text("Departure time: " + processTime(flight.vremePoletanja));
 	$("#flightArrival").text("Arrival time: " + processTime(flight.vremeSletanja));
+	$("#flightReserver").text("Reservation made by: " + rezervacija.korisnik.ime + " " + rezervacija.korisnik.prezime);
 	
 
 	var vreme = flight.vremePoletanja;
@@ -447,6 +451,7 @@ function fillPasengerInfo()
     
 }
 
+
 function otkaziLet()
 {
 	$.ajax({
@@ -728,4 +733,23 @@ function oceniVozilo()
 	        });
 	    });
 	});
+
+function odjava()
+{
+	localStorage.clear();
+}
+
+
+function nalaziURezervaciji(rezervacija)
+{
+	retVal = false;
+	for( var i = 0 ; i < rezervacija.osobe.length ; i ++ )
+	{
+		osoba = rezervacija.osobe[i];
+		if(osoba.email == korisnik.email)
+		{
+			retVal = true;
+		}
+	}
+	return retVal;
 }

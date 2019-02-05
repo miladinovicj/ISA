@@ -1,4 +1,4 @@
-package com.example.ISA_AMA_projekat.controller;
+ package com.example.ISA_AMA_projekat.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -269,10 +269,26 @@ public class RezervacijaController
 		}
 	}
 	
+	@RequestMapping(
+			value = "/getAllReservations/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Rezervacija>> getRerzervationsForUser(@PathVariable("id") Integer userID)	
+	{
+		try
+		{
+			return new ResponseEntity<List<Rezervacija>>(osobaIzRezService.searchByUser(userID), HttpStatus.OK);
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("ispao");
+			return null; 	
+		}
+	}
+	
 	
 	public boolean sendRezervationInfo(Korisnik korisnik, Rezervacija rez, boolean friend)
 	{
-
 		//slanje emaila
 		try 
 		{	
@@ -290,6 +306,7 @@ public class RezervacijaController
 	}
 	
 	
+
 	@RequestMapping(
 			value = "/otkaziLet/{rez_id}/{sediste}",
 			method = RequestMethod.DELETE,
@@ -542,8 +559,6 @@ public class RezervacijaController
 		
 		return prosecna;
 	}
-	
-	
 	
 
 	

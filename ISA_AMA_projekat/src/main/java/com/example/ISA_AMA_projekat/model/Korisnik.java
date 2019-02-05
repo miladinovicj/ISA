@@ -90,7 +90,7 @@ public class Korisnik implements Serializable, UserDetails
 	private Set<Poziv> pozivi = new HashSet<Poziv>();
 	
 
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnikUcesnik")
+	@OneToMany(cascade={ALL}, fetch=FetchType.EAGER, mappedBy="korisnikUcesnik")
 	@JsonManagedReference (value = "korisnik_ucestvovanje")
 	private List<OsobaIzRez> rezervacijeUcestvovanje = new ArrayList<OsobaIzRez>();
 
