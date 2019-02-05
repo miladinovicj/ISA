@@ -178,9 +178,30 @@
 						<h3><b>Rental Car Reservation:</b></h3>
 						<br>
 						<br>
-						<div hidden id="noRental">
+						<div id="noRental">
 						    <p style="margin-left:auto; margin-right:auto; align-content: center;text-align: center;" >No rental reservations have been made.</p>
-							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" id="" class="button search_button">RENT A CAR<span></span><span></span><span></span></button>
+							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:rezervisiVozilo();">RENT A CAR<span></span><span></span><span></span></button>
+							</div>
+							<div id="hocuVozilo" hidden="true" style="display:inline;" >
+							<form id="rentacar" style="align:center;">
+							<div  style="width: 20%; height: 40px; margin-left:40%;" class="search_item">
+										<div style="color:black;">check out date</div>
+										<input type="date" class="check_out search_input"  name="check_out_car" placeholder="dd/mm/yyyy" required="required" style="border-style: solid;">
+									</div>
+									<div class="search_item" style="width: 20%; height: 40px; margin-top: 50px; margin-left:40%;" >
+										<div style="color:black;">check out town</div>
+										<input type="text"  name="check_out_town" class="destination rental_name search_input" required="required" style="border-style: solid;">
+									</div>
+									<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" >Search<span></span><span></span><span></span></button>
+						
+							</form>
+							</div>
+							<div id="hasCar" hidden="true">
+							<ul style="list-style-type:circle; margin-left:15px">
+							<li><p id="check_in">Check in date and town: </p></li>
+							<li><p id="check_out">Check out date and town: </p></li>
+							<li><p id="cost">Cost: $</p></li>
+						</ul>
 						</div>
 						
 					</div>
@@ -226,6 +247,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="plugins/Isotope/isotope.pkgd.min.js"></script>
 <script src="plugins/easing/easing.js"></script>
 <script src="js/offers_custom.js"></script>
+
 
 
 

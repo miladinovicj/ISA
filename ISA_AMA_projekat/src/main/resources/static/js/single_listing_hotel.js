@@ -43,6 +43,7 @@ function showHotel(hotel)
     $("#title_hotel").text(hotel.naziv);
     $("#hotel_name").text(hotel.naziv);
     $('#hotel_info_text').text(hotel.promotivni_opis);
+    $('#average_rating_hotel').text(hotel.prosecna_ocena);
     $('#adresa_hotel').text(hotel.adresa.ulica + ' ' + hotel.adresa.broj + ', ' + hotel.adresa.grad.naziv);
     
     if(hotel.sobe.length == 0)
@@ -203,7 +204,7 @@ function addSoba(soba)
 		temp.content.getElementById("cena_nocenja").innerHTML = '$' + soba.cena_nocenja + '/night';
 	}
 	
-	temp.content.getElementById("prosecna_ocena").innerHTML = soba.prosecna_ocena;
+	temp.content.getElementById("prosecna_ocena").innerHTML = 'Rating: ' + soba.prosecna_ocena;
 	
 	a = document.importNode(div, true);
     document.getElementById("ubaci_sobe_template").appendChild(a);
@@ -429,7 +430,7 @@ function addSpecialPrice(soba)
 	broj_sobasp = broj_sobasp + 1;
 	temp.content.getElementById("broj_krevetasp").innerHTML = broj_kreveta_string + '\r\n' + soba.opis;
 	
-	temp.content.getElementById("prosecna_ocenasp").innerHTML = soba.prosecna_ocena;
+	temp.content.getElementById("prosecna_ocenasp").innerHTML = 'Rating: ' + soba.prosecna_ocena;
 	
 	/*
 	for (let popust of soba.popusti) 

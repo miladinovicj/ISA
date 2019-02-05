@@ -36,4 +36,9 @@ public class RezervacijaService
 		return rez;
 	}
 	
+	public void updateRezVozila(Integer id_rezVozila, Integer id_rez)
+	{
+		rezervacijaRepository.updateRezVozila(id_rezVozila, id_rez);
+	}
+	
 }
