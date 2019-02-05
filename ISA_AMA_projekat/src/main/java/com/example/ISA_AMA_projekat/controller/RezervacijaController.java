@@ -1,4 +1,4 @@
-package com.example.ISA_AMA_projekat.controller;
+ package com.example.ISA_AMA_projekat.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,16 +18,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Let;
 import com.example.ISA_AMA_projekat.model.OsobaIzRez;
+import com.example.ISA_AMA_projekat.model.Rating;
+import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
+import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
+import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
+import com.example.ISA_AMA_projekat.model.Soba;
+import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.security.TokenUtils;
+import com.example.ISA_AMA_projekat.service.AviokompanijaService;
 import com.example.ISA_AMA_projekat.service.EmailService;
+import com.example.ISA_AMA_projekat.service.HotelService;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
 import com.example.ISA_AMA_projekat.service.LetService;
 import com.example.ISA_AMA_projekat.service.OsobaIzRezService;
+import com.example.ISA_AMA_projekat.service.RatingService;
+import com.example.ISA_AMA_projekat.service.RentacarService;
+import com.example.ISA_AMA_projekat.service.RezervacijaHotelService;
 import com.example.ISA_AMA_projekat.service.RezervacijaService;
+import com.example.ISA_AMA_projekat.service.RezervacijaVozilaService;
+import com.example.ISA_AMA_projekat.service.SobaService;
+import com.example.ISA_AMA_projekat.service.VoziloService;
 
 @RestController
 @RequestMapping(value="api/rezervacija")
@@ -47,13 +62,38 @@ public class RezervacijaController
 	private RezervacijaService rezervacijaService;
 	
 	@Autowired
+	private RezervacijaHotelService rezervacijaHotelService;
+	
+	@Autowired
+	private RezervacijaVozilaService rezervacijaVozilaService;
+	
+	@Autowired
 	private KorisnikService korisnikService;
+	
+	@Autowired
+	private RatingService ratingService;
+	
+
+	@Autowired
+	private HotelService hotelService;
+	
+	@Autowired
+	private VoziloService voziloService;
+	
+	@Autowired
+	private RentacarService rentacarService;
+	
+	@Autowired
+	private SobaService sobaService;
 	
 	@Autowired
 	private OsobaIzRezService osobaIzRezService;
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private AviokompanijaService avioServis;
 	
 	
 	@RequestMapping(
@@ -146,6 +186,7 @@ public class RezervacijaController
 		//settovanje ostalih rezervacija u okviru ove na null
 		rezervacija.setRezervacijaVozila(null);
 		rezervacija.setRezevacijaHotel(null);
+		rezervacija.setZavrsena(false);
 		
 		Rezervacija rez = rezervacijaService.save(rezervacija);
 		System.out.println("Upisana rezervacija id: " + rez.getId());
@@ -228,10 +269,26 @@ public class RezervacijaController
 		}
 	}
 	
+	@RequestMapping(
+			value = "/getAllReservations/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Rezervacija>> getRerzervationsForUser(@PathVariable("id") Integer userID)	
+	{
+		try
+		{
+			return new ResponseEntity<List<Rezervacija>>(osobaIzRezService.searchByUser(userID), HttpStatus.OK);
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("ispao");
+			return null; 	
+		}
+	}
+	
 	
 	public boolean sendRezervationInfo(Korisnik korisnik, Rezervacija rez, boolean friend)
 	{
-
 		//slanje emaila
 		try 
 		{	
@@ -247,5 +304,262 @@ public class RezervacijaController
 
 		return true;
 	}
+	
+	
+
+	@RequestMapping(
+			value = "/otkaziLet/{rez_id}/{sediste}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Rezervacija deleteRez(@PathVariable("rez_id") Integer rez_id, @PathVariable("sediste") Integer sediste)
+	{
+		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		rezervacijaService.deleteRez(rez);
+		letService.deleteZauzetoSediste(rez.getLet().getId(), sediste);
+		System.out.println("HOTEL: " + rez.getRezevacijaHotel());
+		if(rez.getRezevacijaHotel()!=null)
+		{
+			System.out.println("Ima hotel rez");
+			RezervacijaHotel rh = rez.getRezevacijaHotel();
+			rezervacijaHotelService.deleteSobaRez(rh.getId());
+			rezervacijaHotelService.deleteRezH2(rh.getId());;
+		
+		}
+		
+		if(rez.getRezervacijaVozila()!=null)
+		{
+			System.out.println("Ima vozilo rez");
+		RezervacijaVozila rv = rez.getRezervacijaVozila();
+		rezervacijaVozilaService.deleteVoziloRez(rv.getId());
+		rezervacijaVozilaService.deleteRezV2(rv.getId());
+		
+		}
+		
+	
+		return rez;
+		
+	}
+	
+	@RequestMapping(
+			value = "/otkaziHotel/{rez_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public RezervacijaHotel deleteRezHotel(@PathVariable("rez_id") Integer rez_id)
+	{
+		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		RezervacijaHotel rh = rez.getRezevacijaHotel();
+		double cena_rez = rez.getCena();
+		double cena_rh=rh.getUkupna_cena();
+		double nova_cena = cena_rez-cena_rh;
+		rezervacijaService.updateCenaRez(nova_cena, rez.getId());
+		rezervacijaService.updateHotelId(rez.getId());
+		rezervacijaHotelService.deleteSobaRez(rh.getId());
+		rezervacijaHotelService.deleteRezH2(rh.getId());;
+		
+	
+		return rh;
+		
+	}
+	
+	@RequestMapping(
+			value = "/otkaziAuto/{rez_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public RezervacijaVozila deleteRezAuto(@PathVariable("rez_id") Integer rez_id)
+	{
+		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		RezervacijaVozila rv = rez.getRezervacijaVozila();
+		double cena_rez = rez.getCena();
+		double cena_rv=rv.getUkupna_cena();
+		double nova_cena = cena_rez-cena_rv;
+		rezervacijaService.updateCenaRez(nova_cena, rez.getId());
+		rezervacijaService.updateVoziloId(rez.getId());
+		rezervacijaVozilaService.deleteVoziloRez(rv.getId());
+		rezervacijaVozilaService.deleteRezV2(rv.getId());
+		
+		
+	
+		return rv;
+		
+	}
+	
+	@RequestMapping(
+			value = "/zavrsi/{rez_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Rezervacija zavrsiRez(@PathVariable("rez_id") Integer rez_id)
+	{
+		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		
+		rezervacijaService.zavrsiRez(rez.getId());
+		
+	
+		return rez;
+		
+	}
+	
+	@RequestMapping(
+			value = "/ocenaLeta/{aktivne}/{let_id}/{korisnik_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double oceniAvio(@PathVariable("aktivne") int ocena, @PathVariable("let_id") Integer let_id, @PathVariable("korisnik_id") Integer korisnik_id)
+	{
+		Rating rating = new Rating();
+		rating.setOcena(ocena);
+		Korisnik korisnik = korisnikService.findById(korisnik_id).get();
+		rating.setKorisnik(korisnik);
+		Let l = letService.findById(let_id).get();
+		rating.setLet(l);
+		Rating sacuvan = ratingService.save(rating);
+		
+		List<Integer> ocene = ratingService.oceneLeta(let_id);
+		int zbir = 0;
+		for(int i=0; i<ocene.size();i++)
+			zbir += ocene.get(i);
+		
+		double prosecna = (double) zbir/ocene.size();
+		
+		letService.updateProsecna(prosecna, let_id);
+		
+		return prosecna;
+	}
+	
+	
+	@RequestMapping(
+			value = "/ocenaAvio/{aktivne}/{let_id}/{korisnik_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double oceniLet(@PathVariable("aktivne") int ocena, @PathVariable("let_id") Integer let_id, @PathVariable("korisnik_id") Integer korisnik_id)
+	{
+		Rating rating = new Rating();
+		rating.setOcena(ocena);
+		Korisnik korisnik = korisnikService.findById(korisnik_id).get();
+		rating.setKorisnik(korisnik);
+		Let l = letService.findById(let_id).get();
+		Aviokompanija avio = l.getAviokompanija();
+		rating.setAviokompanija(avio);
+		Rating sacuvan = ratingService.save(rating);
+		
+		List<Integer> ocene = ratingService.oceneAvio(avio.getId());
+		int zbir = 0;
+		for(int i=0; i<ocene.size();i++)
+			zbir += ocene.get(i);
+		
+		double prosecna = (double) zbir/ocene.size();
+		
+		avioServis.updateProsecnaAvio(prosecna, avio.getId());
+		
+		return prosecna;
+	}
+	
+	
+	@RequestMapping(
+			value = "/ocenaHotel/{aktivne}/{hotel_id}/{korisnik_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double oceniHotel(@PathVariable("aktivne") int ocena, @PathVariable("hotel_id") Integer hotel_id, @PathVariable("korisnik_id") Integer korisnik_id)
+	{
+		Rating rating = new Rating();
+		rating.setOcena(ocena);
+		Korisnik korisnik = korisnikService.findById(korisnik_id).get();
+		rating.setKorisnik(korisnik);
+		Hotel h = hotelService.findById(hotel_id).get();
+		rating.setHotel(h);
+		Rating sacuvan = ratingService.save(rating);
+		
+		List<Integer> ocene = ratingService.oceneHotel(h.getId());
+		int zbir = 0;
+		for(int i=0; i<ocene.size();i++)
+			zbir += ocene.get(i);
+		
+		double prosecna = (double) zbir/ocene.size();
+		
+		hotelService.updateProsecnaHotel(prosecna, h.getId());
+		
+		return prosecna;
+	}
+	
+	
+	@RequestMapping(
+			value = "/ocenaSoba/{aktivne}/{soba_id}/{korisnik_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double oceniSobu(@PathVariable("aktivne") int ocena, @PathVariable("soba_id") Integer soba_id, @PathVariable("korisnik_id") Integer korisnik_id)
+	{
+		Rating rating = new Rating();
+		rating.setOcena(ocena);
+		Korisnik korisnik = korisnikService.findById(korisnik_id).get();
+		rating.setKorisnik(korisnik);
+		Soba s =sobaService.findById(soba_id).get();
+		rating.setSoba(s);
+		Rating sacuvan = ratingService.save(rating);
+		
+		List<Integer> ocene = ratingService.oceneSoba(s.getId());
+		int zbir = 0;
+		for(int i=0; i<ocene.size();i++)
+			zbir += ocene.get(i);
+		
+		double prosecna = (double) zbir/ocene.size();
+		
+		sobaService.updateProsecnaSoba(prosecna, s.getId());
+		
+		return prosecna;
+	}
+	
+	
+	@RequestMapping(
+			value = "/ocenaRent/{aktivne}/{rent_id}/{korisnik_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double oceniRent(@PathVariable("aktivne") int ocena, @PathVariable("rent_id") Integer rent_id, @PathVariable("korisnik_id") Integer korisnik_id)
+	{
+		Rating rating = new Rating();
+		rating.setOcena(ocena);
+		Korisnik korisnik = korisnikService.findById(korisnik_id).get();
+		rating.setKorisnik(korisnik);
+		RentacarServis rs =rentacarService.findById(rent_id).get();
+		rating.setRentacar(rs);
+		Rating sacuvan = ratingService.save(rating);
+		
+		List<Integer> ocene = ratingService.oceneRent(rs.getId());
+		int zbir = 0;
+		for(int i=0; i<ocene.size();i++)
+			zbir += ocene.get(i);
+		
+		double prosecna = (double) zbir/ocene.size();
+		
+		rentacarService.updateProsecnaRent(prosecna, rs.getId());
+		
+		return prosecna;
+	}
+	
+	
+	@RequestMapping(
+			value = "/ocenaVozilo/{aktivne}/{car_id}/{korisnik_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public double oceniVozilo(@PathVariable("aktivne") int ocena, @PathVariable("car_id") Integer car_id, @PathVariable("korisnik_id") Integer korisnik_id)
+	{
+		Rating rating = new Rating();
+		rating.setOcena(ocena);
+		Korisnik korisnik = korisnikService.findById(korisnik_id).get();
+		rating.setKorisnik(korisnik);
+		Vozilo v =voziloService.findById(car_id).get();
+		rating.setVozilo(v);
+		Rating sacuvan = ratingService.save(rating);
+		
+		List<Integer> ocene = ratingService.oceneVozilo(v.getId());
+		int zbir = 0;
+		for(int i=0; i<ocene.size();i++)
+			zbir += ocene.get(i);
+		
+		double prosecna = (double) zbir/ocene.size();
+		
+		voziloService.updateProsecnaVozilo(prosecna, v.getId());
+		
+		return prosecna;
+	}
+	
+
 	
 }

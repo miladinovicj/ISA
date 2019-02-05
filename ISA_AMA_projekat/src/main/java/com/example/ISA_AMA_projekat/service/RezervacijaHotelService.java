@@ -56,4 +56,19 @@ public class RezervacijaHotelService {
 	public void updateDatumRez(Date datum_rez, Integer id){
 		rezervacijaHotelRepository.updateDatumRez(datum_rez, id);
 	}
+	
+	public void deleteRezH(RezervacijaHotel rh)
+	{
+		rezervacijaHotelRepository.delete(rh);
+	}
+	
+	public void deleteRezH2(Integer id)
+	{
+		rezervacijaHotelRepository.deleteRezH(id);
+	}
+	
+	public void deleteSobaRez(Integer id)
+	{
+		rezervacijaHotelRepository.deleteSobaRez(id);
+	}
 }

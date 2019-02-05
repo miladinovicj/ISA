@@ -34,7 +34,7 @@ public class Hotel {
 	@Column(nullable = true)
 	private String promotivni_opis;
 	
-	@Column
+	@Column(nullable = true)
 	private double prosecna_ocena;
 	
 	@Column(nullable = true)
@@ -48,7 +48,7 @@ public class Hotel {
 	private Set<Soba> sobe = new HashSet<Soba>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Rating> ocene = new HashSet<Rating>();
+	private Set<Rating> rejtinzi = new HashSet<Rating>();
 	
 	public Hotel() {
 		super();
@@ -110,12 +110,12 @@ public class Hotel {
 		this.sobe = sobe;
 	}
 
-	public Set<Rating> getOcene() {
-		return ocene;
+	public Set<Rating> getRejtinzi() {
+		return rejtinzi;
 	}
 
-	public void setOcene(Set<Rating> ocene) {
-		this.ocene = ocene;
+	public void setRejtinzi(Set<Rating> ocene) {
+		this.rejtinzi = ocene;
 	}
 	
 

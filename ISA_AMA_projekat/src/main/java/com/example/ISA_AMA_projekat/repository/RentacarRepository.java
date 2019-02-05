@@ -33,4 +33,9 @@ public interface RentacarRepository extends JpaRepository<RentacarServis, Intege
 		@Transactional
 		@Query("update RentacarServis rs set rs.naziv = ?1 , rs.adresa.id = ?2 , rs.promotivni_opis = ?3 where rs.id = ?4")
 		public void updateServis(String naziv, Integer adresa_id, String promotivni_opis,  Integer id);
+		
+		@Modifying
+		@Transactional
+		@Query(value = "update rentacar_servis rs set rs.prosecna_ocena=?1 where rs.id=?2", nativeQuery = true)
+		public void updateProsecnaRent(double prosecna_ocena, Integer rent_id);
 }

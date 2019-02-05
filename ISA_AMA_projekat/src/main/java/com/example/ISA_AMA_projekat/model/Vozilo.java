@@ -46,7 +46,7 @@ public class Vozilo {
 	@Column
 	private double cena_dan;
 	
-	@Column
+	@Column(nullable = true)
 	private double prosecna_ocena;
 	
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
@@ -58,7 +58,7 @@ public class Vozilo {
 	private Set<RezervacijaVozila> rezervacije = new HashSet<RezervacijaVozila>();
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Rating> ocene = new HashSet<Rating>();
+	private Set<Rating> rejtinzi = new HashSet<Rating>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Popust> popusti = new HashSet<Popust>();
@@ -132,15 +132,15 @@ public class Vozilo {
 
 
 
-	public Set<Rating> getOcene() {
-		return ocene;
+	public Set<Rating> getRejtinzi() {
+		return rejtinzi;
 	}
 
 
 
 
-	public void setOcene(Set<Rating> ocene) {
-		this.ocene = ocene;
+	public void setRejtinzi(Set<Rating> ocene) {
+		this.rejtinzi = ocene;
 	}
 
 

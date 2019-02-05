@@ -38,6 +38,9 @@ public class VoziloService {
 	}
 	
 	
-	
+	public void updateProsecnaVozilo(double prosecna_ocena, Integer vozilo_id)
+	{
+		voziloRepository.updateProsecnaVozilo(prosecna_ocena, vozilo_id);
+	}
 
 }

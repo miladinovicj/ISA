@@ -481,7 +481,6 @@ $(document).ready(function()
 		this.brojPasosa = broj_pasosa;
 		this.prtljag = prtljag;
 		this.sediste = sediste;
-		
 	}
 
 

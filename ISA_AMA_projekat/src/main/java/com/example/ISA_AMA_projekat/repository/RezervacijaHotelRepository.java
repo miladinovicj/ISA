@@ -46,4 +46,15 @@ public interface RezervacijaHotelRepository extends JpaRepository<RezervacijaHot
 	@Transactional
 	@Query("update RezervacijaHotel rez set rez.datum_rezervacije = ?1 where rez.id = ?2")
 	public void updateDatumRez(Date datum_rez,  Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "delete from rezervacija_hotel where rezervacija_hotel.id=?1", nativeQuery = true)
+	void deleteRezH(Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "delete from soba_rezervacije where soba_rezervacije.rezervacije_id=?1", nativeQuery = true)
+	void deleteSobaRez(Integer id);
+	
 }

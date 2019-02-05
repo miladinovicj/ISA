@@ -1,4 +1,5 @@
 package com.example.ISA_AMA_projekat.repository;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,21 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Intege
 	@Transactional
 	@Query(value = "update Rezervacija r set r.cena = ?1 where r.id = ?2", nativeQuery = true)
 	public void updateCenaRez(double cena, Integer id_rez);
+	
+
+	@Modifying
+	@Transactional
+	@Query(value = "update Rezervacija r set r.rezevacija_hotel_id = null where r.id = ?1", nativeQuery = true)
+	public void updateHotelId( Integer id_rez);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update Rezervacija r set r.rezervacija_vozila_id = null where r.id = ?1", nativeQuery = true)
+	public void updateVoziloId( Integer id_rez);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update Rezervacija r set r.zavrsena = true where r.id = ?1", nativeQuery = true)
+	public void zavrsiRez( Integer id_rez);
+
 }

@@ -1,7 +1,8 @@
 var korisnik = null;
 
 
-$(document).ready(function(){
+$(document).ready(function()
+		{
 	token=localStorage.getItem('jwtToken');
 	
 	
@@ -33,7 +34,6 @@ $(document).ready(function(){
 					
 				}
 				
-				document.getElementById("naslov").innerHTML = 'My profile <br/>' + user.ime + ' ' + user.prezime;
 				document.getElementById("name_profile").value  = user.ime;
 				document.getElementById("lastname_profile").value  = user.prezime;
 				document.getElementById("email_profile").value  = user.email;
@@ -43,7 +43,7 @@ $(document).ready(function(){
 				
 				
 				
-				console.log(korisnik.rezervacijeUcestvovanje)
+				getRezervacije();
 			}
 			else
 			{
@@ -60,6 +60,12 @@ $(document).ready(function(){
 			window.location.href = 'index.html';
 			
 		}
+		
+
+		
+		
+		
+		
 	
 	});
 	
@@ -412,7 +418,6 @@ $(document).ready(function(){
 	});
 	
 	
-	
 	$('#form_discount').submit(function(event) {
 		console.log('form_discount submit');
 		event.preventDefault();
@@ -439,33 +444,80 @@ $(document).ready(function(){
 			}
 		});
 	});
-});
-/*
-function refresh()
-{
-	$.post({
-		url: "/auth/refresh",
-		headers: 'Authorization',
-		contentType: 'application/json',
-		  
-		success: function(res) {
-			if(res!="" && res.accessToken != null)
+
+
+
+	function getRezervacije()
+	{
+		$.get({
+			url: "/api/rezervacija/getAllReservations/" + korisnik.id,
+			success: function(data) 
 			{
-				localStorage.setItem('jwtToken', res.accessToken);
-			}
-			else
-			{
-				localStorage.removeItem('jwtToken');
-			}
-		},
+				$.each(data, function( index, value ) 
+				{				
+					insertReservation(value);
+				});
+				if(data.length > 0)
+				{
+					$("#noRezervations").prop("hidden", true);
+				}
+			},
+		});
+	}
+
+
+
+	function insertReservation(rezervacija)
+	{
+		var $reservationTemplate = $('#reservationTemplate');
+	    var $item = $($reservationTemplate.html())
+	    
+	    $item.find("#fromTo").text(rezervacija.let.odakle + " to " + rezervacija.let.dokle);
+	    
+	    $item.find("#previewButton").prop("id","previewButton" + rezervacija.id);
+	    $item.find("#creator").text("created by: " + rezervacija.korisnik.ime + " " + rezervacija.korisnik.prezime);
+	  
+
+	    
+	    if(potvrdjenaRez(rezervacija))
+	    {
+	    	 $item.find("#nepotvrdjeaRez").prop("hidden",true);
+	    }
+	    else
+	    {
+	    	$item.find("#nepotvrdjeaRez").prop("hidden",false);
+	    }
+	    
+	    var $reservationList = $("#reservationList");
+	    $reservationList.append($item);
+	    
+		   $("#previewButton"+rezervacija.id).click(function(){
+			   window.location.replace("/rezervacijaPreview.html?id="+rezervacija.id);
+		   });
+
+	}
+
+
+
+	function potvrdjenaRez(rezervacija)
+	{
+		retVal = true;
 		
-		error: function() {
-			console.log('greska prilikom refresh-ovanja tokena');
+		for(var i = 0 ; i < rezervacija.osobe.length ; i++)
+		{
+			osoba = rezervacija.osobe[i];
+			if(osoba.email == korisnik.email)
+			{
+				console.log("nasao potvrdu.")
+				return osoba.potvrdjeno;
+			}
 		}
-	
-	});
-}
-*/
+		
+	}
+
+		
+});
+
 function loginAgain(email, pass)
 {
 	$.post({
@@ -548,44 +600,6 @@ function back()
     window.scrollBy(0, -100);
 }
 
-/*
-function add()
-{
-	console.log('[profil.js: add()]');
-	
-	name = $('input[name="new_name"]').val();
-	city = $('input[name="new_city"]').val();
-	street = $('input[name="new_street"]').val();
-	number = $('input[name="new_street_number"]').val();
-	latitude = $('input[name="new_latitude"]').val();
-	longitude = $('input[name="new_longitude"]').val();
-	description = $('input[name="new_description"]').val();
-	
-	$.get({
-		url: "/api/address/checkCity/" + city,
-		  
-		success: function(data) {
-			if(data == null || data == "")
-			{
-				console.log('nije pronadjen grad');
-				newCity(city);
-			}
-			else
-			{
-				console.log('pronadjen grad: ' + data.naziv);
-				checkAddress(data);
-			}
-			window.location.search='';
-		},
-		
-		error: function() {
-			alert('Error with loading city');
-		}
-	
-	});
-	
-}
-*/
 
 function newCity(city)
 {
@@ -913,18 +927,9 @@ function changePassword()
 	console.log('changing password');
 	
 	$('#passChange').show();
-	//$('#passChange').attr('pomoc', 'pomoc');
 	$('input[value=edit]').hide();
 	
 	var $passChange = $('#passChange');
-	/*
-    if ($passChange.attr('pomoc')) {
-
-        $("#old_password_profile").prop('required', false);
-        $("#new_password_profile").prop('required', false);
-        $("#confirm_new_password_profile").prop('required', false);
-        
-    } else {*/
 	if(!$passChange.attr('pomoc'))
 	{
     	$passChange.attr('pomoc', 'pomoc');
@@ -935,3 +940,6 @@ function changePassword()
     }
     
 }
+
+
+

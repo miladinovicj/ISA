@@ -47,11 +47,11 @@ public class RentacarServis {
 	@ManyToMany
 	private Set<Usluga> usluge = new HashSet<Usluga>();
 	
-	@Column
+	@Column(nullable = true)
 	private double prosecna_ocena;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Rating> ocene = new HashSet<Rating>();
+	private Set<Rating> rejtinzi = new HashSet<Rating>();
 	
 	
 	
@@ -128,12 +128,12 @@ public class RentacarServis {
 		this.filijale = filijale;
 	}
 
-	public Set<Rating> getOcene() {
-		return ocene;
+	public Set<Rating> getRejtinzi() {
+		return rejtinzi;
 	}
 
-	public void setOcene(Set<Rating> ocene) {
-		this.ocene = ocene;
+	public void setRejtinzi(Set<Rating> ocene) {
+		this.rejtinzi = ocene;
 	}
 	
 	public Integer getId_admin() {

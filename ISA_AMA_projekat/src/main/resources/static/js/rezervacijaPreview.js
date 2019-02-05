@@ -5,10 +5,13 @@ var vozilo = null;
 var rentacar_servis=null;
 var soba=null;
 var hotel=null;
+var sediste=null;
 
 $(document).ready(function(){
 	
+	
 	getKorisnik();
+	
 	
 	$('form#rentacar').submit(function(event){
 		event.preventDefault();
@@ -111,7 +114,7 @@ function getRezervacija()
             	$('input[name=check_out_hotel]').attr("min", flight.vremeSletanja.substring(0,10));
             	$('input[name=check_out_car]').attr("min", flight.vremeSletanja.substring(0,10));
             	
-            	if(rezervacija.korisnik.id != korisnik.id)
+            	if(!nalaziURezervaciji(rezervacija))
             	{
             		alert("Unauthorized.");
             		window.location.replace("index.html");
@@ -129,13 +132,22 @@ function getRezervacija()
 
 function initWindow()
 { 
-	//info o letu
+	if(rezervacija.zavrsena==true)
+		{
+		$("#zavrsena_dugme").hide();
+		$("#bookCar").hide();
+		$("#bookHotel").hide();
+		}
+	
+	
 	$("#flightFrom").text("From: " + capitalize(flight.odakle));
 	$("#flightTo").text("To: " + capitalize(flight.dokle));
 	$("#flightDuration").text("Duration: " + flight.trajanje + " hours");
 	$("#flightDeparture").text("Departure time: " + processTime(flight.vremePoletanja));
 	$("#flightArrival").text("Arrival time: " + processTime(flight.vremeSletanja));
+	$("#flightReserver").text("Reservation made by: " + rezervacija.korisnik.ime + " " + rezervacija.korisnik.prezime);
 	
+
 	var vreme = flight.vremePoletanja;
 	var date = new Date(vreme);
 	var pravi = date.toString();
@@ -160,13 +172,15 @@ function initWindow()
 		$('#cancel_let').attr("hidden", true);
 		}
 	
-	if(today>date_sletanja)
+	if(today>date_sletanja && rezervacija.zavrsena==true)
 		{
 		$('#rate_flight').attr("hidden", false);
+		$('#rate_avio').attr("hidden", false);
 		}
 	else
 		{
 		$('#rate_flight').attr("hidden", true);
+		$('#rate_avio').attr("hidden", true);
 		}
 	
 	fillPasengerInfo();
@@ -222,13 +236,23 @@ function initWindow()
 		 $("#check_in_hotel_res").text("Check in date: " + date_check_in.toString().substring(0, 10));
 		 $("#check_out_hotel_res").text("Check out date: " + date_check_out.toString().substring(0, 10));
 		 
-		 for(var i = 0, size = rezervacija.rezevacijaHotel.usluge.length; i < size ; i++)
+		 if(rezervacija.rezevacijaHotel.usluge.length == 0)
 		 {
-			 let usluga = rezervacija.rezevacijaHotel.usluge[i];
-		
-			var li = $('<li><p>' + usluga.naziv + '</p></li>');
-	 		$('#included_services').append(li);
+			 $('#services_included_p').hide();
 		 }
+		 else
+		 {
+			 $('#services_included_p').show();
+			 
+			 for(var i = 0, size = rezervacija.rezevacijaHotel.usluge.length; i < size ; i++)
+			 {
+				 let usluga = rezervacija.rezevacijaHotel.usluge[i];
+			
+				var li = $('<li><p>' + usluga.naziv + '</p></li>');
+		 		$('#included_services').append(li);
+			 }
+		 }
+		 
 		 
 		 
 		//var li = $('<li><p>Cost: $' + rezervacija.rezevacijaHotel.ukupna_cena + '</p></li>');
@@ -259,7 +283,7 @@ function initWindow()
 	    		$("#cancel_hotel").attr("hidden", true);
 	    		}
 	    	
-	    	if(today_h>date_odlaska)
+	    	if(today_h>date_odlaska && rezervacija.zavrsena==true)
 	    		{
 	    		$("#rate_hotel").attr("hidden", false);
 	    		$("#rate_room").attr("hidden", false);
@@ -328,7 +352,7 @@ function initWindow()
 		    		$("#cancel_car").attr("hidden", true);
 		    		}
 		    	
-		    	if(today>date_vracanja)
+		    if(today>date_vracanja && rezervacija.zavrsena==true)
 		    		{
 		    		$("#rate_rentacar").attr("hidden", false);
 		    		$("#rate_car").attr("hidden", false);
@@ -434,6 +458,7 @@ function fillPasengerInfo()
     	$item.find("#itemPass").text(osoba.brojPasosa);
     	$item.find("#itemLug").text(prtljag);
     	$item.find("#itemSeat").text(osoba.sediste);
+    	sediste=osoba.sediste;
     	$item.find("#itemConfirmed").text(potvrdjeno);
 
     	$putniciTabela.append($item);
@@ -444,3 +469,306 @@ function fillPasengerInfo()
     
 }
 
+
+function otkaziLet()
+{
+	$.ajax({
+        type: 'DELETE',
+        url: 'api/rezervacija/otkaziLet/' + rezervacija.id + '/' + sediste,
+        contentType: 'application/json',
+        success: function (let)
+		{
+            alert('Flight successfully canceled!');
+            window.location.href="index.html";
+		}
+    });
+}
+
+function otkaziHotel()
+{
+	$.ajax({
+        type: 'DELETE',
+        url: 'api/rezervacija/otkaziHotel/' + rezervacija.id,
+        contentType: 'application/json',
+        success: function (hotel)
+		{
+            alert('Hotel reservation successfully canceled!');
+            window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+		}
+    });
+}
+
+
+function otkaziAuto()
+{
+	$.ajax({
+        type: 'DELETE',
+        url: 'api/rezervacija/otkaziAuto/' + rezervacija.id,
+        contentType: 'application/json',
+        success: function (auto)
+		{
+            alert('Car reservation successfully canceled!');
+            window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+		}
+    });
+}
+
+function zavrsiRezervaciju()
+{
+	$("#zavrsena_dugme").hide();
+	$.ajax({
+        type: 'POST',
+        url: 'api/rezervacija/zavrsi/' + rezervacija.id,
+        contentType: 'application/json',
+        success: function (rez)
+		{
+            window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+		}
+    });
+}
+
+function oceniLet()
+{
+	$("#rate_flight").hide();
+	$("#rating1").attr("hidden", false);
+	
+	var aktivne=0;
+	document.querySelector('#rating1').addEventListener('click', function (e) {
+	    let action = 'add';
+	    for (const span of this.children) {
+	    	
+	        span.classList[action]('active');
+	        if (span === e.target) action = 'remove';
+	    }
+	    aktivne=0;
+	    for (const span of this.children)
+	    	{
+	    	if(span.className=='active')
+	    		aktivne+=1;
+	    	}
+	    
+	    console.log(aktivne);
+	    
+	    $("#ocenaLeta").click(function (){
+	    	$.ajax({
+	            type: 'POST',
+	            url: 'api/rezervacija/ocenaLeta/' + aktivne + '/' + flight.id + '/' + korisnik.id,
+	            contentType: 'application/json',
+	            success: function (prosek)
+	    		{
+	            	console.log(prosek);
+	                window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+	    		}
+	        });
+	    });
+	});
+
+}
+function oceniAvio()
+	{
+		$("#rate_avio").hide();
+		$("#rating2").attr("hidden", false);
+		
+		var aktivne=0;
+		document.querySelector('#rating2').addEventListener('click', function (e) {
+		    let action = 'add';
+		    for (const span of this.children) {
+		    	
+		        span.classList[action]('active');
+		        if (span === e.target) action = 'remove';
+		    }
+		    aktivne=0;
+		    for (const span of this.children)
+		    	{
+		    	if(span.className=='active')
+		    		aktivne+=1;
+		    	}
+		    
+		    console.log(aktivne);
+		    
+		    $("#ocenaAvio").click(function (){
+		    	$.ajax({
+		            type: 'POST',
+		            url: 'api/rezervacija/ocenaAvio/' + aktivne + '/' + flight.id + '/' + korisnik.id,
+		            contentType: 'application/json',
+		            success: function (prosek)
+		    		{
+		            	console.log(prosek);
+		                window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+		    		}
+		        });
+		    });
+		});
+	}
+
+
+function oceniHotel()
+{
+	$("#rate_hotel").hide();
+	$("#rating3").attr("hidden", false);
+	
+	var aktivne=0;
+	document.querySelector('#rating3').addEventListener('click', function (e) {
+	    let action = 'add';
+	    for (const span of this.children) {
+	    	
+	        span.classList[action]('active');
+	        if (span === e.target) action = 'remove';
+	    }
+	    aktivne=0;
+	    for (const span of this.children)
+	    	{
+	    	if(span.className=='active')
+	    		aktivne+=1;
+	    	}
+	    
+	    console.log(aktivne);
+	    
+	    $("#ocenaHotel").click(function (){
+	    	$.ajax({
+	            type: 'POST',
+	            url: 'api/rezervacija/ocenaHotel/' + aktivne + '/' + hotel.id + '/' + korisnik.id,
+	            contentType: 'application/json',
+	            success: function (prosek)
+	    		{
+	            	console.log(prosek);
+	                window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+	    		}
+	        });
+	    });
+	});
+}
+
+
+function oceniSobu()
+{
+	$("#rate_room").hide();
+	$("#rating4").attr("hidden", false);
+	
+	var aktivne=0;
+	document.querySelector('#rating4').addEventListener('click', function (e) {
+	    let action = 'add';
+	    for (const span of this.children) {
+	    	
+	        span.classList[action]('active');
+	        if (span === e.target) action = 'remove';
+	    }
+	    aktivne=0;
+	    for (const span of this.children)
+	    	{
+	    	if(span.className=='active')
+	    		aktivne+=1;
+	    	}
+	    
+	    console.log(aktivne);
+	    
+	    $("#ocenaSoba").click(function (){
+	    	$.ajax({
+	            type: 'POST',
+	            url: 'api/rezervacija/ocenaSoba/' + aktivne + '/' + soba.id + '/' + korisnik.id,
+	            contentType: 'application/json',
+	            success: function (prosek)
+	    		{
+	            	console.log(prosek);
+	                window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+	    		}
+	        });
+	    });
+	});
+}
+
+
+function oceniRent()
+{
+	$("#rate_rentacar").hide();
+	$("#rating5").attr("hidden", false);
+	
+	var aktivne=0;
+	document.querySelector('#rating5').addEventListener('click', function (e) {
+	    let action = 'add';
+	    for (const span of this.children) {
+	    	
+	        span.classList[action]('active');
+	        if (span === e.target) action = 'remove';
+	    }
+	    aktivne=0;
+	    for (const span of this.children)
+	    	{
+	    	if(span.className=='active')
+	    		aktivne+=1;
+	    	}
+	    
+	    console.log(aktivne);
+	    
+	    $("#ocenaRent").click(function (){
+	    	$.ajax({
+	            type: 'POST',
+	            url: 'api/rezervacija/ocenaRent/' + aktivne + '/' + rentacar_servis.id + '/' + korisnik.id,
+	            contentType: 'application/json',
+	            success: function (prosek)
+	    		{
+	            	console.log(prosek);
+	                window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+	    		}
+	        });
+	    });
+	});
+}
+
+
+function oceniVozilo()
+{
+	$("#rate_car").hide();
+	$("#rating6").attr("hidden", false);
+	
+	var aktivne=0;
+	document.querySelector('#rating6').addEventListener('click', function (e) {
+	    let action = 'add';
+	    for (const span of this.children) {
+	    	
+	        span.classList[action]('active');
+	        if (span === e.target) action = 'remove';
+	    }
+	    aktivne=0;
+	    for (const span of this.children)
+	    	{
+	    	if(span.className=='active')
+	    		aktivne+=1;
+	    	}
+	    
+	    console.log(aktivne);
+	    
+	    $("#ocenaVozilo").click(function (){
+	    	$.ajax({
+	            type: 'POST',
+	            url: 'api/rezervacija/ocenaVozilo/' + aktivne + '/' + vozilo.id + '/' + korisnik.id,
+	            contentType: 'application/json',
+	            success: function (prosek)
+	    		{
+	            	console.log(prosek);
+	                window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
+	    		}
+	        });
+	    });
+	});
+}
+
+function odjava()
+{
+	localStorage.clear();
+}
+
+
+function nalaziURezervaciji(rezervacija)
+{
+	retVal = false;
+	for( var i = 0 ; i < rezervacija.osobe.length ; i ++ )
+	{
+		osoba = rezervacija.osobe[i];
+		if(osoba.email == korisnik.email)
+		{
+			retVal = true;
+		}
+	}
+	return retVal;
+}

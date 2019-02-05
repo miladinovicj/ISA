@@ -36,4 +36,9 @@ public class AviokompanijaService
 	public void updateAdmin(Integer avioID, Integer adminID) {
 		avioRepo.updateAdmin(avioID, adminID);
 	}
+	
+	public void updateProsecnaAvio(double prosecna, Integer avio_id)
+	{
+		avioRepo.updateProsecnaAvio(prosecna, avio_id);
+	}
 }
