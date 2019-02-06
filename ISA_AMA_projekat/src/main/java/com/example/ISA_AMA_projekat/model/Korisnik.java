@@ -80,12 +80,12 @@ public class Korisnik implements Serializable, UserDetails
 	
 	//SLOZENI ATRIBUTI:
 
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="prima")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="prima")
 	@JsonManagedReference
 	private Set<FriendRequest> prijateljstva = new HashSet<FriendRequest>();
 	
 	
-	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="korisnik")
+	@OneToMany(fetch=LAZY, mappedBy="korisnik")
 	@JsonManagedReference
 	private Set<Poziv> pozivi = new HashSet<Poziv>();
 	
