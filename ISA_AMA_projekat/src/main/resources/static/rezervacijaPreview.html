@@ -109,14 +109,34 @@
 		<!-- DEFAULTNI PRIKAZ PRILIKOM ULASKA NA STRANICU AVIO KOMPANIJE -->
 		<div class="container" style="margin-top: -5%">
 			
-
 			<div class="row" >
 				<div   class="col-lg-12">
 					<div id="defaultAirlineView" class="single_listing">
 						<br>
 						<br>
+
 						<h3><b>Flight Information: <button id="rate_flight" style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;vertical-align:center" class="button search_button">Rate flight</button><button style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_let">Cancel flight</button>
+
 						</b></h3>
+						<br>
+						
+						<div id='rating1' hidden="true">
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaLeta">Rate</button>
+						</div>
+						<div id='rating2' hidden="true">
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaAvio">Rate</button>
+						</div>
+						<br>
 						<br>
 						<ul style="list-style-type:circle; margin-left:15px">
 							<li><p id="flightFrom">From: </p></li>
@@ -163,14 +183,16 @@
 						<br>
 						<br>
 						<br>
-						<h3><b>Hotel Reservation:<button style="margin-left:7%; margin-top:0px; margin-bottom:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_hotel">Cancel hotel reservation</button>
+						<h3><b>Hotel Reservation:<button style="margin-left:7%; margin-top:0px; margin-bottom:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_hotel" onclick="javascript:otkaziHotel();">Cancel hotel reservation</button>
 						</b></h3><br>
+
+						
 						<br>
 						<br>
 						<br>
 						<div id="noHotel" style="margin-left:auto; margin-right:auto">
 						    <p style="margin-left:auto; margin-right:auto; align-content: center;text-align: center;" >No hotel reservations have been made.</p>
-							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:bookHotel()">BOOK A HOTEL<span></span><span></span><span></span></button>
+							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:bookHotel()" id="bookHotel">BOOK A HOTEL<span></span><span></span><span></span></button>
 						</div>
 						<div id="infoHotel" hidden="true" style="display: inline;" >
 							<form id="hotel_form" style="align:center;">
@@ -183,11 +205,34 @@
 						</div>
 						
 						<div id="hasHotelReservation" hidden="true">
-							<ul style="list-style-type:circle; margin-left:15px">
+							<ul id="list_hotel" style="list-style-type:circle; margin-left:15px">
 								<li><p id="check_in_hotel_res">Check in date: </p></li>
 								<li><p id="check_out_hotel_res">Check out date: </p></li>
-								<li><span id="hotel_res">Hotel: </span><button id="rate_hotel" style="margin-left:7%; margin-top:0px; height:40px;  align-content: center;text-align: center;" class="button search_button">Rate hotel</button></li><br><br>
-								<li><span id="room_res">Number of beds in room: </span><button id="rate_room" style="margin-left:18%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button">Rate room</button></li><br><br>
+								
+								<li><span id="hotel_res">Hotel: </span><button id="rate_hotel" style="margin-left:7%; margin-top:0px; height:40px;  align-content: center;text-align: center;" class="button search_button" onclick="javascript:oceniHotel();">Rate hotel</button></li><br>
+								<div id='rating3' hidden="true">
+						  		<span></span>
+						  		<span></span>
+						  		<span></span>
+						 	   	<span></span>
+						  		<span></span>
+						  		<button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaHotel">Rate</button>
+								</div>
+								<br><br>
+								<li><span id="room_res">Number of beds in room: </span><button id="rate_room" style="margin-left:18%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" onclick="javascript:oceniSobu();">Rate room</button></li><br>
+								<div id='rating4' hidden="true">
+						 		 <span></span>
+						  		<span></span>
+						  		<span></span>
+						  		<span></span>
+						  		<span></span>
+						 		 <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaSoba">Rate</button>
+								</div><br><br>
+								
+								<li id="services_included_p"><p>Services included: </p></li>
+								<ul id="included_services" style="margin-left: 20px; list-style-type: disk;">
+								</ul>
+
 								<li><p id="cost_hotel_res">Cost: $</p></li>
 							</ul>
 						</div>
@@ -196,13 +241,13 @@
 						<br>
 						<br>
 						<br>
-						<h3><b>Rental Car Reservation: <button style="margin-left:7%; margin-top:0px; margin-bottom:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_car">Cancel car reservation</button>
+						<h3><b>Rental Car Reservation: <button style="margin-left:7%; margin-top:0px; margin-bottom:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_car" onclick="javascript:otkaziAuto();">Cancel car reservation</button>
 						</b></h3><br><br>
 						<br>
 						<br>
 						<div id="noRental">
 						    <p style="margin-left:auto; margin-right:auto; align-content: center;text-align: center;" >No rental reservations have been made.</p>
-							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:rezervisiVozilo();">RENT A CAR<span></span><span></span><span></span></button>
+							<button style="margin-left:41%; margin-right:auto; align-content: center;text-align: center;" class="button search_button" onclick="javascript:rezervisiVozilo();" id="bookCar">RENT A CAR<span></span><span></span><span></span></button>
 							</div>
 							<div id="hocuVozilo" hidden="true" style="display:inline;" >
 							<form id="rentacar" style="align:center;">
@@ -220,14 +265,30 @@
 							</div>
 							<div id="hasCar" hidden="true">
 							<ul style="list-style-type:circle; margin-left:15px">
-							<li><span id="servis">Rentacar: </span><button id="rate_rentacar" style="margin-left:7%; margin-top:0px; height:40px;  align-content: center;text-align: center;" class="button search_button">Rate rentacar</button></li><br><br>
-							<li><span id="car">Car: </span><button id="rate_car" style="margin-left:18%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button">Rate car</button></li><br><br>
+							<li><span id="servis">Rentacar: </span><button id="rate_rentacar" style="margin-left:7%; margin-top:0px; height:40px;  align-content: center;text-align: center;" class="button search_button" onclick="javascript:oceniRent();">Rate rentacar</button></li><br>
+							<div id='rating5' hidden="true">
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaRent">Rate</button>
+						</div><br><br>
+							<li><span id="car">Car: </span><button id="rate_car" style="margin-left:18%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" onclick="javascript:oceniVozilo();">Rate car</button></li><br>
+							<div id='rating6' hidden="true">
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <span></span>
+						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaVozilo">Rate</button>
+						</div><br>
 							<li><p id="check_in">Check in date and town: </p></li>
 							<li><p id="check_out">Check out date and town: </p></li>
 							<li><p id="cost">Cost: $</p></li>
 						</ul>
 						</div>
-						<button style="margin-left:77%; align-content: center;text-align: center;" class="button search_button" >FINISH RESERVATION<span></span><span></span><span></span></button>
+						<button id="zavrsena_dugme" style="margin-left:77%; align-content: center;text-align: center;" class="button search_button" onclick="javascript:zavrsiRezervaciju();">FINISH RESERVATION<span></span><span></span><span></span></button>
 	
 					</div>
 		

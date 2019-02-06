@@ -38,4 +38,19 @@ public class RezervacijaVozilaService {
 	public Optional<RezervacijaVozila> findById(Integer id){
 		return rezervacijaVozilaRepository.findById(id);
 	}
+	
+	public void deleteRezV(RezervacijaVozila rv)
+	{
+		rezervacijaVozilaRepository.delete(rv);
+	}
+	
+	public void deleteRezV2(Integer id)
+	{
+		rezervacijaVozilaRepository.deleteRezV(id);
+	}
+	
+	public void deleteVoziloRez(Integer id)
+	{
+		rezervacijaVozilaRepository.deleteVoziloRez(id);
+	}
 }

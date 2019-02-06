@@ -424,9 +424,35 @@ $(document).ready(function()
 		}
 		
 	});
+	
+	
+	$('#form_discount').submit(function(event) {
+		console.log('form_discount submit');
+		event.preventDefault();
+		
+		let bonus_points = $('input[name="bonus_points"]').val();
+		let discount = $('input[name="discount"]').val();
+		
+		$.post({
+			url: "/api/bonus/save/",
+			headers: {"Authorization": "Bearer " + token},
+			data: JSON.stringify({bonusPoeni: bonus_points, popust: discount}),
+			contentType: 'application/json',
+			success: function(data) {
+				if(data.result == 'success')
+				{
+					console.log('uspesno dodat bonus');
+					$('#error_bonus_points').hide();
+					window.location.href = 'profil.html';
+				}
+				else
+				{
+					$('#error_bonus_points').show();
+				}
+			}
+		});
+	});
 
-		
-		
 
 
 	function getRezervacije()
@@ -625,6 +651,7 @@ function refresh()
 	});
 }
 */
+
 function loginAgain(email, pass)
 {
 	$.post({
@@ -657,6 +684,7 @@ function newAirline()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add airline';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new');
     el.scrollIntoView(true);
@@ -672,6 +700,7 @@ function newHotel()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add hotel';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new');
     el.scrollIntoView(true);
@@ -687,6 +716,7 @@ function newRental()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add car rental';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new');
     el.scrollIntoView(true);
@@ -704,44 +734,6 @@ function back()
     window.scrollBy(0, -100);
 }
 
-/*
-function add()
-{
-	console.log('[profil.js: add()]');
-	
-	name = $('input[name="new_name"]').val();
-	city = $('input[name="new_city"]').val();
-	street = $('input[name="new_street"]').val();
-	number = $('input[name="new_street_number"]').val();
-	latitude = $('input[name="new_latitude"]').val();
-	longitude = $('input[name="new_longitude"]').val();
-	description = $('input[name="new_description"]').val();
-	
-	$.get({
-		url: "/api/address/checkCity/" + city,
-		  
-		success: function(data) {
-			if(data == null || data == "")
-			{
-				console.log('nije pronadjen grad');
-				newCity(city);
-			}
-			else
-			{
-				console.log('pronadjen grad: ' + data.naziv);
-				checkAddress(data);
-			}
-			window.location.search='';
-		},
-		
-		error: function() {
-			alert('Error with loading city');
-		}
-	
-	});
-	
-}
-*/
 
 function newCity(city)
 {
@@ -866,6 +858,7 @@ function newAirlineAdmin()
 	document.getElementById('button_add_admin').value = 'Add airline administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Airlines:';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
@@ -918,6 +911,7 @@ function newHotelAdmin()
 	document.getElementById('button_add_admin').value = 'Add hotel administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Hotels: ';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
@@ -970,6 +964,7 @@ function newRentalAdmin()
 	document.getElementById('button_add_admin').value = 'Add car rental administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Car rentals: ';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
@@ -1021,10 +1016,28 @@ function newSystemAdmin()
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add system administrator';
 	document.getElementById('admin_sys_close').style.display = 'none';
+	document.getElementById("div_define_discount").style.display  = 'none';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
     window.scrollBy(0, -100);
+}
+
+function defineDiscount()
+{
+	console.log('[profil.js: defineDiscount()]');
+	document.getElementById("div_define_discount").style.display  = 'block';
+	document.getElementById("div_button_discount").style.display  = 'none';
+	document.getElementById("div_new_admin").style.display  = 'none';
+	document.getElementById("div_buttons_system_admin").style.display  = 'block';
+	document.getElementById("div_buttons_admin").style.display  = 'block';
+	document.getElementById("div_new").style.display  = 'none';
+	document.getElementById("div_buttons").style.display  = 'block';
+	document.getElementById('admin_sys_close').style.display = 'none';
+	
+	var el = document.getElementById('div_define_discount');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -250);
 }
 
 function backAdmin()
@@ -1035,6 +1048,8 @@ function backAdmin()
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById("no_one").style.display  = 'none';
 	document.getElementById("button_back_admin2").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_button_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_buttons_admin');
     el.scrollIntoView(true);
@@ -1046,18 +1061,9 @@ function changePassword()
 	console.log('changing password');
 	
 	$('#passChange').show();
-	//$('#passChange').attr('pomoc', 'pomoc');
 	$('input[value=edit]').hide();
 	
 	var $passChange = $('#passChange');
-	/*
-    if ($passChange.attr('pomoc')) {
-
-        $("#old_password_profile").prop('required', false);
-        $("#new_password_profile").prop('required', false);
-        $("#confirm_new_password_profile").prop('required', false);
-        
-    } else {*/
 	if(!$passChange.attr('pomoc'))
 	{
     	$passChange.attr('pomoc', 'pomoc');

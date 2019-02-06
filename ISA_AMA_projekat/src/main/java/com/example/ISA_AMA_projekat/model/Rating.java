@@ -31,7 +31,32 @@ public class Rating implements Serializable
 	@JoinColumn(referencedColumnName="id", nullable=true)
 	private Korisnik korisnik;
 	
+	@ManyToOne
+	@JoinColumn(referencedColumnName="id", nullable=true)
+	private Let let;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName="id", nullable=true)
+	private Aviokompanija aviokompanija;
 
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName="id", nullable=true)
+	private Hotel hotel;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName="id", nullable=true)
+	private Soba soba;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName="id", nullable=true)
+	private RentacarServis rentacar;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName="id", nullable=true)
+	private Vozilo vozilo;
+	
+	
 	public Rating() {
 		super();
 	}
@@ -61,6 +86,56 @@ public class Rating implements Serializable
 
 	public void setKorisnik(Korisnik korisnik) {
 		this.korisnik = korisnik;
-	}	
+	}
+
+	public Let getLet() {
+		return let;
+	}
+
+	public void setLet(Let let) {
+		this.let = let;
+	}
+
+	public Aviokompanija getAviokompanija() {
+		return aviokompanija;
+	}
+
+	public void setAviokompanija(Aviokompanija aviokompanija) {
+		this.aviokompanija = aviokompanija;
+	}
+
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
+	public Soba getSoba() {
+		return soba;
+	}
+
+	public void setSoba(Soba soba) {
+		this.soba = soba;
+	}
+
+	public RentacarServis getRentacar() {
+		return rentacar;
+	}
+
+	public void setRentacar(RentacarServis rentacar) {
+		this.rentacar = rentacar;
+	}
+
+	public Vozilo getVozilo() {
+		return vozilo;
+	}
+
+	public void setVozilo(Vozilo vozilo) {
+		this.vozilo = vozilo;
+	}
+
+	
 	
 }

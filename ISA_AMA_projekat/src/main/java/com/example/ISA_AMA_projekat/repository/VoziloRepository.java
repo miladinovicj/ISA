@@ -23,7 +23,10 @@ public interface VoziloRepository extends JpaRepository<Vozilo, Integer>{
 	public void updateFilVozilo(Integer filijala,  Integer id);
 	
 	
-	
+	@Modifying
+	@Transactional
+	@Query(value = "update vozilo set vozilo.prosecna_ocena=?1 where vozilo.id=?2", nativeQuery = true)
+	public void updateProsecnaVozilo(double prosecna_ocena, Integer vozilo_id);
 
 
 

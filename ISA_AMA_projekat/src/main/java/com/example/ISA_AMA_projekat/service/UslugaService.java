@@ -27,6 +27,10 @@ public class UslugaService {
 		uslugaRepository.updateUsluga(cena, id);
 	}
 	
+	public void updatePopust(double popust, Integer id){
+		uslugaRepository.updatePopust(popust, id);
+	}
+	
 	public Usluga save(Usluga usluga, Integer id_hotel){
 		Usluga u = uslugaRepository.save(usluga);
 		

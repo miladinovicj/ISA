@@ -42,4 +42,9 @@ public class HotelService {
 	public void updateHotel(Integer id, String naziv, String opis, Integer adresa) {
 		hotelRepository.updateHotel(id, naziv, opis, adresa);
 	}
+	
+	public void updateProsecnaHotel(double prosecna, Integer hotel_id)
+	{
+		hotelRepository.updateProsecnaHotel(prosecna, hotel_id);
+	}
 }

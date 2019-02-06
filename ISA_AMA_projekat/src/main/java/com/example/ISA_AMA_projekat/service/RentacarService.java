@@ -42,5 +42,10 @@ public class RentacarService {
 	public void updateServis(String naziv, Integer adresa_id, String promotivni_opis, Integer id){
 		 rentRepository.updateServis(naziv, adresa_id, promotivni_opis, id);
 	}
+	
+	public void updateProsecnaRent(double prosecna, Integer rent_id)
+	{
+		rentRepository.updateProsecnaRent(prosecna, rent_id);
+	}
 
 }

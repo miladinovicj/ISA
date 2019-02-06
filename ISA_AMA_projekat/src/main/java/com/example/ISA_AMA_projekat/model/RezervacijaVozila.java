@@ -2,8 +2,11 @@ package com.example.ISA_AMA_projekat.model;
 
 import java.util.Date;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +23,7 @@ public class RezervacijaVozila {
 	private Integer id;
 	
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JsonBackReference(value = "RezervacijaVozila-Vozilo")
 	private Vozilo vozilo;
 	

@@ -23,7 +23,7 @@ public class Soba {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column
+	@Column(nullable = true)
 	private double prosecna_ocena;
 	
 	@Column
@@ -53,7 +53,7 @@ public class Soba {
 	private Set<RezervacijaHotel> rezervacije = new HashSet<RezervacijaHotel>();
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Rating> ocene = new HashSet<Rating>();
+	private Set<Rating> rejtinzi = new HashSet<Rating>();
 	
 	public Soba() {
 		super();
@@ -109,12 +109,12 @@ public class Soba {
 		this.rezervacije = rezervacije;
 	}
 
-	public Set<Rating> getOcene() {
-		return ocene;
+	public Set<Rating> getRejtinzi() {
+		return rejtinzi;
 	}
 
-	public void setOcene(Set<Rating> ocene) {
-		this.ocene = ocene;
+	public void setRejtinzi(Set<Rating> ocene) {
+		this.rejtinzi = ocene;
 	}
 
 	public boolean isZauzeta() {

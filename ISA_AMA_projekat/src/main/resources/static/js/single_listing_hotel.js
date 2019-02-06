@@ -97,7 +97,11 @@ function showHotel(hotel)
     	$("#text_no_services").text("Additional services: ");
     	for (let usluga of hotel.usluge) 
     	{
-    		let li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span></li>');
+    		if(usluga.popust != 0)
+    			var li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day - discount: ' + usluga.popust +'%</span></li>');
+    		else
+    			var li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span></li>');
+    		$('#usluge_hotela').append(li);
     		
     		if(!(check_in == '0001-01-01' || check_out == '0001-01-01'))
     		{
@@ -495,6 +499,14 @@ function addSpecialPrice(soba)
 		    		$(element).click(bookRoomSpecial(check_in, check_out, pronadjen_popust, soba.id));
 		    	}
     		}
+        	else
+        	{
+        		var elements = document.getElementsByClassName('button_book_roomsp');
+        		for(element of elements)
+        		{
+        			element.parentElement.style.display = 'none';
+        		}
+        	}
 		}
     });
 	

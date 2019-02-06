@@ -107,9 +107,9 @@ $(document).ready(function()
 
 	initMenu();
 	//initIsotopeFiltering();
-	initSearch();
+	//initSearch();
 	initMoreOptions();
-	initSearchForm();
+	//initSearchForm();
 
 	/* 
 
@@ -265,7 +265,7 @@ $(document).ready(function()
 	5. Init Search
 
 	*/
-
+/*
 	function initSearch()
 	{
 		if($('.search_tab').length)
@@ -283,7 +283,7 @@ $(document).ready(function()
 			});
 		}
 	}
-
+*/
 	/* 
 
 	6. Init More Options

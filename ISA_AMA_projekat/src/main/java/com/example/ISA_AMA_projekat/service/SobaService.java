@@ -25,4 +25,9 @@ public class SobaService {
 	public void deleteRoom(Soba soba) {
 		sobaRepository.delete(soba);
 	}
+	
+	public void updateProsecnaSoba(double prosecna_ocena,Integer soba_id)
+	{
+		sobaRepository.updateProsecnaSoba(prosecna_ocena, soba_id);
+	}
 }

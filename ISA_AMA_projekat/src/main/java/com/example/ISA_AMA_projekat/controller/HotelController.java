@@ -34,6 +34,7 @@ import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.Soba;
 import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.service.HotelService;
+import com.example.ISA_AMA_projekat.service.PopustService;
 import com.example.ISA_AMA_projekat.service.RezervacijaHotelService;
 import com.example.ISA_AMA_projekat.service.RezervacijaService;
 import com.example.ISA_AMA_projekat.service.SobaService;
@@ -58,6 +59,9 @@ public class HotelController {
 	
 	@Autowired
 	private RezervacijaService rezervacijaService; 
+	
+	@Autowired
+	private PopustService popustService;
 	
 	@RequestMapping(
 			value = "/all",
@@ -457,14 +461,18 @@ public class HotelController {
 		ArrayList<Usluga> usluge = new ArrayList<Usluga>();
 		System.out.println("[HotelController: bookRoom]: U rezervaciji se nalaze sledece usluge: ");
 		
+		double popustUsluga = 0;
+		
 		for(Iterator<Usluga> iteratorUsluga = rezervacijaHotel.getUsluge().iterator(); iteratorUsluga.hasNext();) {
 			Usluga usluga = iteratorUsluga.next();
 			cena_rez += broj_dana * usluga.getCena();
+			popustUsluga += usluga.getPopust();
 			System.out.println("usluga: " + usluga.getNaziv());
 			usluge.add(usluga);
 			iteratorUsluga.remove();
 		}
 		
+		cena_rez = cena_rez - (popustUsluga/100)*cena_rez;
 		rezervacijaHotel.setUkupna_cena(cena_rez);
 		rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 		rezervacijaHotelService.insertRezervacijaSoba(rezervacijaHotel.getId(), soba.getId());
@@ -814,6 +822,13 @@ public class HotelController {
 		System.out.println("[HotelController: totalEarnings]: danasnji datum: " + today);
 		
 		Calendar cal = new GregorianCalendar();
+		
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		String today1_str = format.format(cal.getTime());
+		Date today1 = format.parse(today1_str);
+		System.out.println("[HotelController: totalEarnings]: datum pre 1 dan: " + today1);
+
 		cal.setTime(today);
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		String today7_str = format.format(cal.getTime());
@@ -831,27 +846,55 @@ public class HotelController {
 		for(Iterator<RezervacijaHotel> iteratorRez = rez.iterator(); iteratorRez.hasNext();){
 			
 			RezervacijaHotel rezervacija = iteratorRez.next();
+			
+			Calendar start = Calendar.getInstance();
+			start.setTime(rezervacija.getDatum_dolaska());
+			Calendar end = Calendar.getInstance();
+			end.setTime(rezervacija.getDatum_odlaska());
+			
 			System.out.println("[HotelController: totalEarnings]: rezervacija " + rezervacija.getId() + " ima ukupnu cenu: " + rezervacija.getUkupna_cena());
-			System.out.println("[HotelController: totalEarnings]: datum odlaska: " + rezervacija.getDatum_odlaska());
+			System.out.println("[HotelController: totalEarnings]: datum odlaska: " + rezervacija.getDatum_odlaska() + "; datum dolaska: " + rezervacija.getDatum_dolaska());
 			
-			if(today.equals(rezervacija.getDatum_odlaska())){
+			for(Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()){
 				
-				System.out.println("Datum vracanja je danas za rez: " + rezervacija.getId());
-				totalDay += rezervacija.getUkupna_cena();
-			}
-			
-			if(today7.equals(rezervacija.getDatum_odlaska()) || (today7.before(rezervacija.getDatum_odlaska()) && today.after(rezervacija.getDatum_odlaska()))
-					|| today.equals(rezervacija.getDatum_odlaska())){
+				if(today.equals(date)){
+					
+					totalDay += rezervacija.getUkupna_cena()/rezervacija.getBroj_nocenja();
+				}
 				
-				System.out.println("Datum vracanja je u toku prethodne nedelje za rez: " + rezervacija.getId());
-				totalWeek += rezervacija.getUkupna_cena();
-			}
-			
-			if(today30.equals(rezervacija.getDatum_odlaska()) || (today30.before(rezervacija.getDatum_odlaska()) && today.after(rezervacija.getDatum_odlaska()))
-					|| today.equals(rezervacija.getDatum_odlaska())){
+				if(today7.equals(date) || (today7.before(date) && today1.after(date))
+						|| today1.equals(date)){
+					
+					totalWeek += rezervacija.getUkupna_cena()/rezervacija.getBroj_nocenja();
+				}
 				
-				System.out.println("Datum vracanja je u toku prethodnog meseca za rez: " + rezervacija.getId());
-				totalMonth += rezervacija.getUkupna_cena();
+				if(today30.equals(date) || (today30.before(date) && today.after(date))
+						|| today.equals(date)){
+					
+					totalMonth += rezervacija.getUkupna_cena()/rezervacija.getBroj_nocenja();
+				}
+				
+				/*
+				if(today.equals(rezervacija.getDatum_odlaska())){
+					
+					System.out.println("Datum vracanja je danas za rez: " + rezervacija.getId());
+					totalDay += rezervacija.getUkupna_cena();
+				}
+				
+				if(today7.equals(rezervacija.getDatum_odlaska()) || (today7.before(rezervacija.getDatum_odlaska()) && today.after(rezervacija.getDatum_odlaska()))
+						|| today.equals(rezervacija.getDatum_odlaska())){
+					
+					System.out.println("Datum vracanja je u toku prethodne nedelje za rez: " + rezervacija.getId());
+					totalWeek += rezervacija.getUkupna_cena();
+				}
+				
+				if(today30.equals(rezervacija.getDatum_odlaska()) || (today30.before(rezervacija.getDatum_odlaska()) && today.after(rezervacija.getDatum_odlaska()))
+						|| today.equals(rezervacija.getDatum_odlaska())){
+					
+					System.out.println("Datum vracanja je u toku prethodnog meseca za rez: " + rezervacija.getId());
+					totalMonth += rezervacija.getUkupna_cena();
+				}
+				*/
 			}
 		}
 		
@@ -1025,49 +1068,42 @@ public class HotelController {
 			if(today6.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today6) && rezervacija.getDatum_dolaska().before(today6))
 					|| today6.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY7 REZ" + rezervacija.getId());
 				day7 += 1;
 			}
 			
 			if(today5.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today5) && rezervacija.getDatum_dolaska().before(today5))
 					|| today5.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY6 REZ" + rezervacija.getId());
 				day6 += 1;
 			}
 			
 			if(today4.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today4) && rezervacija.getDatum_dolaska().before(today4))
 					|| today4.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY5 REZ" + rezervacija.getId());
 				day5 += 1;
 			}
 			
 			if(today3.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today3) && rezervacija.getDatum_dolaska().before(today3))
 					|| today3.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY4 REZ" + rezervacija.getId());
 				day4 += 1;
 			}
 			
 			if(today2.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today2) && rezervacija.getDatum_dolaska().before(today2))
 					|| today2.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY3 REZ" + rezervacija.getId());
 				day3 += 1;
 			}
 			
 			if(today1.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today1) && rezervacija.getDatum_dolaska().before(today1))
 					|| today1.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY2 REZ" + rezervacija.getId());
 				day2 += 1;
 			}
 			
 			if(today0.equals(rezervacija.getDatum_odlaska()) || (rezervacija.getDatum_odlaska().after(today0) && rezervacija.getDatum_dolaska().before(today0))
 					|| today0.equals(rezervacija.getDatum_dolaska()))
 			{
-				System.out.println("DAY1 REZ" + rezervacija.getId());
 				day1 += 1;
 			}
 			
@@ -1140,17 +1176,14 @@ public class HotelController {
 		cal.set(year, 0, 1);
 		String jan1_str = format.format(cal.getTime());
 		Date jan1 = format.parse(jan1_str);
-		System.out.println("JAN1 " + jan1);
 		
 		cal.set(year, 0, 31);
 		String jan31_str = format.format(cal.getTime());
 		Date jan31 = format.parse(jan31_str);
-		System.out.println("JAN31 " + jan31);
 		
 		cal.set(year, 1, 1);
 		String feb1_str = format.format(cal.getTime());
 		Date feb1 = format.parse(feb1_str);
-		System.out.println("FEB1 " + feb1);
 		
 		String febkraj_str="";
 		if(prestupna){
@@ -1190,7 +1223,6 @@ public class HotelController {
 		cal.set(year, 5, 1);
 		String jun1_str = format.format(cal.getTime());
 		Date jun1 = format.parse(jun1_str);
-		System.out.println("JUN1 " + jun1);
 		
 		cal.set(year, 5, 30);
 		String jun30_str = format.format(cal.getTime());
@@ -1219,7 +1251,6 @@ public class HotelController {
 		cal.set(year, 8, 30);
 		String sep30_str = format.format(cal.getTime());
 		Date sep30 = format.parse(sep30_str);
-		System.out.println("SEP30 " + sep30);
 		
 		cal.set(year, 9, 1);
 		String okt1_str = format.format(cal.getTime());
@@ -1255,6 +1286,7 @@ public class HotelController {
 			Calendar end = Calendar.getInstance();
 			end.setTime(rv2.getDatum_odlaska());
 			System.out.println("START: " + start.getTime() + " END: " + end.getTime());
+			
 			for(Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime())
 			{
 				
@@ -1326,29 +1358,17 @@ public class HotelController {
 		
 		int[] meseci = new int[12]; 
 		meseci[0]=jan;
-		System.out.println(meseci[0]);
 		meseci[1]=feb;
-		System.out.println(meseci[1]);
 		meseci[2]=mart;
-		System.out.println(meseci[2]);
 		meseci[3]=apr;
-		System.out.println(meseci[3]);
 		meseci[4]=maj;
-		System.out.println(meseci[4]);
 		meseci[5]=jun;
-		System.out.println(meseci[5]);
 		meseci[6]=jul;
-		System.out.println(meseci[6]);
 		meseci[7]=avg;
-		System.out.println(meseci[7]);
 		meseci[8]=sep;
-		System.out.println(meseci[8]);
 		meseci[9]=okt;
-		System.out.println(meseci[9]);
 		meseci[10]=nov;
-		System.out.println(meseci[10]);
 		meseci[11]=dec;
-		System.out.println(meseci[11]);
 		
 		result.put("jan", jan);
 		result.put("feb", feb);
@@ -1383,6 +1403,66 @@ public class HotelController {
 			
 		return ResponseEntity.accepted().body(result);
 	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/add_special_price/{id_soba}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addSpecialPrice(@PathVariable("id_soba") Integer id_soba, @RequestBody Popust popust){
+		
+		Soba soba = sobaService.findById(id_soba).get();
+		
+		Date pocetak = popust.getPocetak_vazenja();
+		Date kraj = popust.getKraj_vazenja();
+		
+		System.out.println("[HotelController: addSpecialPrice] popust - pocetak: " + pocetak + "; kraj: " + kraj);
+		boolean postoji = false;
+		
+		for(Iterator<Popust> iteratorPopust = soba.getPopusti().iterator(); iteratorPopust.hasNext();) {
+			Popust pronadjen = iteratorPopust.next();
+			System.out.println("[HotelController: addSpecialPrice] pronadjen - pocetak: " + pronadjen.getPocetak_vazenja() + "; kraj: " + pronadjen.getKraj_vazenja());
+			Date pronadjen_pocetak = pronadjen.getPocetak_vazenja();
+			Date pronadjen_kraj = pronadjen.getKraj_vazenja();
+			
+			if(pocetak.equals(pronadjen_pocetak) || pocetak.equals(pronadjen_kraj) || kraj.equals(pronadjen_pocetak) || (pronadjen_pocetak.after(pocetak) && pronadjen_pocetak.before(kraj)) || (pocetak.after(pronadjen_pocetak) && pocetak.before(pronadjen_kraj)) || (kraj.after(pronadjen_pocetak) && kraj.before(pronadjen_kraj))) {
+				postoji = true;
+				break;
+			}
+		}
+
+		Map<String, Object> result = new HashMap<>();
+		
+		if(!postoji) {
+			Popust saved = popustService.save(popust);
+			popustService.updateSoba(id_soba, saved.getId());
+			
+			result.put("result", "success");
+			result.put("popust_id", saved.getId());
+		}else {
+			result.put("result", "error");
+		}
+		
+		return ResponseEntity.accepted().body(result);
+	}
+	
+	@PreAuthorize("hasRole('HOTELADMIN')")
+	@RequestMapping(
+			value = "/add_usluga_special_price/{popust_id}/{usluga_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addUslugaSpecialPrice(@PathVariable("popust_id") Integer popust_id, @PathVariable("usluga_id") Integer usluga_id){
+		
+		popustService.updateUsluga(popust_id, usluga_id);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("result", "success");
+			
+		return ResponseEntity.accepted().body(result);
+	}
+	
 	
 	public Hotel pretraga_hotel(Hotel hotel, Date check_in, Date check_out, int adults){
 		Hotel result = hotel;
