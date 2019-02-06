@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,29 +27,51 @@ public class AddressController {
 	@Autowired
 	private GradService gradService;
 	
+	@PreAuthorize("hasRole('SYSADMIN')")
 	@RequestMapping(
-			value = "/checkCity/{city}",
+			value = "/checkCity/{city}/{street}/{number}/{longitude}/{latitude}",
 			method = RequestMethod.GET,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Grad> checkCity(@PathVariable("city") String city){
+	public ResponseEntity<Adresa> checkCity(@PathVariable("city") String city, @PathVariable("street") String street, @PathVariable("number") String number, @PathVariable("longitude") double longitude, @PathVariable("latitude") double latitude){
 		
-		Grad grad = gradService.findByNaziv(city);
+		Grad postoji = gradService.findByNaziv(city);
 		
-		return new ResponseEntity<Grad>(grad, HttpStatus.OK);
+		if(postoji != null) {
+			
+			System.out.println("Grad sa ovim nazivom vec postoji u bazi");
+			//return new ResponseEntity<Grad>(postoji, HttpStatus.OK);
+		}else {
+			
+			postoji = new Grad(city);
+			postoji = gradService.save(postoji);
+
+			System.out.println("Grad sacuvan u bazi sa id: " + postoji.getId());
+			//return new ResponseEntity<Grad>(result, HttpStatus.CREATED);
+		}
+		
+		List<Adresa> adrese = addressService.checkAddress(postoji.getId(), street, number);
+		
+		Adresa novaAdresa = null;
+		
+		if(adrese.isEmpty()) {
+			Adresa newAddress = new Adresa();
+			newAddress.setGrad(postoji);
+			newAddress.setUlica(street);
+			newAddress.setBroj(number);
+			newAddress.setLongitude(longitude);
+			newAddress.setLatitude(latitude);
+			
+			novaAdresa = addressService.save(newAddress);
+		}else {
+			novaAdresa = adrese.get(0);
+		}
+		System.out.println("[AddessController: checkAddress] adresa.id: " + novaAdresa.getId());
+		
+		return new ResponseEntity<Adresa>(novaAdresa, HttpStatus.OK);
 	}
 	
-	@RequestMapping(
-			value = "/newCity/{city}",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Grad> newCity(@PathVariable("city") String city){
-		
-		Grad grad = new Grad(city);
-		Grad result = gradService.save(grad);
-		
-		return new ResponseEntity<Grad>(result, HttpStatus.OK);
-	}
-	
+	/*
 	@RequestMapping(
 			value = "/checkAddress/{street}/{number}/{longitude}/{latitude}/{city_id}",
 			method = RequestMethod.GET,
@@ -78,6 +101,7 @@ public class AddressController {
 		System.out.println("[AddessController: checkAddress] adresa.id: " + adresa.getId());
 		return new ResponseEntity<Adresa>(adresa, HttpStatus.OK);
 	}
+	*/
 	
 	@RequestMapping(
 			value = "/check/{city}/{street}/{number}/{latitude}/{longitude}",

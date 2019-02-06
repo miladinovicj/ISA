@@ -362,17 +362,6 @@ public class HotelController {
 			Hotel saved = hotelService.save(hotel);
 			return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
 		}
-		/*
-		Hotel saved = null;
-		try {
-			saved = hotelService.save(hotel);
-		} catch(Exception e) {
-			System.out.println("Hotel sa ovim nazivom vec postoji u bazi");
-			return new ResponseEntity<Hotel>(postoji, HttpStatus.CONFLICT);
-		}
-		
-		return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
-		*/
 	}
 	
 	@RequestMapping(

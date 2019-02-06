@@ -162,20 +162,21 @@ $(document).ready(function()
 		if(ispravno == true)
 		{
 			$.get({
-				url: "/api/address/checkCity/" + city,
-				  
+				url: "/api/address/checkCity/" + city + '/' + street + '/' + number + '/' + longitude + '/' + latitude,
+				headers: {"Authorization": "Bearer " + token},
+				contentType: 'application/json',
 				success: function(data) {
 					if(data == null || data == "")
 					{
-						console.log('nije pronadjen grad');
-						newCity(city);
+						alert('nije pronadjen grad');
+						//newCity(city);
 					}
 					else
 					{
-						console.log('pronadjen grad: ' + data.naziv);
-						checkAddress(data);
+						console.log('pronadjena adresa: ' + data.id);
+						finalAdd(data);
 					}
-					window.location.search='';
+					//window.location.search='';
 				},
 				
 				error: function() {
@@ -600,58 +601,6 @@ function back()
     window.scrollBy(0, -100);
 }
 
-
-function newCity(city)
-{
-	console.log('[profil.js: newCity()]');
-	
-	$.post({
-		url: "/api/address/newCity/" + city,
-		  
-		success: function(data) {
-			if(data == null || data == "")
-			{
-				console.log('nije sacuvan grad');
-			}
-			else
-			{
-				console.log('sacuvan grad: ' + data.naziv);
-				checkAddress(data);
-			}
-		},
-		
-		error: function() {
-			alert('Error with saving city');
-		}
-	
-	});
-}
-
-function checkAddress(newCity)
-{
-	console.log('[profil.js: checkAddress()]');
-	
-	$.get({
-		url: "/api/address/checkAddress/" + street + '/' + number + '/' + longitude + '/' + latitude + '/' + newCity.id,
-		success: function(data) {
-			if(data == null || data == "")
-			{
-				console.log('nije pronadjena adresa');
-			}
-			else
-			{
-				console.log('pronadjena adresa sa id: ' + data.id);
-				finalAdd(data);
-			}
-		},
-		
-		error: function() {
-			alert('Error with saving address');
-		}
-	
-	});
-}
-
 function finalAdd(address)
 {
 	console.log('[profil.js: finalAdd()]');
@@ -660,7 +609,7 @@ function finalAdd(address)
 	{
 		$.post({
 			url: "/rest/airline/save",
-			data: JSON.stringify({naziv: name, opis: description, adresa: address}),
+			data: JSON.stringify({naziv: name, opis: description, adresa: address, prosecna_ocena: 0}),
 			contentType: 'application/json',
 			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
@@ -669,7 +618,9 @@ function finalAdd(address)
 			},
 			
 			error: function() {
-				alert('Error');
+				//alert('Error');
+				document.getElementById("error_new_name").innerHTML = "There is already airline with this name.";
+				document.getElementById("error_new_name").style.display  = 'block';
 			}
 		
 		});
@@ -678,7 +629,7 @@ function finalAdd(address)
 	{
 		$.post({
 			url: "/api/hotels/save",
-			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
+			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address, prosecna_ocena: 0}),
 			contentType: 'application/json',
 			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
@@ -687,7 +638,9 @@ function finalAdd(address)
 			},
 			
 			error: function() {
-				alert('Error');
+				//alert('Error');
+				document.getElementById("error_new_name").innerHTML = "There is already car rental with this name.";
+				document.getElementById("error_new_name").style.display  = 'block';
 			}
 		
 		});
@@ -696,7 +649,7 @@ function finalAdd(address)
 	{
 		$.post({
 			url: "/api/rents/save",
-			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
+			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address, prosecna_ocena: 0}),
 			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			  
@@ -706,7 +659,9 @@ function finalAdd(address)
 			},
 			
 			error: function() {
-				alert('Error');
+				//alert('Error');
+				document.getElementById("error_new_name").innerHTML = "There is already hotel with this name.";
+				document.getElementById("error_new_name").style.display  = 'block';
 			}
 		
 		});
