@@ -80,11 +80,11 @@ public class KorisnikService implements UserDetailsService{
 			
 			Korisnik k = null;
 			
-			if(fq.getPrima().getId() == id)
+			if(fq.getPrima().getId() == id && fq.getStanje()==0)
 			{
 				k = fq.getSalje();
 			}
-			if(fq.getSalje().getId() == id)
+			if(fq.getSalje().getId() == id && fq.getStanje()==0)
 			{
 				k = fq.getPrima();
 			}
@@ -92,6 +92,37 @@ public class KorisnikService implements UserDetailsService{
 		}
 		
 		return retVala;
+	}
+	
+	
+	
+	public boolean areStrangers(Integer k1, Korisnik k2)
+	{
+		boolean retVal = true;
+		
+		if(k1 == k2.getAdmin_id())
+		{
+			retVal = false;
+		}
+		
+		
+		List<FriendRequest> requestList = requestRepository.findBySaljeOrPrimaAbstract(k1);
+		for (int i = 0 ; i < requestList.size() ; i ++ )
+		{
+			FriendRequest fq = requestList.get(i);
+						
+			if(fq.getPrima().getId() == k2.getId() )
+			{
+				retVal = false;
+			}
+			if(fq.getSalje().getId() == k2.getId() )
+			{
+				retVal = false;
+			}
+		}
+		
+		return retVal;
+		
 	}
 	
 	

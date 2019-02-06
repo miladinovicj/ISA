@@ -26,21 +26,6 @@
 
 		<!-- Top Bar -->
 
-		<div class="top_bar">
-			<div class="container">
-				<div class="row">
-					<div class="col d-flex flex-row">
-						<div class="user_box ml-auto">
-							<div id="prijava" class="user_box_login user_box_link"><a href="prijava.html">login</a></div>
-							<div id="odjava" class="user_box_login user_box_link" onclick="javascript:odjava()" ><a href="index.html">logout</a></div>
-							<div id="reg" class="user_box_register user_box_link"><a href="registration.html">register</a></div>
-							<div id="rentacarS" class="user_box_register user_box_link" ><a id="linkServis">Your rentacar</a></div>
-							<div id="hotelAdmin" class="user_box_register user_box_link" ><a id="linkHotelAdmin">Your hotel</a></div>
-						</div>
-					</div>
-				</div>
-			</div>		
-		</div>
 
 		<!-- Main Navigation -->
 
@@ -115,7 +100,7 @@
 				<div class="col-lg-12">
 					<div class="single_listing">
 					
-					<div style="width: 100%;">
+					<div style="width: 100%; margin-left:auto; margin-right:auto">
 						<div id="div_buttons">
 							<button id="button_airline" style="margin-right: 10%; margin-left: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:newAirline()">New airline</button>
 							<button id="button_hotel" style="margin-right: 10%; margin-top: 0px;" class="button search_button" onclick="javascript:newHotel()">New hotel</button>
@@ -263,7 +248,7 @@
 						</div>
 						
 					</div>
-						<div style="margin-top:0%">
+						<div style="margin-top:-5%">
 							<h3 style="margin-bottom: 5%; margin-top: 12%;" >MY RESERVATIONS:</h3>
 							<ul id="reservationList">
 								<template id="reservationTemplate">
@@ -283,91 +268,85 @@
 							<br>
 							<br>
 							
-							<p id="noRezervations">No reservations have been made yet.</p>
+							<p style="margin-top:-7%"  id="noRezervations">No reservations have been made yet.</p>
 						</div>
 
 						<!-- Zahtevi na cekanju -->
 						<div class="review">
 							<hr style="margin-bottom:6%">
 							<h3 style="margin-bottom: 5%; margin-top: 12%;" >PENDING REQUESTS:</h3>
-							<div class="row">
-								<div class="col-lg-1">
-									<div class="review_image">
-										<img src="images/review_1.jpg" alt="https://unsplash.com/@saaout">
-									</div>
-								</div>
-								<div class="col-lg-11">
-									<div class="review_content">
-										<div class="review_title_container">
-											<div class="review_title" style="font-style: normal; margin-top: 2%">Milica Mukic</div>
-											<button class="button search_button" style="float: right; margin-top: -5%">CONFIRM<button>
-											
-										</div>
-									</div>
-								</div>
-							</div>
+							<ul id="requestList">
+								<template id="requestTemplate">
+										<li style="margin-bottom:10%">
+													<div id="requestDiv" height: 80px;  vertical-align:middle"  class="review_content">
+														<div class="review_title_container">
+															<div id="from" class="review_title" style="font-style: normal; margin-top: 5%; ">Muki Mukić</div>
+															<div style="float: right; margin-top:-40px; vertical-align: middle;">
+																<button id="declineButton" class="button search_button" style=" margin-top: -15%">DECLNE</button>
+																<button id="confirmButton" class="button search_button" style="margin-top:-15%; margin-left:30px;">CONFIRM</button>
+															</div>
+														</div>
+													</div>
+										</li>
+								</template>
+							</ul>
 						</div>
-
-						<p> No new friend requests. </p>
-
+						<p hidden style="margin-top:-5%" id="noNewRequests"> No new friend requests. </p>
+						<br>
+						<br>
 
 
 						<div class="reviews">
 							<div>
-								<input style="border: black 1px solid; float: left; width: 30%" type="text" placeholder="Search for people in" class="destination search_input" required="required">
-								<select style="width: 20%;border: black 1px solid; margin-left: 3%;" class=" search_input">
-									<option>Friends</option>
-									<option>All users</option>
+								<select id="peopleView" style="width: 20%;border: black 1px solid; margin-left: 3%;" class=" search_input">
+									<option selected value="friends">Friends</option>
+									<option value="users">All users</option>
 								</select>
+								<input id="searchField" style="border: black 1px solid; float: left; width: 30%" type="text" placeholder="Search for people in" class="destination search_input">
+								<button id="goButton" class="button search_button" style="margin-top:-20px;float:right">GO</button>
 								<hr>
 							</div>
-							<div class="reviews_container">
-							<br><br>
-
-
-
-
-								<!-- PRIJATELJ -->
-								<div class="review">
-									<div class="row">
-										<div class="col-lg-1">
-											<div class="review_image">
-												<img src="images/review_1.jpg" alt="https://unsplash.com/@saaout">
-											</div>
-										</div>
-										<div class="col-lg-11">
-											<div class="review_content">
-												<div class="review_title_container">
-													<div class="review_title" style="font-style: normal; margin-top: 2%">Alen Mukic</div>
-													<button class="button search_button" style="float: right; margin-top: -5%">Unfriend<butto>
-												</div>
-
-												<div class="review_date">Friend</div>
-
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- NEPRIJATELJ -->
-								<div class="review">
-									<div class="row">
-										<div class="col-lg-1">
-											<div class="review_image">
-												<img src="images/review_1.jpg" alt="https://unsplash.com/@saaout">
-											</div>
-										</div>
-										<div class="col-lg-11">
-											<div class="review_content">
-												<div class="review_title_container">
-													<div class="review_title" style="font-style: normal; margin-top: 2%">Milica Mukic</div>
-													<button class="button search_button" style="float: right; margin-top: -5%">Send Request<butto>
-												</div>
-
-
-											</div>
-										</div>
-									</div>
+							<div style="width:auto;height: 400px;overflow: auto;overflow-x: hidden;"class="reviews_container">
+								<br><br>
+	
+	
+	
+	
+								<div id="prijateljiSection">
+									<ul id="friendList">
+	
+									</ul>
+										<template id="friendTemplate">
+												<li style="margin-bottom:10%">
+															<div id="friendDiv" height: 80px;  vertical-align:middle"  class="review_content">
+																<div class="review_title_container">
+																	<div id="friendName" class="review_title" style="font-style: normal; margin-top: 5%; ">Muki Mukić</div>
+																	<div style="float: right; margin-top:-40px; vertical-align: middle;">
+																		<button id="unfriendButton" class="button search_button" style="margin-top:-15%; margin-left:30px;">UNFRIEND</button>
+																	</div>
+																</div>
+															</div>
+												</li>
+										</template>
+								</div>	<!-- PRIJATELJ -->
+	
+								<div id="neprijateljiSection">
+									<ul id="userList">
+	
+									</ul>
+									
+										<template id="userTemplate">
+												<li style="margin-bottom:10%">
+															<div id="userDiv" height: 80px;  vertical-align:middle"  class="review_content">
+																<div class="review_title_container">
+																	<div id="userName" class="review_title" style="font-style: normal; margin-top: 5%; ">Muki Mukić</div>
+																	<div style="float: right; margin-top:-40px; vertical-align: middle;">
+																		<button id="befriendButton" class="button search_button" style="margin-top:-15%; margin-left:30px;">SEND REQUEST</button>
+																	</div>
+																</div>
+															</div>
+												</li>
+										</template>
 								</div>
 							</div>
 						</div>
@@ -392,7 +371,7 @@
 
 							<!-- Search Panel -->
 
-							<div style=" margin-top:%" class="search_panel active">
+							<div style=" margin-top:0%" class="search_panel active">
 								<form action="#" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<div style="width: 49%;" class="search_item">
 										<div>Name: </div>

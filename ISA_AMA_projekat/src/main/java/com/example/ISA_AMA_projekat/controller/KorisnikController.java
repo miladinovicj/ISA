@@ -2,7 +2,9 @@ package com.example.ISA_AMA_projekat.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -329,4 +331,38 @@ public class KorisnikController {
 		
 		return new ResponseEntity<Collection<Korisnik>>(list,HttpStatus.OK);
 	}
+	
+	
+	
+	@RequestMapping(value = "/withNames/{text}/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Korisnik>> getAllFriendsOf(@PathVariable("text") String namePiece, @PathVariable("id") Integer userID)
+	{
+		
+		if(namePiece.equals(""))
+		{
+			return null;
+		}
+		
+		ArrayList<Korisnik> retVal = new ArrayList<Korisnik>();
+		
+		List<Korisnik> sviKorisnici = korisnikService.findAll();
+		
+		for(int i = 0 ; i < sviKorisnici.size() ; i ++)
+		{
+			Korisnik k = sviKorisnici.get(i);
+			if(korisnikService.areStrangers(userID, k))
+			{
+				String stringic = k.getIme().toLowerCase() + " " + k.getPrezime().toLowerCase();
+				
+				if(stringic.contains(namePiece.toLowerCase()))
+				{
+					retVal.add(k);
+				}
+			}
+		}
+		
+		
+		return new ResponseEntity<Collection<Korisnik>>(retVal,HttpStatus.OK);
+	}
+	
 }

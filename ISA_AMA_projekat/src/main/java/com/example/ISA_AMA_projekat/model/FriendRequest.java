@@ -60,8 +60,8 @@ public class FriendRequest implements Serializable
 		return stanje.ordinal();
 	}
 
-	public void setStanje(Stanje stanje) {
-		this.stanje = stanje;
+	public void setStanje(int stanje) {
+		this.stanje = Stanje.values()[stanje];
 	}
 
 	public Korisnik getSalje() {

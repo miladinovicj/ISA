@@ -1,9 +1,13 @@
 var korisnik = null;
-
-
+var token;
+var cnt_fr = 0;
+var friend_list = [];
 $(document).ready(function()
 		{
 	token=localStorage.getItem('jwtToken');
+	
+	
+
 	
 	
 	
@@ -18,7 +22,7 @@ $(document).ready(function()
 			if(user != "")
 			{
 				korisnik = user;
-				
+				console.log(user);
 				if(korisnik.authority.authority!="ROLE_SYSADMIN")
 				{
 					$("#div_buttons").hide();
@@ -44,6 +48,10 @@ $(document).ready(function()
 				
 				
 				getRezervacije();
+				setFriendShipRequests();
+				setFriends();
+				
+				selectDefaulView();
 			}
 			else
 			{
@@ -489,10 +497,108 @@ $(document).ready(function()
 		
 	}
 
+	
+	function setFriendShipRequests()
+	{
+		cnt_fr = 0;
+		console.log(korisnik.prijateljstva)
+		for( var i = 0 ; i < korisnik.prijateljstva.length ; i ++ )
+		{
+			if(korisnik.prijateljstva[i].stanje == 1) //stanje na cekanju
+			{
+				cnt_fr++;
+				zahtevOd = korisnik.prijateljstva[i].salje;
+				ubaciZahtev(korisnik.prijateljstva[i].id, zahtevOd);		
+			}
+		}
+		if(cnt_fr == 0)
+		{
+			$("#noNewRequests").prop("hidden",false);
+		}
 		
 		
+	}
+
+
+	function ubaciZahtev(zahtevID, luv)
+	{
+		var $requestTemplate = $('#requestTemplate');
+	    var $item = $($requestTemplate.html())
+	    
+	    $item.find("#from").text(luv.ime + " " + luv.prezime);
+	    
+	    $item.find("#confirmButton").prop("id","confirmButton" + zahtevID);
+	    $item.find("#declineButton").prop("id","declineButton" + zahtevID);
+	  
+
+	    $item.find("#requestDiv").prop("id","requestDiv"+zahtevID);
+	 
+	    var $requestList = $("#requestList");
+	    $requestList.append($item);
+	    
+		$("#confirmButton"+zahtevID).click(function()
+		{
+		    $.ajax({
+		        type: 'PUT',
+		        url: 'api/friendRequest/' + token + "/" + zahtevID,
+		        complete: function (data)
+				{
+		        	if(data == null)
+		        	{
+		        		console.log("greska");
+		        		
+		        	}
+		        	else
+		        	{
+		        		//izbrisi i ubaci u listu prijatelja
+		        		$("#requestDiv"+zahtevID).prop("hidden",true);
+		        		cnt_fr--;
+		        		if(cnt_fr == 0)
+		        		{
+		        			$("#noNewRequests").prop("hidden",false);
+		        		}
+		        		insertFirend(luv);
+		        	}
+				}
+		    });
+		});
 		
-});
+		$("#declineButton"+zahtevID).click(function()
+		{
+		
+					    $.ajax({
+					        type: 'DELETE',
+					        url: 'api/friendRequest/delete/' + token + "/" + zahtevID,
+					        complete: function (data)
+							{
+					        	if(data == null)
+					        	{
+					        		console.log("greska")
+					        	}
+					        	else
+					        	{
+					        		//izbrisi samo
+					        		$("#requestDiv"+zahtevID).prop("hidden",true);
+					        		cnt_fr--;
+					        		if(cnt_fr == 0)
+					        		{
+					        			$("#noNewRequests").prop("hidden",false);
+					        		}
+					        	}
+							}
+					    });
+			
+			
+		});
+
+	}
+
+
+	
+		
+		
+}
+);
 /*
 function refresh()
 {
@@ -964,4 +1070,190 @@ function changePassword()
 }
 
 
+function setFriends()
+{
+	$.get({
+		url: "/api/users/friendsOf/" + korisnik.id,
+		success: function(data) 
+		{
+			if(data == null)
+			{
+				console.log("nullcina");
+			}		
+			for(let friend of data)
+			{
+				insertFirend(friend);
+				friend_list.push(friend);
+			}
+			
+			
+			
+						
+		},
+		error : function(data)
+		{
+			console.log("errorcina prilikom prihvatanja prijatelja");
+		}
+		});
+	
+	setSearch();
+}
 
+
+function insertFirend(friend)
+{
+	var $friendTemplate = $('#friendTemplate');
+    var $item = $($friendTemplate.html())
+    
+    $item.find("#friendName").text(friend.ime + " " + friend.prezime);
+    
+    $item.find("#unfriendButton").prop("id","unfriendButton" + friend.id);
+  
+
+    $item.find("#friendDiv").prop("id","friendDiv"+friend.id);
+ 
+    var $friendList = $("#friendList");
+    $friendList.append($item);
+    
+	$("#unfriendButton"+friend.id).click(function()
+	{
+	    $.ajax({
+	        type: 'DELETE',
+	        url: 'api/friendRequest/deleteFriend/' + token + "/" + friend.id,
+	        complete: function (data)
+			{
+	        	if(data == null)
+	        	{
+	        		console.log("greska")
+	        	}
+	        	else
+	        	{
+	        		//izbrisi samo
+	        		$("#friendDiv"+ friend.id).prop("hidden",true);
+	        	}
+			}
+	    });
+	});
+}
+
+
+function insertUser(friend)
+{
+	var $userTemplate = $('#userTemplate');
+    var $item = $($userTemplate.html())
+    
+    $item.find("#userName").text(friend.ime + " " + friend.prezime);
+    
+    $item.find("#befriendButton").prop("id","befriendButton" + friend.id);
+  
+
+    $item.find("#userDiv").prop("id","userDiv"+friend.id);
+ 
+    var $userList = $("#userList");
+    $userList.append($item);
+    
+	$("#befriendButton"+friend.id).click(function()
+	{
+	    $.ajax({
+	        type: 'POST',
+	        url: 'api/friendRequest/befriend/' + token + "/" + friend.id,
+	        complete: function (data)
+			{
+	        	if(data == null || data == undefined || data =="")
+	        	{
+	        		console.log("greska u kreiranju");        		
+	        	}
+	        	else
+	        	{
+	        		$("#befriendButton"+friend.id).html("REQUEST SENT");
+	        		$("#befriendButton"+friend.id).prop("disabled",true);
+	        		$("#befriendButton"+friend.id).css("background-color","#ff9966");
+	        		console.log(data)
+	        	}
+			}
+	    });
+	});
+}
+
+
+
+function selectDefaulView()
+{
+	$("#prijateljiSection").prop("hidden",false);
+	$("#neprijateljiSection").prop("hidden",true);
+	
+	$("#peopleView").change(function() 
+	{
+		var value = $( "#peopleView option:selected" ).val();
+		if(value == "users")
+		{
+			$("#prijateljiSection").prop("hidden",true);
+			$("#neprijateljiSection").prop("hidden",false);
+		}
+		if(value == "friends")
+		{
+			$("#prijateljiSection").prop("hidden",false);
+			$("#neprijateljiSection").prop("hidden",true);
+		}
+		if(value !="friends" && value!="users")
+		{
+			return;
+		}
+	});
+
+}
+
+function getValOfSelect()
+{
+ 	return $( "#peopleView option:selected" ).val();
+}
+
+
+function setSearch()
+{
+
+	$("#goButton").click(function(){
+		
+		
+		var searchText = $("#searchField").val().toLowerCase();
+		if(getValOfSelect() == "friends")
+		{
+			$("#friendList").empty();
+			for(var i = 0 ; i < friend_list.length ; i ++)
+			{				
+				thisFriend = friend_list[i].ime.toLowerCase() + " " + friend_list[i].prezime.toLowerCase();  
+				if(thisFriend.indexOf(searchText) >= 0)
+				{
+					insertFirend(friend_list[i]);
+				}
+			}
+		}
+		if(getValOfSelect() == "users")
+		{
+			$("#userList").empty();
+			if(searchText == "") return;
+			$.get({
+				url: "/api/users/withNames/" + searchText + "/" + korisnik.id,
+				success: function(data) 
+				{
+					if(data == null)
+					{
+						console.log("nullcina");
+					}		
+					for(let user of data)
+					{
+						insertUser(user);
+					}
+				
+				},
+				error : function(data)
+				{
+					console.log("errorcina prilikom prihvatanja usera");
+				}
+				});
+			
+		}
+		
+	});
+
+}
