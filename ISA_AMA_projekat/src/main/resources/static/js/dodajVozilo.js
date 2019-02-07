@@ -268,18 +268,12 @@ $(document).ready(function()
 		{
 			
 		
-			if(!(/[A-Z]/.test( naziv[0])))
-			{
-			$('#validacijaNaziv').text("First letter of the name must be capital!");
-			ispravno=false;
 			
-			}
-			else
 			$('#validacijaNaziv').text("");
 		
 			
 		
-			if(!(/[A-Z]/.test( naziv[0])))
+			if(!(/[A-Z]/.test( marka[0])))
 			{
 			$('#validacijaMarka').text("First letter of the brand must be capital!");
 			ispravno=false;
@@ -299,10 +293,10 @@ $(document).ready(function()
 				success: function(data) {
 					if(data==null || data==""){
 						//$('#validacijaEmail').text('User with this email already exists!');
-						alert('Nije izmenjen!');
+						$('#neuspesno').text('Car with this name, brand and model already exists!');
 					}
 					else {
-						
+						$('#neuspesno').text("");
 						$('#uspesno').text('Car successfully added!');
 						$('#forma').hide();
 						

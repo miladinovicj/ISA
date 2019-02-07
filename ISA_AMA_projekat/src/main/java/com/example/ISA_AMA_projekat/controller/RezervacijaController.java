@@ -22,6 +22,7 @@ import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Let;
 import com.example.ISA_AMA_projekat.model.OsobaIzRez;
+import com.example.ISA_AMA_projekat.model.Poziv;
 import com.example.ISA_AMA_projekat.model.Rating;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
@@ -171,6 +172,7 @@ public class RezervacijaController
 			}
 			//ubacivanje sedista
 			let.getZauzetaSedista().add(osoba.getSediste());
+			
 		}	
 		
 		System.out.println("Korisnik: " + korisnik.getId() + " Let: " + let.getId());		
@@ -576,6 +578,40 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
-
+	@RequestMapping(
+			value = "/obrisiOsobu/{osoba_id}/{rez_id}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Rezervacija deleteOsoba(@PathVariable("osoba_id") Integer osoba_id, @PathVariable("rez_id") Integer rez_id)
+	{
+		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		Let let = letService.findById(rez.getLet().getId()).get();
+		double cena_rez=rez.getCena();
+		System.out.println("CENA REZ " + cena_rez);
+		double cena_let = let.getCena();
+		System.out.println("CENA LET " + cena_let);
+		double nova_cena = cena_rez-cena_let;
+		
+		System.out.println("NOVA " + nova_cena);
+		rezervacijaService.updateCena(nova_cena, rez_id);
+		
+		rezervacijaService.obrisiOsobu(osoba_id, rez_id);
+		return rez;
+		
+	}
+	
+	@RequestMapping(
+			value = "/prihvatiRez/{osoba_id}/{rez_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public Rezervacija prihvatiRez(@PathVariable("osoba_id") Integer osoba_id, @PathVariable("rez_id") Integer rez_id)
+	{
+		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		
+		rezervacijaService.potvrdiRez(osoba_id, rez_id);
+		return rez;
+		
+	}
+	
 	
 }

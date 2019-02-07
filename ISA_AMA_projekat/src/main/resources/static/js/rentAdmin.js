@@ -24,6 +24,38 @@ $(document).ready(function()
 		}
     });
 	
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	 if(dd<10){
+	        dd='0'+dd
+	    } 
+	    if(mm<10){
+	        mm='0'+mm
+	    } 
+
+	today = yyyy+'-'+mm+'-'+dd;
+	
+	$('input[name=start_special_price]').attr("min", today);
+	$('input[name=end_special_price]').attr("min", today);
+	
+	$('input[name=start_special_price]').on('change', function(){
+		
+		var datum = $('input[name=start_special_price]').val();
+		$('input[name=end_special_price]').attr("min", datum);
+		
+		var date_start = new Date(datum);
+		var date_end = new Date($('input[name=end_special_price]').val());
+		
+		if(date_end < date_start)
+		{
+			$('input[name=end_special_price]').val(datum);
+		}
+	});
+	
+	
+	
 	$('#izmenaCENE').submit(function(event){
 		
 		event.preventDefault();
@@ -53,6 +85,41 @@ $(document).ready(function()
 		
 			
 	});
+		
+	});
+	
+	$('#special_price_form').submit(function(event) {
+		console.log('special_price_form submit');
+		event.preventDefault();
+		
+
+		$('#error_start_special_price').hide();
+		
+		let selected = $( "select[name=services_special_price]" ).val();
+		let date_start = $('input[name="start_special_price"]').val();
+		let date_end = $('input[name="end_special_price"]').val();
+		let discount = $('input[name="discount_special_price"]').val();
+		let id_vozilo = $('select[name="car_special_price"] option:selected').val();
+		
+		$.post({
+			url: '/api/rents/add_special_price/' + id_vozilo,
+			headers: {"Authorization": "Bearer " + token},
+			data: JSON.stringify({pocetak_vazenja: date_start, kraj_vazenja: date_end, popust: discount}),
+			contentType: 'application/json',
+			success: function(data) {
+				if(data.result == 'success'){
+					console.log('Popust uspesno dodat');
+					window.location.href="rentAdmin.html?id=" + id;
+					dodajUsluge(data.popust_id, selected);
+				}
+				else 
+				{
+					console.log('Popust nije uspesno dodat');
+					$('#error_start_special_price').show();
+				}
+			}
+		});
+		
 		
 	});
 });
@@ -97,6 +164,15 @@ function showRentacar(rentacar)
 	    	$("#text_no_services").text("Additional services: ");
 	    	$("#izmenaCENE").attr("hidden", false);
 	    	$('input[name="promena_cene"]').val(0);
+	    	var selectsp = $('select[name=services_special_price]');
+			selectsp.children().remove();
+			
+			var option = document.createElement("option");
+	    	option.text = '';
+	    	option.value = 0;
+	    	selectsp.append(option);
+	    	
+	    	
 	    	for(let usluga of rentacar.usluge)
 	    		{
 	    		var opcija='<option value="' + usluga.id + '">' + usluga.naziv +  '</option>';
@@ -107,11 +183,25 @@ function showRentacar(rentacar)
 	    		let li = $('<li>' + usluga.naziv + ' - $' + usluga.cena + '/per day</li>');
 	    		$('#usluge_rentacar').append(li);
 	    	}
+	    	
+	    	for (let usluga of rentacar.usluge) 
+	    	{
+	    		
+	    		var option = document.createElement("option");
+				option.text = usluga.naziv;
+				option.value = usluga.id;
+				selectsp.append(option);
+	    	}
 		}
 }
 
 function addFilijala(rentacar, filijala)
 {
+	for (let vozilo of filijala.vozila)
+		{
+		var option = '<option value="' + vozilo.id + '">' + vozilo.naziv + ' ' + vozilo.marka + ' ' + vozilo.model + '</option>';
+		$('select[name="car_special_price"]').append(option);
+		}
 	var temp, div, a;
 	temp = document.getElementById("template_filijala");
 	div = temp.content.querySelector("div#ubaci_filijalu");
@@ -305,6 +395,7 @@ function izlistajVozila(filijala_id, rentacar_id)
 		url: '/api/filijale/' + filijala_id,
 		success: function(filijala) {
 			console.log('filijala_uspesno_vracena ' + filijala.id);
+		
 			for(let vozilo of filijala.vozila)
 				{
 				
@@ -339,6 +430,46 @@ function addVozilo(car, rentacar_id)
 	temp.content.getElementById("broj_sedista").innerHTML = broj_sedista_string;
 	temp.content.getElementById("cena_auta").innerHTML = '$' + car.cena_dan + '/day';
 	temp.content.getElementById("prosecna_ocena").innerHTML = car.prosecna_ocena;
+	
+	if(car.popusti.length == 0)
+	{
+		temp.content.getElementById("text_discount_list").style.display = 'none';
+		temp.content.getElementById("discount_list").style.display = 'none';
+	}
+	
+	list = temp.content.getElementById("discount_list");
+	while (list.hasChildNodes()) 
+	{   
+		list.removeChild(list.firstChild);
+	}
+	
+	for (let popust of car.popusti) 
+	{	
+		temp.content.getElementById("text_discount_list").style.display = 'block';
+		
+		list.style.display = 'block';
+		
+		let li = document.createElement("li");
+		var inner = '<span>' + popust.pocetak_vazenja.substring(0, 10) + '  -  ' + popust.kraj_vazenja.substring(0, 10) + '  -  ' + popust.popust + '%';
+		
+		var usluge_str = '';
+		for(let usluga of popust.usluge)
+		{
+			usluge_str += usluga.naziv + ', ';
+		}
+		
+		usluge_str = usluge_str.substring(0, usluge_str.length-2);
+		
+		if(popust.usluge.length >0)
+			inner += ' (' + usluge_str + ')';
+		
+		inner += '</span>';
+				
+		//li.innerHTML =	'<span>' + popust.pocetak_vazenja.substring(0, 10) + '  -  ' + popust.kraj_vazenja.substring(0, 10) + '  -  ' + popust.popust + '%</span>';
+		li.innerHTML = inner;
+		temp.content.getElementById("discount_list").appendChild(li);
+	}
+    
 	 let rezervisana = false;
 	    
 	    for(let rezervacija of car.rezervacije)
@@ -374,12 +505,11 @@ function addVozilo(car, rentacar_id)
 		temp.content.getElementById("brisanje_auta").innerHTML = '';
 		}
 	
-	
-	
-	
-		
 	a = document.importNode(div, true);
     document.getElementById("ubaci_auto_template").appendChild(a);
+    
+	
+	
     
 }
 
@@ -413,4 +543,59 @@ function initMap()
           zoom: 17
         })
       });
+}
+
+
+function addSpecialPrice()
+{
+	console.log('add special price');
+	
+	$('#div_special_price').show();
+
+	
+	var el = document.getElementById('div_special_price');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -150);
+}
+
+function backEdit()
+{
+	
+	$('#div_special_price').hide();
+	
+	$('#button_hotel_back').attr('pritisnuto', 'true');
+	
+	var el = document.getElementById('div_changing_buttons');
+    el.scrollIntoView(true);
+    window.scrollBy(0, -500);
+}
+
+
+function dodajUsluge(popust_id, usluge)
+{
+	for(var i = 0, size = usluge.length; i < size ; i++)
+	{
+		var usluga_id = usluge[i];
+		var id_popust = '' + popust_id + '';
+		
+		if(usluga_id != '0')
+		{
+			$.post({
+				url: '/api/rents/add_usluga_special_price/' + id_popust + '/' + usluga_id,
+				headers: {"Authorization": "Bearer " + token},
+				contentType: 'application/json',
+				success: function(data) {
+					if(data.result == 'success'){
+						console.log('Popust uspesno dodat');
+						window.location.href="rentAdmin.html?id=" + id;
+					}
+					else 
+					{
+						console.log('Popust nije uspesno dodat');
+						
+					}
+				}
+			});
+		}
+	}	
 }

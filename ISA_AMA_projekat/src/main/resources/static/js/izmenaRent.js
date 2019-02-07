@@ -240,7 +240,7 @@ $(document).ready(function()
         	$('input[name="rent_grad"]').val(servis.adresa.grad.naziv);
         	$('input[name="rent_latitude"]').val(servis.adresa.latitude);
         	$('input[name="rent_longitude"]').val(servis.adresa.longitude);
-        	$('input[name="rent_opis"]').val(servis.promotivni_opis);
+        	$('textarea[name="rent_opis"]').val(servis.promotivni_opis);
         	
 		}
     });
@@ -256,7 +256,7 @@ $(document).ready(function()
 		let grad = $('input[name="rent_grad"]').val();
 		let latitude = $('input[name="rent_latitude"]').val();
 		let longitude = $('input[name="rent_longitude"]').val();
-		let opis = $('input[name="rent_opis"]').val();
+		let opis = $('textarea[name="rent_opis"]').val();
 		
 		$('#uspesno').text("");
 		$('#neuspesno').text("");

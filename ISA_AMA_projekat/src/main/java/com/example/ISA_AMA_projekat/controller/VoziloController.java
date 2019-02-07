@@ -75,6 +75,10 @@ public class VoziloController {
 			@PathVariable("godina") int godina, @PathVariable("sedista") int sedista, @PathVariable("tip") String tip,
 			@PathVariable("cena") double cena)
 	{
+		
+		Vozilo found = voziloService.postoji(marka, naziv, model, godina, filijala);
+		if(found==null)
+		{
 		System.out.println("[VoziloController]: addVozilo");
 		Vozilo auto = new Vozilo();
 		auto.setNaziv(naziv);
@@ -84,10 +88,14 @@ public class VoziloController {
 		auto.setBroj_sedista(sedista);
 		auto.setTip(tip);
 		auto.setCena_dan(cena);
+		auto.setProsecna_ocena(0);
 		auto.setZauzeto(false);
 		Vozilo v = voziloService.save(auto);
 		voziloService.updateFil(filijala, v.getId());
 		return v;
+		}
+		else
+			return null;
 	}
 	
 	@PreAuthorize("hasRole('RENTADMIN')")
