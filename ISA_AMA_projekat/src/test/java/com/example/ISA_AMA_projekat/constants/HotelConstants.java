@@ -15,7 +15,7 @@ public class HotelConstants {
     public static final Integer DB_ID = 3;
     public static final String DB_NAZIV = "Hotel Moskva";
     public static final String DB_PROMOTIVNI_OPIS = "Odlican hotel";
-    public static final double DB_PROSECNA_OCENA = 3.5;
+    public static final double DB_PROSECNA_OCENA = 4.8;
     
     public static final int DB_ADULTS = 2;
     
