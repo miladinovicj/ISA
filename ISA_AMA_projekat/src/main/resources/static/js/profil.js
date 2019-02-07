@@ -462,8 +462,16 @@ $(document).ready(function()
 			success: function(data) 
 			{
 				$.each(data, function( index, value ) 
-				{				
+				{			
+					if(value.zavrsena==true && value.korisnik.id!=korisnik.id)
+					{	
 					insertReservation(value);
+					}
+					
+					if(value.korisnik.id==korisnik.id)
+						{
+						insertReservation(value);
+						}
 				});
 				if(data.length > 0)
 				{
@@ -490,10 +498,49 @@ $(document).ready(function()
 	    if(potvrdjenaRez(rezervacija))
 	    {
 	    	 $item.find("#nepotvrdjeaRez").prop("hidden",true);
+	    	 $item.find("#prihvatiButton").prop("hidden",true);
+		    	$item.find("#odbijButton").prop("hidden",true);
 	    }
 	    else
 	    {
-	    	$item.find("#nepotvrdjeaRez").prop("hidden",false);
+	    	var today = new Date();
+	    	var today_vreme = today.getTime();
+	    	
+	    	var vreme = rezervacija.let.vremePoletanja;
+	    	var date = new Date(vreme);
+	    	var pravi = date.toString();
+	    	var date_pol = new Date(pravi);
+	    	var vr_poletanja = date_pol.getTime();
+	    	var vreme3=vr_poletanja-10800000;
+	    	
+	    	var datum_rez = rezervacija.datum_rezervacije;
+	    	var date_rez = new Date(datum_rez);
+	    	var pravi_rez = date_rez.toString();
+	    	var date_vrrez = new Date(pravi_rez);
+	    	var vr_rez = date_vrrez.getTime();
+	    	var vreme3dana=vr_rez+259200000;
+	    	
+	    	if(today_vreme>vreme3 || today_vreme>vreme3dana)
+	    	{
+	    		$.ajax({
+	    	        type: 'DELETE',
+	    	        url: 'api/rezervacija/obrisiOsobu/' + korisnik.id + '/' + rezervacija.id,
+	    	        contentType: 'application/json',
+	    	        success: function (rez)
+	    			{
+	    	            console.log("Osoba obrisana iz osoba_iz_rez i nije vise u rezervaciji " + rez.id);
+	    	            window.location.href="profil.html";
+	    			}
+	    	    });
+	    	}
+	    	else
+	    	{
+		    	$item.find("#nepotvrdjeaRez").prop("hidden",false);
+		    	$item.find("#prihvatiButton").prop("hidden",false);
+		    	$item.find("#prihvatiButton").click(function(){ prihvatiRez(rezervacija.id);});
+		    	$item.find("#odbijButton").prop("hidden",false);
+		    	$item.find("#odbijButton").click(function(){ odbijRez(rezervacija.id);});
+	    	}
 	    }
 	    
 	    var $reservationList = $("#reservationList");
@@ -505,7 +552,40 @@ $(document).ready(function()
 
 	}
 
+function odbijRez(rez_id)
+{
+	
+	$.ajax({
+        type: 'DELETE',
+        url: 'api/rezervacija/obrisiOsobu/' + korisnik.id + '/' + rez_id,
+        contentType: 'application/json',
+        success: function (rez)
+		{
+        	
+            console.log("Osoba obrisana iz osoba_iz_rez i nije vise u rezervaciji " + rez.id);
+            window.location.href="profil.html";
+		}
+    });
 
+
+}
+
+function prihvatiRez(rez_id)
+{
+	//alert("REZ ID: " + rez_id);
+	$.ajax({
+        type: 'POST',
+        url: 'api/rezervacija/prihvatiRez/' + korisnik.id + '/' + rez_id,
+        contentType: 'application/json',
+        success: function (rez)
+		{
+            console.log("Osoba prihvatila rezervaciju " + rez.id);
+            window.location.href="profil.html";
+		}
+    });
+
+
+}
 
 	function potvrdjenaRez(rezervacija)
 	{

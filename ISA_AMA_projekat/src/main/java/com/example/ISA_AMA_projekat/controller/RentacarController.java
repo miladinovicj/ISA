@@ -9,8 +9,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +37,11 @@ import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
+import com.example.ISA_AMA_projekat.model.Soba;
 import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.service.AddressService;
 import com.example.ISA_AMA_projekat.service.GradService;
+import com.example.ISA_AMA_projekat.service.PopustService;
 import com.example.ISA_AMA_projekat.service.RentacarService;
 import com.example.ISA_AMA_projekat.service.RezervacijaService;
 import com.example.ISA_AMA_projekat.service.RezervacijaVozilaService;
@@ -65,6 +69,9 @@ public class RentacarController {
 	
 	@Autowired
 	private RezervacijaVozilaService rezervacijaVozilaService;
+	
+	@Autowired
+	private PopustService popustService;
 	
 	@RequestMapping(
 			value = "/all",
@@ -1389,5 +1396,64 @@ public class RentacarController {
 		System.out.println("Povratna vrednost: " + ret);
 		
 		return ret;
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/add_special_price/{id_vozilo}",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addSpecialPrice(@PathVariable("id_vozilo") Integer id_vozilo, @RequestBody Popust popust){
+		
+		Vozilo vozilo = voziloService.findById(id_vozilo).get();
+		
+		Date pocetak = popust.getPocetak_vazenja();
+		Date kraj = popust.getKraj_vazenja();
+		
+		System.out.println("[HotelController: addSpecialPrice] popust - pocetak: " + pocetak + "; kraj: " + kraj);
+		boolean postoji = false;
+		
+		for(Iterator<Popust> iteratorPopust = vozilo.getPopusti().iterator(); iteratorPopust.hasNext();) {
+			Popust pronadjen = iteratorPopust.next();
+			System.out.println("[HotelController: addSpecialPrice] pronadjen - pocetak: " + pronadjen.getPocetak_vazenja() + "; kraj: " + pronadjen.getKraj_vazenja());
+			Date pronadjen_pocetak = pronadjen.getPocetak_vazenja();
+			Date pronadjen_kraj = pronadjen.getKraj_vazenja();
+			
+			if(pocetak.equals(pronadjen_pocetak) || pocetak.equals(pronadjen_kraj) || kraj.equals(pronadjen_pocetak) || (pronadjen_pocetak.after(pocetak) && pronadjen_pocetak.before(kraj)) || (pocetak.after(pronadjen_pocetak) && pocetak.before(pronadjen_kraj)) || (kraj.after(pronadjen_pocetak) && kraj.before(pronadjen_kraj))) {
+				postoji = true;
+				break;
+			}
+		}
+
+		Map<String, Object> result = new HashMap<>();
+		
+		if(!postoji) {
+			Popust saved = popustService.save(popust);
+			popustService.updateVozilo(id_vozilo, saved.getId());
+			
+			result.put("result", "success");
+			result.put("popust_id", saved.getId());
+		}else {
+			result.put("result", "error");
+		}
+		
+		return ResponseEntity.accepted().body(result);
+	}
+	
+	@PreAuthorize("hasRole('RENTADMIN')")
+	@RequestMapping(
+			value = "/add_usluga_special_price/{popust_id}/{usluga_id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addUslugaSpecialPrice(@PathVariable("popust_id") Integer popust_id, @PathVariable("usluga_id") Integer usluga_id){
+		
+		popustService.updateUsluga(popust_id, usluga_id);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("result", "success");
+			
+		return ResponseEntity.accepted().body(result);
 	}
 }

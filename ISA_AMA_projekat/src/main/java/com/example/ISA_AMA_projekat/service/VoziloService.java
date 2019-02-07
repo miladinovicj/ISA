@@ -42,5 +42,10 @@ public class VoziloService {
 	{
 		voziloRepository.updateProsecnaVozilo(prosecna_ocena, vozilo_id);
 	}
+	
+	public Vozilo postoji(String marka, String naziv, String model, int godina_proizvodnje, Integer filijala)
+	{
+		return voziloRepository.postoji(marka, naziv, model, godina_proizvodnje, filijala);
+	}
 
 }
