@@ -1,6 +1,8 @@
 var id_rez=null;
+var token = null;
 $(document).ready(function()	
 {
+	token=localStorage.getItem('jwtToken');
 	
 	var search = window.location.search;
 	var splitted = search.split('&');
@@ -170,14 +172,22 @@ function addSpecialPrice(vozilo)
         	document.getElementById("cena_autasp").innerHTML = 'Regular price: $' + vozilo.cena_dan + '/day\r\nPrice with discount: $' + popust_cena + '/day';
         	if(id_rez!=0)
         		{
-        	$(".button_book_carrsp").addClass('vozilo_id_' + vozilo.id);
+        	$(".button_book_carsp").addClass('vozilo_id_' + vozilo.id);
         	var elements = document.getElementsByClassName('button_book_carsp');
-        	for(element of elements)
-        	{
-        		$(element).removeClass('button_book_carsp');
-        		$(element).click(bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo.id));
-        	}
+			        	for(element of elements)
+			        	{
+			        		$(element).removeClass('button_book_carsp');
+			        		$(element).click(bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo.id));
+			        	}
         		}
+        	else
+        	{
+        			var elements = document.getElementsByClassName('button_book_carsp');
+        			for(element of elements)
+        			{
+        				element.parentElement.style.display = 'none';
+        			}
+        	}
 		}
     });
 	
@@ -195,7 +205,8 @@ function bookCarSpecial(check_in, check_out, pronadjen_popust, vozilo_id)
 			url: 'api/rents/book_car_special/' + vozilo_id + '/' + check_in + '/' + check_in_town + '/' + check_out + '/' + check_out_town + '/' + passengers + '/' + id_rez,
 			type: 'PUT',
 			data: JSON.stringify(pronadjen_popust),
-			contentType: 'application/json; charset=utf-8',
+			headers: {"Authorization": "Bearer " + token},
+	        contentType: 'application/json',
 			success: function(vozilo) {
 				console.log("uspesna brza rezervacija vozila sa id: " + vozilo.id);
 				alert('uspesna brza rezervacija vozila sa id: ' + vozilo.id + " dodata u rez: " + id_rez);
@@ -352,7 +363,8 @@ function bookCar(id)
 			url: 'api/rents/book_car/' + id  + '/' + id_rez,
 			type: 'PUT',
 			data: JSON.stringify(rezervacijaVozila),
-			contentType: 'application/json; charset=utf-8',
+			 headers: {"Authorization": "Bearer " + token},
+		     contentType: 'application/json',
 			success: function(vozilo) {
 				console.log("uspesna rezervacija vozila sa id_vozila: " + vozilo.id);
 				alert('uspesna rezervacija vozila sa id_vozila: ' + vozilo.id + " dodata u rez: " + id_rez);

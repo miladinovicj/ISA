@@ -72,7 +72,7 @@ $(document).ready(function()
 		$.post
 		({
 			url: "/auth/userprofile",
-			headers: 'Authorization',
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			data : token,
 			  
@@ -271,6 +271,7 @@ $(document).ready(function()
 	{
 		$.get({
 		url: "/api/users/friendsOf/" + korisnikId,
+		headers: {"Authorization": "Bearer " + token},
 		success: function(data) 
 		{
 			if(data == null)
@@ -454,6 +455,7 @@ $(document).ready(function()
 		$.post({
 			url: "/api/rezervacija/create/" + flight.id + "/" + token,
 			data: JSON.stringify(rezervacijaOsobe),
+			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			success: function(data) {
 				if(data==null || data=="")

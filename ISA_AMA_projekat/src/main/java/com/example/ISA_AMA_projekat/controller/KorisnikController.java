@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -301,6 +302,9 @@ public class KorisnikController {
 		}
 	}
 	
+	
+	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping("/changeData/{email}")
 	public void changeData(@PathVariable("email") String email, @RequestBody Korisnik korisnik){
 		
@@ -330,17 +334,19 @@ public class KorisnikController {
 		System.out.println("[KorisnikController: changeData] korisnik uspesno update-ovan.");
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(value = "/friendsOf/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Korisnik>> getAllFriendsOf(@PathVariable("id") int userID)
 	{
 		Collection<Korisnik> list = korisnikService.getAllFriendsOfUser(userID);
-		
+		ArrayList<Korisnik> sortirani = (ArrayList<Korisnik>) list;
+		sortirani.sort(Comparator.comparing(Korisnik::getIme));
+		list = sortirani;
 		return new ResponseEntity<Collection<Korisnik>>(list,HttpStatus.OK);
 	}
 	
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(value = "/withNames/{text}/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Korisnik>> getAllFriendsOf(@PathVariable("text") String namePiece, @PathVariable("id") Integer userID)
 	{
@@ -372,6 +378,7 @@ public class KorisnikController {
 		return new ResponseEntity<Collection<Korisnik>>(retVal,HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/set_bonus_points/{distance}/{id}",
 			method = RequestMethod.POST,
@@ -450,6 +457,7 @@ public class KorisnikController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/update_bonus/{points}/{id}",
 			method = RequestMethod.POST,

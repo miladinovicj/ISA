@@ -7,6 +7,7 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -70,7 +71,9 @@ public class HotelController {
 	public ResponseEntity<Collection<Hotel>> getHotels(){
 		
 		Collection<Hotel> hotels = hotelService.findAll();
-		
+		ArrayList<Hotel> sortirani = (ArrayList<Hotel>) hotels;
+		sortirani.sort(Comparator.comparing(Hotel::getNaziv));
+		hotels = sortirani;
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
 	}
 	
@@ -364,6 +367,7 @@ public class HotelController {
 		}
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/add_usluga/{usluga_id}",
 			method = RequestMethod.POST,
@@ -378,6 +382,7 @@ public class HotelController {
 		return new ResponseEntity<RezervacijaHotel>(rezervacijaHotela, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/remove_usluga/{usluga_id}",
 			method = RequestMethod.POST,
@@ -429,6 +434,7 @@ public class HotelController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_room/{soba_id}/{id_rez}",
 			method = RequestMethod.PUT,
@@ -488,6 +494,7 @@ public class HotelController {
 		return new ResponseEntity<Soba>(soba, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_room_special/{soba_id}/{check_in}/{check_out}/{rez_id}",
 			method = RequestMethod.PUT,

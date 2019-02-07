@@ -7,9 +7,9 @@ var soba=null;
 var hotel=null;
 var sediste=null;
 var odabrano = null;
-
+var token =null;
 $(document).ready(function(){
-	
+	token = localStorage.getItem('jwtToken');
 	
 	getKorisnik();
 	
@@ -60,6 +60,7 @@ $(document).ready(function(){
 			$.ajax({
 		        type: 'POST',
 		        url: 'api/rezervacija/updateCena/' + rezervacija.id + '/' + cenaSaPopustom,
+		        headers: {"Authorization": "Bearer " + token},
 		        contentType: 'application/json',
 		        success: function (rez)
 				{
@@ -94,7 +95,7 @@ function preusmeriHotel(check_in_town, check_in_date, check_out_date, adults){
 
 function getKorisnik()
 {
-	token = localStorage.getItem('jwtToken');
+	
 	$.post
 	({
 		url: "/auth/userprofile",
@@ -130,6 +131,7 @@ function getRezervacija()
     $.ajax({
         type: 'GET',
         url: 'api/rezervacija/' + rezID,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         dataType: "json",
         complete: function (data)
@@ -191,7 +193,7 @@ function initWindow()
 		
 		$.post({
 			url: "/api/users/set_bonus_points/" + rezervacija.let.udaljenost + '/' + rezervacija.korisnik.id,
-			  
+			headers: {"Authorization": "Bearer " + token}, 
 			success: function(data) {
 				
 				if(data.result == 'success')
@@ -552,6 +554,7 @@ function otkaziLet()
 	$.ajax({
         type: 'DELETE',
         url: 'api/rezervacija/otkaziLet/' + rezervacija.id + '/' + sediste,
+        headers: {"Authorization": "Bearer " + token}, 
         contentType: 'application/json',
         success: function (let)
 		{
@@ -566,6 +569,7 @@ function otkaziHotel()
 	$.ajax({
         type: 'DELETE',
         url: 'api/rezervacija/otkaziHotel/' + rezervacija.id,
+        headers: {"Authorization": "Bearer " + token}, 
         contentType: 'application/json',
         success: function (hotel)
 		{
@@ -581,6 +585,7 @@ function otkaziAuto()
 	$.ajax({
         type: 'DELETE',
         url: 'api/rezervacija/otkaziAuto/' + rezervacija.id,
+        headers: {"Authorization": "Bearer " + token}, 
         contentType: 'application/json',
         success: function (auto)
 		{
@@ -597,6 +602,7 @@ function zavrsiRezervaciju()
 	$.ajax({
         type: 'POST',
         url: 'api/rezervacija/zavrsi/' + rezervacija.id,
+        headers: {"Authorization": "Bearer " + token}, 
         contentType: 'application/json',
         success: function (rez)
 		{
@@ -610,6 +616,7 @@ function zavrsiRezervaciju()
 		$.ajax({
 	        type: 'POST',
 	        url: 'api/users/update_bonus/' + points + '/' + rezervacija.korisnik.id,
+	        headers: {"Authorization": "Bearer " + token}, 
 	        contentType: 'application/json',
 	        success: function (rez)
 			{
@@ -622,6 +629,7 @@ function zavrsiRezervaciju()
 		$.ajax({
 	        type: 'POST',
 	        url: 'api/users/update_bonus/' + bonus_poeni + '/' + rezervacija.korisnik.id,
+	        headers: {"Authorization": "Bearer " + token}, 
 	        contentType: 'application/json',
 	        success: function (rez)
 			{
@@ -658,6 +666,7 @@ function oceniLet()
 	    	$.ajax({
 	            type: 'POST',
 	            url: 'api/rezervacija/ocenaLeta/' + aktivne + '/' + flight.id + '/' + korisnik.id,
+	            headers: {"Authorization": "Bearer " + token}, 
 	            contentType: 'application/json',
 	            success: function (prosek)
 	    		{
@@ -695,6 +704,7 @@ function oceniAvio()
 		    	$.ajax({
 		            type: 'POST',
 		            url: 'api/rezervacija/ocenaAvio/' + aktivne + '/' + flight.id + '/' + korisnik.id,
+		            headers: {"Authorization": "Bearer " + token}, 
 		            contentType: 'application/json',
 		            success: function (prosek)
 		    		{
@@ -733,6 +743,7 @@ function oceniHotel()
 	    	$.ajax({
 	            type: 'POST',
 	            url: 'api/rezervacija/ocenaHotel/' + aktivne + '/' + hotel.id + '/' + korisnik.id,
+	            headers: {"Authorization": "Bearer " + token}, 
 	            contentType: 'application/json',
 	            success: function (prosek)
 	    		{
@@ -771,6 +782,7 @@ function oceniSobu()
 	    	$.ajax({
 	            type: 'POST',
 	            url: 'api/rezervacija/ocenaSoba/' + aktivne + '/' + soba.id + '/' + korisnik.id,
+	            headers: {"Authorization": "Bearer " + token}, 
 	            contentType: 'application/json',
 	            success: function (prosek)
 	    		{
@@ -809,6 +821,7 @@ function oceniRent()
 	    	$.ajax({
 	            type: 'POST',
 	            url: 'api/rezervacija/ocenaRent/' + aktivne + '/' + rentacar_servis.id + '/' + korisnik.id,
+	            headers: {"Authorization": "Bearer " + token}, 
 	            contentType: 'application/json',
 	            success: function (prosek)
 	    		{
@@ -847,6 +860,7 @@ function oceniVozilo()
 	    	$.ajax({
 	            type: 'POST',
 	            url: 'api/rezervacija/ocenaVozilo/' + aktivne + '/' + vozilo.id + '/' + korisnik.id,
+	            headers: {"Authorization": "Bearer " + token}, 
 	            contentType: 'application/json',
 	            success: function (prosek)
 	    		{

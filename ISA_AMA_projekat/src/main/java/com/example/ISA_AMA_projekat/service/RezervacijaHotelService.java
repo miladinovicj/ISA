@@ -71,4 +71,9 @@ public class RezervacijaHotelService {
 	{
 		rezervacijaHotelRepository.deleteSobaRez(id);
 	}
+	
+	public void deleteRezHotelUsluge(Integer id)
+	{
+		rezervacijaHotelRepository.deleteRezHotelUsluge(id);
+	}
 }

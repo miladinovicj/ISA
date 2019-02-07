@@ -17,7 +17,7 @@ public interface LetRepository extends JpaRepository<Let,Integer>
 	
 	@Modifying
 	@Transactional
-	@Query(value = "delete from zauzeta_sedista where zauzeta_sedista.let_id=?1, zauzeta_sedista.zauzeta_sedista=?2", nativeQuery = true)
+	@Query(value = "delete from zauzeta_sedista where zauzeta_sedista.let_id=?1 and zauzeta_sedista.zauzeta_sedista=?2", nativeQuery = true)
 	void deleteZauzetoSediste(Integer let_id, int sediste);
 	
 	
