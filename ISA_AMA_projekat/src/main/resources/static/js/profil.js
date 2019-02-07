@@ -6,11 +6,6 @@ $(document).ready(function()
 		{
 	token=localStorage.getItem('jwtToken');
 	
-	
-
-	
-	
-	
 	$.post({
 		url: "/auth/userprofile",
 		headers: {"Authorization": "Bearer " + token},

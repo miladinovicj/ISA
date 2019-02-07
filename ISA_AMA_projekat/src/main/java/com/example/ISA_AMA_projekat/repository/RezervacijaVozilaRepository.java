@@ -30,4 +30,9 @@ public interface RezervacijaVozilaRepository extends JpaRepository<RezervacijaVo
 	@Transactional
 	@Query(value = "delete from vozilo_rezervacije where vozilo_rezervacije.rezervacije_id=?1", nativeQuery = true)
 	void deleteVoziloRez(Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update rezervacija_vozila rez set rez.aktivirana = ?2 where rez.id = ?1", nativeQuery = true)
+	void updateAktivirana(Integer id, boolean aktivirana);
 }

@@ -10,25 +10,41 @@ $(document).ready(function()
     $('.new_additional_service').hide();
     
     console.log('[hotelAdmin.js: document.ready()]: id hotela: ' + id_presented);
-
-    $.ajax({
-        type: 'GET',
-        url: 'api/hotels/admin/' + id_presented,
-        headers: {"Authorization": "Bearer " + token},
-        contentType: 'application/json',
-        success: function (hotel)
-		{
-        	moj_hotel = hotel;
-        	longitudeMap = hotel.adresa.longitude;
-        	latitudeMap = hotel.adresa.latitude;
-            console.log(hotel);
-            showHotel(hotel);
-            initMap();
+    
+    $.post({
+		url: "/auth/userprofile",
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
+		data : token,
+		  
+		success: function(user) {
+			
+			if(user != "")
+			{
+				korisnik = user;
+				id_korisnik = user.id;
+				console.log(user);
+				
+				checkAdmin();
+			}
+			else
+			{
+				localStorage.clear();
+				window.location.href = 'index.html';
+			}
+			
 		},
-		error: function(data){
-			console.log('greska prilikom ucitavanja stranice za admina hotela');
+		
+		error: function() {
+			//alert('Error');
+			console.log('istekao je token');
+			localStorage.clear();
+			window.location.href = 'index.html';
+			
 		}
-    });
+	});
+
+    
     
     /*
     $('textarea').on('keyup', function(){
@@ -473,6 +489,36 @@ $(document).ready(function()
 		
 	});
 });
+
+function checkAdmin()
+{
+	$.ajax({
+        type: 'GET',
+        url: 'api/hotels/admin/' + id_presented + '/' + id_korisnik,
+        headers: {"Authorization": "Bearer " + token},
+        contentType: 'application/json',
+        success: function (hotel)
+		{
+        	if(hotel != '' && hotel != null)
+        	{
+        		moj_hotel = hotel;
+            	longitudeMap = hotel.adresa.longitude;
+            	latitudeMap = hotel.adresa.latitude;
+                console.log(hotel);
+                showHotel(hotel);
+                initMap();	
+			}
+        	else
+        	{
+        		console.log('greska prilikom ucitavanja stranice za admina hotela');
+        		window.location.href = 'index.html';
+        	}
+		},
+		error: function(data){
+			console.log('greska prilikom ucitavanja stranice za admina hotela');
+		}
+    });	
+}
 
 function dodajUsluge(popust_id, usluge)
 {

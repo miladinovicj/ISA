@@ -517,7 +517,7 @@ public class RentacarController {
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
 		rezervacijaVozila.setVozilo(vozilo);
 		
-		rezervacijaVozila.setAktivirana(true);
+		rezervacijaVozila.setAktivirana(false);
 		
 		Date date_check_in = rezervacijaVozila.getDatum_preuzimanja();
 		Date date_check_out = rezervacijaVozila.getDatum_vracanja();
@@ -746,7 +746,7 @@ public class RentacarController {
 		rezervacijaVozila.setBroj_putnika(passengers);
 		rezervacijaVozila.setBrza(true);
 		rezervacijaVozila.setPopust(popust.getPopust());
-		rezervacijaVozila.setAktivirana(true);
+		rezervacijaVozila.setAktivirana(false);
 		rezervacijaVozila.setVozilo(vozilo);
 		double cena_rez = broj_dana * (vozilo.getCena_dan() * 0.01 * (100 - popust.getPopust()));
 		
