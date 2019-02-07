@@ -74,6 +74,9 @@ insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (12, 1
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (13, 6, 'Puskinova', '15', 45.378302, 20.366988);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (14, 2, 'Bulevar kralja Aleksandra', '56', 44.807612, 20.470238);
 
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (15, 2, 'Bulevar kralja Aleksandra', '56', 44.807612, 20.470238);
+
+
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Hotel Park', 1, 'hotel sa 4 zvezdice', 4.8);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Hotel Novi Sad', 2, 'fantastican hotel', 3.7);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (3, 'Hotel Moskva', 3, 'Svaka soba ima terasu.', 5);
@@ -82,7 +85,9 @@ insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (6, 'Rezidencija Makarica', 5, 'Luksuzna vila sa 4 apartmana. Svaki apartman poseduje tv, klima uredjaj, mini bar, terasu, kupatilo. Odlican Wi-Fi signal. Prostrano dvoriste i obezbedjen parking za goste. Najupecatljiviji utisak ostavljaju ljubaznost i gostoprimljivost domacina.', 4.99);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (7, 'Sole mio', 6, 'Hotel sa tradicijom dugom 78 godina.', 4.5);
 
-insert into aviokompanija(id, adresa_id, opis, naziv, ocena, info, prosecna_ocena) values (1, 7,'Najjaci popusti najjace zezanje drugari', 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari', 4);
+insert into luggage_info(id,opis,standard_max_kila,cena_standard,extra_max_kila,cena_extra) values(1,"The airline does not take responsability for any lost suitcases or handbags.",20,20,35,40);
+
+insert into aviokompanija(id, adresa_id, opis, naziv, ocena, info, prosecna_ocena,luggage_info_id) values (1, 7,'Najjaci popusti najjace zezanje drugari', 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari', 4,1);
 
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 80, 3);
 insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 100, 4.5);

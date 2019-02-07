@@ -64,9 +64,19 @@ public class EmailService {
 		mail.setSubject("New Flight Invitation");
 		mail.setTo(korisnik.getEmail());
 		mail.setFrom(env.getProperty("spring.mail.username"));
-		mail.setText("Hello " + korisnik.getIme() + ",\n\nYou have been invited by " + rez.getKorisnik().getIme() + " " + rez.getKorisnik().getPrezime() + " on a flight from: " + rez.getLet().getOdakle() + " to: " + rez.getLet().getDokle() + ".\nAll the expenses have been covered by the reserver. After you you become WhereTo friends, you will you be able to preview the reservation.\n\nYours sincerely,\n WhereTo");		
+		mail.setText("Hello " + korisnik.getIme() + ",\n\nYou have been invited by " + rez.getKorisnik().getIme() + " " + rez.getKorisnik().getPrezime() + " on a flight from: " + rez.getLet().getOdakle() + " to: " + rez.getLet().getDokle() + ".\nAll the expenses have been covered by the reserver. After you create a WhereTo profile and friends, you will you be able to preview the reservation.\n\nYours sincerely,\n WhereTo");		
 		javaMailSender.send(mail);
 	}
 
+	@Async
+	public void toUser(Korisnik korisnik, Rezervacija rez) throws MailException, InterruptedException
+	{
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setSubject("New Flight Invitation");
+		mail.setTo(korisnik.getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setText("Hello " + korisnik.getIme() + ",\n\nYou have succesfully created a reservation on flight from: " + rez.getLet().getOdakle() + " to: " + rez.getLet().getDokle() + "!\nYou are able to preview the information about your reservation and make changes to it on your WhereTo profile.\n\nYours sincerely,\n WhereTo");		
+		javaMailSender.send(mail);
+	}
 
 }

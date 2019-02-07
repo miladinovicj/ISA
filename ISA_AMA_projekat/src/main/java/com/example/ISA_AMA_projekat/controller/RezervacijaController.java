@@ -201,6 +201,7 @@ public class RezervacijaController
 			{
 				osoba.setPotvrdjeno(true);
 				osoba.setKorisnikUcesnik(korisnik);
+				boolean poslatMejl= sendRezervationInfo(korisnik, rez, true);
 			}
 			else
 			{	
@@ -296,6 +297,21 @@ public class RezervacijaController
 				emailService.sendReservationExpensesConformation(korisnik, rez);
 			else
 				emailService.sendReservationConformation(korisnik, rez);
+		}catch( Exception e )
+		{
+			System.out.println("Greska prilikom slanja emaila: " + e.getMessage());
+			return false;
+		}
+
+		return true;
+	}
+	
+	public boolean mejlKorisniku(Korisnik korisnik, Rezervacija rez)
+	{
+		//slanje emaila
+		try 
+		{	
+			emailService.toUser(korisnik, rez);
 		}catch( Exception e )
 		{
 			System.out.println("Greska prilikom slanja emaila: " + e.getMessage());
