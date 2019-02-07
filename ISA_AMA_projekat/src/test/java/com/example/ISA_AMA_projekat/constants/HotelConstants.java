@@ -6,17 +6,16 @@ import java.util.GregorianCalendar;
 
 public class HotelConstants {
 	
-    public static final Integer NEW_ID = 3;
-    public static final String NEW_NAZIV = "Hotel Park";
+    public static final Integer NEW_ID = 2;
+    public static final String NEW_NAZIV = "Hotel Palisad";
     public static final String NEW_PROMOTIVNI_OPIS = "Hotel sa 5 zvezdica";
     public static final double NEW_PROSECNA_OCENA = 4.8;
     public static final Integer NEW_ADMIN_ID = 1;
     
-    public static final Integer DB_ID = 1;
+    public static final Integer DB_ID = 3;
     public static final String DB_NAZIV = "Hotel Moskva";
     public static final String DB_PROMOTIVNI_OPIS = "Odlican hotel";
     public static final double DB_PROSECNA_OCENA = 3.5;
-    public static final Integer DB_ADMIN_ID = 2;
     
     public static final int DB_ADULTS = 2;
     
