@@ -1,6 +1,5 @@
 package com.example.ISA_AMA_projekat.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.repository.RezervacijaRepository;
-import com.example.ISA_AMA_projekat.repository.OsobaIzRezRepository;
 
 @Service
 public class RezervacijaService 
@@ -72,6 +70,23 @@ public class RezervacijaService
 	{
 		rezervacijaRepository.zavrsiRez(id_rez);
 	}
+	
+	
+	public void obrisiOsobu(Integer osoba_id, Integer rez_id)
+	{
+		rezervacijaRepository.obrisiOsobu(osoba_id, rez_id);
+	}
+	
+	public void potvrdiRez(Integer osoba_id, Integer rez_id)
+	{
+		rezervacijaRepository.potvrdiRez(osoba_id, rez_id);
+	}
+	
+	public void updateCena(double cena, Integer id)
+	{
+		rezervacijaRepository.updateCena(cena, id);
+	}
+	
 	
 	
 }

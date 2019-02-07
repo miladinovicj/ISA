@@ -146,8 +146,7 @@ public class FilijalaController {
 		}
 		else
 		{
-			adr = adrese.get(0);
-			addressService.updateAdresa(ulica, broj, grad.getId(), adr.getId());
+			return null;
 		}
 		System.out.println("[FilijalaController]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
 		Filijala fil = new Filijala();

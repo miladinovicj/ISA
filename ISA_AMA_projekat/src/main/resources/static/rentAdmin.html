@@ -137,10 +137,11 @@
 								<p id="rentacar_info_text" style="font-size: 20px; color: #4d0066;">promotivni opis rent-a-car servisa</p>
 								
 								</div>
-								<div>
+								<div id="div_changing_buttons">
 								<span class="button book_button"  id="izmenaServisa" style=" height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeIzmena">Edit rentacar</a></span>
 								<span class="button book_button"  id="dodajFilijalu" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeFil">Add branch</a></span>
 								<span class="button book_button"  id="dodajVozilo" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeVozilo">Add car</a></span>
+								<span class="button book_button"  id="voziloPopust" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a style="cursor:pointer; color:white;" id="button_add_special_price" onclick="javascript:addSpecialPrice()">Add special price</a></span>	
 								<span class="button book_button"  id="izvestaj" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a style="cursor:pointer; color:white;" id="prikaziIzvestaj" onclick="javascript:prikaziIzvestaj();">Business report</a></span>
 								<br/><br/><br/>
 								</div>
@@ -184,6 +185,7 @@
 							</div>
 
 						</div>
+						
 						<p id="text_no_filijale" style="font-size: 15pt; font-weight: bold; color: #4d0066;"></p>
 						<!-- Rooms -->
 						
@@ -230,11 +232,62 @@
 																			<span class="button book_button"  id="brisanje_auta" style="height : 40px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;">Double or Twin Room</span>
 																			
 																			</div>
+																			<div style="width: 100%;">
+												<p id="text_discount_list" style="display: none; font-size: 13pt; margin-left: 80px; color: #4d0066;">Discount list: </p>
+												<ul id="discount_list" style="margin-left: 95px; font-size: 15px; list-style-type: disc; margin-top: 10px;">
+												</ul>
+											</div>
 																</div>	
 															</div>
 														</template>
 												</div>	
-												
+												<!-- forma za dodavanje novog popusta -->
+						
+						<div style=" width: 100%; margin-top: 60px; margin-bottom: 60px; display: none;" id="div_special_price">
+							<form action="#" id="special_price_form" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+								<div style="height:121px; width: 49%; margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Start date: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="date" name="start_special_price" class="search_input" required="required">
+									<p id="error_start_special_price" style="display: none; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">There is already special price in this period.</p>
+									<br>
+								</div>
+					
+								<div style="height:121px; width: 49%;  margin-top: 5%" class="search_item">
+									<div style="margin: 0; color: #31124A;">End date: </div>
+									<input style="border-color: #31124A; border-style: solid;" type="date" name="end_special_price" class="search_input" required="required">
+									<br>
+								</div>
+								
+								
+								
+								<div style="width: 49%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;" >Discount (in %): </div>
+									<input style="margin-bottom: 30px; border-color: #31124A; border-style: solid;" type="number" name="discount_special_price" class="search_input" required="required">
+									<br>
+								</div>
+								
+								<div style="width: 49%;  margin-top: -3%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Car: </div>
+									<select name="car_special_price" style="height: 45px; width: 100%; border-color: #31124A; border-style: solid; border-width: 2px;">
+									</select>
+									<br>
+								</div>
+								
+								
+								<div style="height: 121px; width: 49%;  margin-top: 0%" class="search_item">
+									<div style="margin: 0; color: #31124A;">Services included: </div>
+									<select name="services_special_price" multiple style="height: 80px; width: 100%; border-color: #31124A; border-style: solid; border-width: 2px;">
+									</select>
+									<p style="font-style: italic; height: 35px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px; color: #31124A;">Hold down the Ctrl (windows) / Command (Mac) button to select multiple options</p>
+									<br>
+								</div>
+					
+								<div style=" width: 24%; margin-top: 0%;" class="search_item">
+									<input id="button_click_special_price" value="Add" type="submit" style="width: 100%;" class="button search_button">
+									<button type="button" id="button_rent_back" style="width: 100%; margin-bottom: 15px; margin-top: 20px;" class="button search_button" onclick="javascript:backEdit()">Back</button>
+								</div>
+							</form>
+						</div>
 												
 						
 						<!-- Location on Map -->

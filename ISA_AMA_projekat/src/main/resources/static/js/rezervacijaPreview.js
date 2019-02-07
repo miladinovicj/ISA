@@ -239,6 +239,9 @@ function initWindow()
 		$('#cancel_let').attr("hidden", true);
 		}
 	
+	if(rezervacija.korisnik.id!=korisnik.id)
+		$('#cancel_let').attr("hidden", true);
+		
 	if(today>date_sletanja && rezervacija.zavrsena==true)
 		{
 		$('#rate_flight').attr("hidden", false);
@@ -351,6 +354,9 @@ function initWindow()
 	    		$("#cancel_hotel").attr("hidden", true);
 	    		}
 	    	
+	    	if(rezervacija.korisnik.id!=korisnik.id)
+	    		$('#cancel_hotel').attr("hidden", true);
+	    	
 	    	if(today_h>date_odlaska && rezervacija.zavrsena==true)
 	    		{
 	    		$("#rate_hotel").attr("hidden", false);
@@ -419,6 +425,9 @@ function initWindow()
 		    		{
 		    		$("#cancel_car").attr("hidden", true);
 		    		}
+		    	
+		    	if(rezervacija.korisnik.id!=korisnik.id)
+		    		$('#cancel_car').attr("hidden", true);
 		    	
 		    if(today>date_vracanja && rezervacija.zavrsena==true)
 		    		{

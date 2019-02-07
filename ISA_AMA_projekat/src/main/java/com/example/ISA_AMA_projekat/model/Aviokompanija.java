@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.example.ISA_AMA_projekat.controller.LuggageInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -34,7 +35,7 @@ public class Aviokompanija implements Serializable {
 	
 	@Column(nullable = true)
 	private String opis;
-	
+
 	@Column(nullable = true)
 	private Double ocena;
 	
@@ -43,6 +44,9 @@ public class Aviokompanija implements Serializable {
 	
 	@OneToOne
 	private Adresa adresa;
+	
+	@OneToOne
+	private LuggageInfo luggageInfo;
 	
 	@Column(nullable = true)
 	private Integer id_admin;
@@ -148,6 +152,16 @@ public class Aviokompanija implements Serializable {
 	}
 
 
+	public LuggageInfo getLuggageInfo() {
+		return luggageInfo;
+	}
+
+
+	public void setLuggageInfo(LuggageInfo luggageInfo) {
+		this.luggageInfo = luggageInfo;
+	}
+	
+	
 	public void setLetovi(List<Let> letovi) {
 		this.letovi = letovi;
 	}

@@ -293,11 +293,10 @@ $(document).ready(function()
 				contentType: 'application/json',
 				success: function(data) {
 					if(data==null || data==""){
-						//$('#validacijaEmail').text('User with this email already exists!');
-						alert('Nije izmenjen!');
+						$('#neuspesno').text('Branch on this address already exists!');
 					}
 					else {
-						
+						$('#neuspesno').text("");
 						$('#uspesno').text('Branch successfully added!');
 						$('#forma').hide();
 						

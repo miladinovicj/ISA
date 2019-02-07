@@ -20,6 +20,10 @@ public class PopustService {
 		popustRepozitory.updateSoba(soba_id, popust_id);
 	}
 	
+	public void updateVozilo(Integer vozilo_id, Integer popust_id) {
+		popustRepozitory.updateVozilo(vozilo_id, popust_id);
+	}
+	
 	public void updateUsluga(Integer popust_id, Integer usluga_id) {
 		popustRepozitory.updateUsluga(popust_id, usluga_id);
 	}

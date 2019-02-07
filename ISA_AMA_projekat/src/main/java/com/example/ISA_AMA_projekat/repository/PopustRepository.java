@@ -16,6 +16,11 @@ public interface PopustRepository extends JpaRepository<Popust, Integer> {
 	
 	@Modifying
 	@Transactional
+	@Query(value = "insert into vozilo_popusti (vozilo_id, popusti_id) VALUES (?1, ?2)", nativeQuery = true)
+	public void updateVozilo(Integer vozilo_id, Integer popust_id);
+	
+	@Modifying
+	@Transactional
 	@Query(value = "insert into popust_usluge (popust_id, usluge_id) VALUES (?1, ?2)", nativeQuery = true)
 	public void updateUsluga(Integer popust_id, Integer usluga_id);
 }
