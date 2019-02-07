@@ -115,7 +115,7 @@ var token = localStorage.getItem('jwtToken');
 	initListingSlider();
 	initLightbox();
 	//initGoogleMap();
-	//initSearchForm();
+	initSearchForm();
 
 	/* 
 

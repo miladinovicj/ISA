@@ -420,7 +420,22 @@ public class RezervacijaController
 		
 		rezervacijaService.zavrsiRez(rez.getId());
 		
-	
+		RezervacijaHotel rezHotel = rez.getRezevacijaHotel();
+		
+		if(rezHotel != null) {
+
+			System.out.println("RezervacijaController: zavrsiRez]: aktivirana rezervacija hotela");
+			rezervacijaHotelService.updateAktivirana(rezHotel.getId(), true);
+		}
+		
+		RezervacijaVozila rezVozila = rez.getRezervacijaVozila();
+		
+		if(rezVozila != null) {
+			
+			System.out.println("RezervacijaController: zavrsiRez]: aktivirana rezervacija vozila");
+			rezervacijaVozilaService.updateAktivirana(rezVozila.getId(), true);
+		}
+		
 		return rez;
 		
 	}

@@ -90,6 +90,7 @@ function preusmeri(check_in_town, check_in_date, datum, mesto, passengers)
 
 function preusmeriHotel(check_in_town, check_in_date, check_out_date, adults){
 	
+	//window.location.href = "index.html?hotel&id_rez"
 	window.location.href = "index.html?name_location_hotel=" + check_in_town + "&check_in_hotel=" + check_in_date + "&check_out_hotel=" + check_out_date + "&adults_hotel=" + adults + "&id_rez=" + rezervacija.id;
 }
 
@@ -260,6 +261,11 @@ function initWindow()
 	
 	if(rezervacija.rezevacijaHotel == null)
 	{
+		if(rezervacija.noHotel == true)
+		{
+			$('#bookHotel').hide();
+		}
+		
 		$("#noHotel").prop("hidden",false);
 		$("#hasHotelReservation").attr("hidden", true);
 		$("#cancel_hotel").attr("hidden", true);
@@ -372,7 +378,7 @@ function initWindow()
 	}
 	
 	if(rezervacija.rezervacijaVozila == null)
-	{
+	{	
 		$("#noRental").prop("hidden",false);
 		$("#hasCar").attr("hidden", true);
 		$("#cancel_car").attr("hidden", true);

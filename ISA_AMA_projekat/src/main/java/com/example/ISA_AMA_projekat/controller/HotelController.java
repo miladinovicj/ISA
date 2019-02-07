@@ -29,12 +29,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Hotel;
+import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.Soba;
 import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.service.HotelService;
+import com.example.ISA_AMA_projekat.service.KorisnikService;
 import com.example.ISA_AMA_projekat.service.PopustService;
 import com.example.ISA_AMA_projekat.service.RezervacijaHotelService;
 import com.example.ISA_AMA_projekat.service.RezervacijaService;
@@ -63,6 +65,9 @@ public class HotelController {
 	
 	@Autowired
 	private PopustService popustService;
+	
+	@Autowired
+	private KorisnikService korisnikService;
 	
 	@RequestMapping(
 			value = "/all",
@@ -186,24 +191,31 @@ public class HotelController {
 	
 	@PreAuthorize("hasRole('HOTELADMIN')")
 	@RequestMapping(
-			value = "/admin/{id}",
+			value = "/admin/{id_hotel}/{id_korisnik}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hotel> getOneHotel(@PathVariable("id") Integer id){
+	public ResponseEntity<Hotel> getOneHotel(@PathVariable("id_hotel") Integer id_hotel, @PathVariable("id_korisnik") Integer id_korisnik){
 		
-		System.out.println("usao u metodu api/hotels/hotelAdmin/{id}; id: " + id);
+		System.out.println("usao u metodu api/hotels/hotelAdmin/{id}; id: " + id_hotel);
 		Hotel result = null;
 		
 		try{
-			result = hotelService.findById(id).get();
+			result = hotelService.findById(id_hotel).get();
 			System.out.println("Nasao hotel sa id:" + result.getId());
 		}catch(NoSuchElementException e)
 		{
-			System.out.println("Ne postoji hotel sa id: " + id);
+			System.out.println("Ne postoji hotel sa id: " + id_hotel);
 			return null; 	
 		}
 		
 		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
+		
+		Korisnik korisnik = korisnikService.findById(id_korisnik).get();
+		
+		if(korisnik.getAdmin_id() != id_hotel) {
+			System.out.println("Korisnik: " + korisnik.getId() + " nije admin ovog hotela: " + id_hotel);
+			return null; 
+		}
 		
 		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
 	}
@@ -445,7 +457,7 @@ public class HotelController {
 		
 		Soba soba =  sobaService.findById(soba_id).get();
 		rezervacijaHotel.setSoba(soba);
-		rezervacijaHotel.setAktivirana(true);
+		rezervacijaHotel.setAktivirana(false);
 		
 		Date date_check_in = rezervacijaHotel.getDatum_dolaska();
 		Date date_check_out = rezervacijaHotel.getDatum_odlaska();
@@ -525,7 +537,7 @@ public class HotelController {
 		rezervacijaHotel.setBroj_nocenja(broj_nocenja);
 		rezervacijaHotel.setBrza(true);
 		rezervacijaHotel.setPopust(popust.getPopust());
-		rezervacijaHotel.setAktivirana(true);
+		rezervacijaHotel.setAktivirana(false);
 		rezervacijaHotel.setSoba(soba);
 		double cena_rez = broj_nocenja * (soba.getCena_nocenja() * 0.01 * (100 - popust.getPopust()));
 		

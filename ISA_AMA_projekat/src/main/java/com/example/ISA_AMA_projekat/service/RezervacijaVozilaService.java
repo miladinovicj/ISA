@@ -53,4 +53,9 @@ public class RezervacijaVozilaService {
 	{
 		rezervacijaVozilaRepository.deleteVoziloRez(id);
 	}
+	
+	public void updateAktivirana(Integer id, boolean aktivirana)
+	{
+		rezervacijaVozilaRepository.updateAktivirana(id, aktivirana);
+	}
 }

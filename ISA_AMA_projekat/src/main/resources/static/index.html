@@ -57,7 +57,7 @@
 						</div>
 						<div class="main_nav_container ml-auto">
 							<ul class="main_nav_list">
-								<li class="main_nav_item"><a href="#">home</a></li>
+								<li class="main_nav_item"><a href="index.html">home</a></li>
 								<li class="main_nav_item"><a href="about.html">about us</a></li>
 								<li class="main_nav_item"><a href="contact.html">contact</a></li>
 							</ul>
@@ -155,19 +155,19 @@
 								<form id="search_form_2" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<div style="width: 40%;" class="search_item">
 										<div>hotel name or location</div>
-										<input type="text" class="destination hotel_name search_input" name="name_location_hotel" id="name_location_hotel" style="width: 100%;" required="required">
+										<input type="text" class="destination hotel_name search_input hotel_search" name="name_location_hotel" id="name_location_hotel" style="width: 100%;" required="required">
 									</div>
 									<div style="width: 22%" class="search_item">
 										<div>check in</div>
-										<input type="date" class="check_in search_input" name="check_in_hotel" placeholder="dd/mm/yyyy" required="required">
+										<input type="date" class="check_in search_input hotel_search" name="check_in_hotel" placeholder="dd/mm/yyyy" required="required">
 									</div>
 									<div  style="width: 22%" class="search_item">
 										<div>check out</div>
-										<input type="date" class="check_out search_input" name="check_out_hotel" placeholder="dd/mm/yyyy" required="required">
+										<input type="date" class="check_out search_input hotel_search" name="check_out_hotel" placeholder="dd/mm/yyyy" required="required">
 									</div>
 									<div style="width: 10%" class="search_item">
 										<div>adults</div>
-										<input type="number" class="adults search_input" name="adults_hotel" placeholder="0" min="0">
+										<input type="number" class="adults search_input hotel_search" name="adults_hotel" placeholder="0" min="0">
 									</div>
 									<div style="width: 100%"  style="display: none;">
 										<p id="error_date" style="height: 35px; margin-left: 41.5%; margin-top: 1%; display: none; color: white; background: url(images/exclamation.png) no-repeat scroll 7px 7px; padding-left: 45px;">Check in date is after check out date.</p>
@@ -231,7 +231,7 @@
 					<!-- Offers Grid -->
 					<!-- PREPORUCENI HOTELI -->
 					<div class="offers_grid" id="ubaci_hotele_template" style="display: none;">
-					<h1 class="hotel_title" id="hotel_title">Hotels</h1>
+					<h1 class="hotel_title rentacar_title" id="hotel_title">Hotels</h1>
 					
 						<!-- Offers Item -->
 						<template class="template_hotel" id="template_hotel">
@@ -262,7 +262,10 @@
 							</div>
 						</template>
 						
+						
 					</div>
+					<button id="button_back_to_reservation_hotel" style="display: none; float: right; position: relative;" class="button_back_to_reservation button search_button" onclick="javascript:backToReservation()">Back to reservation</button>
+					
 					<!-- PREPORUCENI RENTALI -->
 					<div class="offers_grid" id="ubaci_rentacar_template" style="display: none;">
 					<h1 class="rentacar_title" id="rentacar_title">Rent-a-car</h1>
@@ -296,7 +299,7 @@
 								</div>
 							</div>
 						</template>
-						
+						<button id="button_back_to_reservation_rental" style="display: none; float: right; position: relative;" class="button_back_to_reservation button search_button" onclick="javascript:backToReservation()">Back to reservation</button>
 					</div>
 				</div>
 				
