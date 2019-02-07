@@ -268,7 +268,7 @@ $(document).ready(function()
 						url: "/auth/first_admin_login/" + new_pass,
 						data: JSON.stringify({email: email, lozinka: lozinka}),
 						contentType: 'application/json',
-						headers: 'Authorization',
+						headers: {"Authorization": "Bearer " + token},
 						  
 						success: function(res) {
 							if(res!="")

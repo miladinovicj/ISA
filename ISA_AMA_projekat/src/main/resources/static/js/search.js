@@ -348,11 +348,6 @@ function submitHotel(name_location, check_in_fake, check_out_fake, adults, id_re
 
 $(document).ready(function()
 {
-	$.ajaxSetup({
-	    headers:{
-	        'Authorization': 'Bearer ' + localStorage.token
-	    }
-	});
 	
 	$('#search_form_2').submit(function(event) {
 		console.log('search');
@@ -633,8 +628,8 @@ $(document).ready(function()
 		
 		if(date_check_in > date_check_out)
 		{
-			document.getElementById("error_date").style.display='block';
-			document.getElementById("error_date").innerHTML = 'Check in date is after check out date.';
+			document.getElementById("error_date_rentacar").style.display='block';
+			document.getElementById("error_date_rentacar").innerHTML = 'Check in date is after check out date.';
 			
 			name_location = name_location.split('+').join(' ');
 			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
@@ -648,12 +643,23 @@ $(document).ready(function()
 			$('input[name="check_in_town"]').val(check_in_town);
 			$('input[name="check_out_town"]').val(check_out_town);
 			$('input[name="passengers_rent"]').val(passengers);
+			if(id_rez!=0)
+			{
+				$('input[name="name_location_rentacar"]').prop('readonly', true);
+				$('input[name="check_in_car"]').prop('readonly', true);
+				$('input[name="check_out_car"]').prop('readonly', true);
+				$('input[name="check_in_town"]').prop('readonly', true);
+				$('input[name="check_out_town"]').prop('readonly', true);
+				$('input[name="passengers_rent"]').prop('readonly', true);
+				
+				$('#rent_search_butt').hide();
+			}
 			
 		}
 		else if(date_check_in < date_now || date_check_out < date_now)
 		{
-			document.getElementById("error_date").style.display='block';
-			document.getElementById("error_date").innerHTML = 'Check in and check out date must be in the future.';
+			document.getElementById("error_date_rentacar").style.display='block';
+			document.getElementById("error_date_rentacar").innerHTML = 'Check in and check out date must be in the future.';
 			
 			name_location = name_location.split('+').join(' ');
 			var check_in = check_in_fake.substring(0, 4) + '-' + check_in_fake.substring(5, 7) + '-' + check_in_fake.substring(8, 10);
@@ -667,6 +673,18 @@ $(document).ready(function()
 			$('input[name="check_in_town"]').val(check_in_town);
 			$('input[name="check_out_town"]').val(check_out_town);
 			$('input[name="passengers_rent"]').val(passengers);
+			
+			if(id_rez!=0)
+			{
+				$('input[name="name_location_rentacar"]').prop('readonly', true);
+				$('input[name="check_in_car"]').prop('readonly', true);
+				$('input[name="check_out_car"]').prop('readonly', true);
+				$('input[name="check_in_town"]').prop('readonly', true);
+				$('input[name="check_out_town"]').prop('readonly', true);
+				$('input[name="passengers_rent"]').prop('readonly', true);
+				
+				$('#rent_search_butt').hide();
+			}
 		}
 		else
 		{

@@ -7,6 +7,7 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
@@ -84,6 +86,10 @@ public class RentacarController {
 		{
 			System.out.println("IMA LI FILIJALA: " + rs.getFilijale().size());
 		}
+		
+		ArrayList<RentacarServis> sortirani = (ArrayList<RentacarServis>) rents;
+		sortirani.sort(Comparator.comparing(RentacarServis::getNaziv));
+		rents = sortirani;
 		return new ResponseEntity<Collection<RentacarServis>>(rents, HttpStatus.OK);
 	}
 	
@@ -505,6 +511,7 @@ public class RentacarController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_car/{vozilo_id}/{id_rez}",
 			method = RequestMethod.PUT,
@@ -718,6 +725,7 @@ public class RentacarController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_car_special/{vozilo_id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}/{id_rez}",
 			method = RequestMethod.PUT,

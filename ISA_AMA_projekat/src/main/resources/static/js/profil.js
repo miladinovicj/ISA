@@ -361,6 +361,7 @@ $(document).ready(function()
 				url: "/api/users/changeData/" + korisnik.email,
 				data: JSON.stringify({email: email_profile, ime: name_profile, prezime: lastname_profile, grad: city_profile, telefon: phone_profile}),
 				contentType: 'application/json',
+				headers: {"Authorization": "Bearer " + token},
 				success: function() {
 					console.log('uspesna promena podataka korisnika');
 					window.location.href = 'profil.html';
@@ -464,6 +465,7 @@ $(document).ready(function()
 	{
 		$.get({
 			url: "/api/rezervacija/getAllReservations/" + korisnik.id,
+			headers: {"Authorization": "Bearer " + token},
 			success: function(data) 
 			{
 				$.each(data, function( index, value ) 
@@ -530,6 +532,7 @@ $(document).ready(function()
 	    		$.ajax({
 	    	        type: 'DELETE',
 	    	        url: 'api/rezervacija/obrisiOsobu/' + korisnik.id + '/' + rezervacija.id,
+	    	        headers: {"Authorization": "Bearer " + token},
 	    	        contentType: 'application/json',
 	    	        success: function (rez)
 	    			{
@@ -563,6 +566,7 @@ function odbijRez(rez_id)
 	$.ajax({
         type: 'DELETE',
         url: 'api/rezervacija/obrisiOsobu/' + korisnik.id + '/' + rez_id,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         success: function (rez)
 		{
@@ -581,6 +585,7 @@ function prihvatiRez(rez_id)
 	$.ajax({
         type: 'POST',
         url: 'api/rezervacija/prihvatiRez/' + korisnik.id + '/' + rez_id,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         success: function (rez)
 		{
@@ -652,6 +657,7 @@ function prihvatiRez(rez_id)
 		    $.ajax({
 		        type: 'PUT',
 		        url: 'api/friendRequest/' + token + "/" + zahtevID,
+		        headers: {"Authorization": "Bearer " + token},
 		        complete: function (data)
 				{
 		        	if(data == null)
@@ -680,6 +686,7 @@ function prihvatiRez(rez_id)
 					    $.ajax({
 					        type: 'DELETE',
 					        url: 'api/friendRequest/delete/' + token + "/" + zahtevID,
+					        headers: {"Authorization": "Bearer " + token},
 					        complete: function (data)
 							{
 					        	if(data == null)
@@ -1119,6 +1126,8 @@ function setFriends()
 {
 	$.get({
 		url: "/api/users/friendsOf/" + korisnik.id,
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(data) 
 		{
 			if(data == null)
@@ -1165,6 +1174,8 @@ function insertFirend(friend)
 	    $.ajax({
 	        type: 'DELETE',
 	        url: 'api/friendRequest/deleteFriend/' + token + "/" + friend.id,
+	        headers: {"Authorization": "Bearer " + token},
+			contentType: 'application/json',
 	        complete: function (data)
 			{
 	        	if(data == null)
@@ -1202,6 +1213,8 @@ function insertUser(friend)
 	    $.ajax({
 	        type: 'POST',
 	        url: 'api/friendRequest/befriend/' + token + "/" + friend.id,
+	        headers: {"Authorization": "Bearer " + token},
+			contentType: 'application/json',
 	        complete: function (data)
 			{
 	        	if(data == null || data == undefined || data =="")
@@ -1279,6 +1292,8 @@ function setSearch()
 			if(searchText == "") return;
 			$.get({
 				url: "/api/users/withNames/" + searchText + "/" + korisnik.id,
+				headers: {"Authorization": "Bearer " + token},
+				contentType: 'application/json',
 				success: function(data) 
 				{
 					if(data == null)

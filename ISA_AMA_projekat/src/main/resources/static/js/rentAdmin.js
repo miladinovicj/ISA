@@ -1,3 +1,4 @@
+var token=null;
 $(document).ready(function()
 {
 	token=localStorage.getItem('jwtToken');
@@ -129,7 +130,9 @@ function showRentacar(rentacar)
 	console.log(rentacar.naziv);
 	 $("#title_rentacar").text(rentacar.naziv);
 	 $("#rentacar_name").text(rentacar.naziv);
+	 $("#ocenaRentacara").text(" Rate: " + rentacar.prosecna_ocena);
 	 $('#rentacar_info_text').text(rentacar.promotivni_opis);
+	
 	 var idiNa = "izmenaRent.html?id="+rentacar.id;
 	 $('#dugmeIzmena').attr("href", idiNa);
 	 var dodajFil = "dodajFilijalu.html?id="+rentacar.id;

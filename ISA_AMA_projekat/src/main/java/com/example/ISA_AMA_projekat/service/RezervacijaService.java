@@ -87,6 +87,12 @@ public class RezervacijaService
 		rezervacijaRepository.updateCena(cena, id);
 	}
 	
+	public void obrisiSveOsobe(Integer rez_id)
+	{
+		rezervacijaRepository.obrisiSveOsobe(rez_id);
+	}
+	
+	
 	
 	
 }

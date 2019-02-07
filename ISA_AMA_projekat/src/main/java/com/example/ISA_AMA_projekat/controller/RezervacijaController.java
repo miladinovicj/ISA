@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,6 @@ import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Let;
 import com.example.ISA_AMA_projekat.model.OsobaIzRez;
-import com.example.ISA_AMA_projekat.model.Poziv;
 import com.example.ISA_AMA_projekat.model.Rating;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
@@ -96,7 +96,7 @@ public class RezervacijaController
 	@Autowired
 	private AviokompanijaService avioServis;
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/create/{id}/{token}",
 			method = RequestMethod.POST,
@@ -254,7 +254,7 @@ public class RezervacijaController
 	}
 	
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/{id}",
 			method = RequestMethod.GET,
@@ -274,7 +274,8 @@ public class RezervacijaController
 	}
 	
 	
-	
+
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/getAllReservations/{id}",
 			method = RequestMethod.GET,
@@ -327,7 +328,7 @@ public class RezervacijaController
 	}
 	
 	
-
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/otkaziLet/{rez_id}/{sediste}",
 			method = RequestMethod.DELETE,
@@ -335,7 +336,9 @@ public class RezervacijaController
 	public Rezervacija deleteRez(@PathVariable("rez_id") Integer rez_id, @PathVariable("sediste") Integer sediste)
 	{
 		Rezervacija rez = rezervacijaService.findById(rez_id).get();
+		rezervacijaService.obrisiSveOsobe(rez_id);
 		rezervacijaService.deleteRez(rez);
+		
 		letService.deleteZauzetoSediste(rez.getLet().getId(), sediste);
 		System.out.println("HOTEL: " + rez.getRezevacijaHotel());
 		if(rez.getRezevacijaHotel()!=null)
@@ -361,6 +364,7 @@ public class RezervacijaController
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/otkaziHotel/{rez_id}",
 			method = RequestMethod.DELETE,
@@ -375,13 +379,14 @@ public class RezervacijaController
 		rezervacijaService.updateCenaRez(nova_cena, rez.getId());
 		rezervacijaService.updateHotelId(rez.getId());
 		rezervacijaHotelService.deleteSobaRez(rh.getId());
-		rezervacijaHotelService.deleteRezH2(rh.getId());;
+		rezervacijaHotelService.deleteRezHotelUsluge(rh.getId());
+		rezervacijaHotelService.deleteRezH2(rh.getId());
 		
 	
 		return rh;
 		
 	}
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/otkaziAuto/{rez_id}",
 			method = RequestMethod.DELETE,
@@ -404,6 +409,7 @@ public class RezervacijaController
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/zavrsi/{rez_id}",
 			method = RequestMethod.POST,
@@ -434,6 +440,7 @@ public class RezervacijaController
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/ocenaLeta/{aktivne}/{let_id}/{korisnik_id}",
 			method = RequestMethod.POST,
@@ -460,7 +467,7 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/ocenaAvio/{aktivne}/{let_id}/{korisnik_id}",
 			method = RequestMethod.POST,
@@ -488,7 +495,7 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/ocenaHotel/{aktivne}/{hotel_id}/{korisnik_id}",
 			method = RequestMethod.POST,
@@ -516,6 +523,7 @@ public class RezervacijaController
 	}
 	
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/ocenaSoba/{aktivne}/{soba_id}/{korisnik_id}",
 			method = RequestMethod.POST,
@@ -542,7 +550,7 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/ocenaRent/{aktivne}/{rent_id}/{korisnik_id}",
 			method = RequestMethod.POST,
@@ -569,7 +577,7 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")	
 	@RequestMapping(
 			value = "/ocenaVozilo/{aktivne}/{car_id}/{korisnik_id}",
 			method = RequestMethod.POST,
@@ -596,6 +604,7 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/updateCena/{id}/{cena}",
 			method = RequestMethod.POST,
@@ -605,6 +614,7 @@ public class RezervacijaController
 		rezervacijaService.updateCenaRez(cena, id_rez);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/obrisiOsobu/{osoba_id}/{rez_id}",
 			method = RequestMethod.DELETE,
@@ -627,6 +637,7 @@ public class RezervacijaController
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/prihvatiRez/{osoba_id}/{rez_id}",
 			method = RequestMethod.POST,

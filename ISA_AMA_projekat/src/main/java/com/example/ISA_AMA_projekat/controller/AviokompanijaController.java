@@ -2,6 +2,7 @@ package com.example.ISA_AMA_projekat.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.service.AviokompanijaService;
 
 @RestController
@@ -51,7 +53,9 @@ public class AviokompanijaController
 	public ResponseEntity<Collection<Aviokompanija>> getAviokompanije(){
 		
 		Collection<Aviokompanija> los_avios = avioServis.findAll();
-		
+		ArrayList<Aviokompanija> sortirani = (ArrayList<Aviokompanija>)los_avios;
+		sortirani.sort(Comparator.comparing(Aviokompanija::getNaziv));
+		los_avios = sortirani;
 		return new ResponseEntity<Collection<Aviokompanija>>(los_avios, HttpStatus.OK);
 	}
 	
