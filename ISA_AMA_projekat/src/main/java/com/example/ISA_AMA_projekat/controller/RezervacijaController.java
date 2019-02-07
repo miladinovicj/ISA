@@ -258,6 +258,7 @@ public class RezervacijaController
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Rezervacija> getRezervacija(@PathVariable("id") Integer id)	
 	{
+		System.out.println("[RezervacijaContorller: getRezervacija] id: " + id);
 		try
 		{
 			return new ResponseEntity<Rezervacija>(rezervacijaService.findById(id).get(), HttpStatus.OK);
@@ -268,6 +269,8 @@ public class RezervacijaController
 			return null; 	
 		}
 	}
+	
+	
 	
 	@RequestMapping(
 			value = "/getAllReservations/{id}",
@@ -560,6 +563,12 @@ public class RezervacijaController
 		return prosecna;
 	}
 	
-
-	
+	@RequestMapping(
+			value = "/updateCena/{id}/{cena}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateCena(@PathVariable("id") Integer id_rez, @PathVariable("cena") double cena){
+		
+		rezervacijaService.updateCenaRez(cena, id_rez);
+	}
 }

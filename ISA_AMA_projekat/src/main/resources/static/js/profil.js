@@ -28,6 +28,7 @@ $(document).ready(function()
 					$("#div_buttons").hide();
 					$("#div_buttons_admin").hide();
 					$("#div_buttons_system_admin").hide();
+					$('#div_button_discount').hide();
 					
 				}
 				else
@@ -35,7 +36,7 @@ $(document).ready(function()
 					$("#div_buttons").show();
 					$("#div_buttons_admin").show();
 					$("#div_buttons_system_admin").show();
-					
+					$('#div_button_discount').show();
 				}
 				
 				document.getElementById("name_profile").value  = user.ime;
@@ -82,6 +83,14 @@ $(document).ready(function()
   	  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
 	});
 	*/
+	
+	$("input[name=bonus_points]").bind('keyup mouseup', function () {
+		$('#error_bonus_points').hide();
+	});
+	
+	$("input[name=discount]").bind('keyup mouseup', function () {
+		$('#error_bonus_points').hide();
+	});
 	
 	$('#add_form').submit(function(event) {
 		console.log('add_form submit');

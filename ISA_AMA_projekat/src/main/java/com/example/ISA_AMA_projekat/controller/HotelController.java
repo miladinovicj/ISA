@@ -468,7 +468,8 @@ public class HotelController {
 		
 		rezervacijaService.updateRezHotel(rezervacijaHotel.getId(), id_rez);
 		Rezervacija rezervacija = rezervacijaService.findById(id_rez).get();
-		rezervacijaService.updateCenaRez(rezervacija.getCena() + rezervacijaHotel.getUkupna_cena(), id_rez);
+		double cena = rezervacija.getCena() + rezervacijaHotel.getUkupna_cena() - (rezervacija.getCena() + rezervacijaHotel.getUkupna_cena())*0.05;
+		rezervacijaService.updateCenaRez(cena, id_rez);
 		Date datum_rez = rezervacija.getDatumRezervacije();
 		rezervacijaHotelService.updateDatumRez(datum_rez, rezervacijaHotel.getId());
 		
@@ -534,7 +535,8 @@ public class HotelController {
 		
 		rezervacijaService.updateRezHotel(rezervacijaHotel.getId(), rez_id);
 		Rezervacija rezervacija = rezervacijaService.findById(rez_id).get();
-		rezervacijaService.updateCenaRez(rezervacija.getCena() + rezervacijaHotel.getUkupna_cena(), rez_id);
+		double cena = rezervacija.getCena() + rezervacijaHotel.getUkupna_cena() - (rezervacija.getCena() + rezervacijaHotel.getUkupna_cena())*0.05;
+		rezervacijaService.updateCenaRez(cena, rez_id);
 		Date datum_rez = rezervacija.getDatumRezervacije();
 		rezervacijaHotelService.updateDatumRez(datum_rez, rezervacijaHotel.getId());
 		

@@ -36,7 +36,7 @@ public class BonusController {
 		
 		if(postoji != null) {
 			System.out.println("Bonus sa ovim brojem poena vec postoji u bazi");
-			
+			bonusService.updateBonus(bonus.getPopust(), bonus.getBonusPoeni());
 			result.put("result", "error");
 			
 			return ResponseEntity.accepted().body(result);

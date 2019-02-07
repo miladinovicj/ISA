@@ -6,6 +6,7 @@ var rentacar_servis=null;
 var soba=null;
 var hotel=null;
 var sediste=null;
+var odabrano = null;
 
 $(document).ready(function(){
 	
@@ -41,6 +42,39 @@ $(document).ready(function(){
 		let adults = rezervacija.osobe.length;
 		
 		preusmeriHotel(check_in_town, check_in_date, check_out_date, adults);
+	});
+	
+	$('.bonus_points').click(function(){
+		text = $(this).text(); 
+		
+		$('#div_bonus_points').hide();
+		$('#div_zavrsena_rez').show();
+		
+		if(text == "Yes"){
+			console.log('kliknuo YES');
+			
+			$('#finish_total_cost').text('Total cost: $' + cenaSaPopustom);
+			
+			odabrano = 'yes';
+			
+			$.ajax({
+		        type: 'POST',
+		        url: 'api/rezervacija/updateCena/' + rezervacija.id + '/' + cenaSaPopustom,
+		        contentType: 'application/json',
+		        success: function (rez)
+				{
+		            console.log('uspesno azurirana cena rezervacije');
+				}
+		    });
+		}
+		else
+		{
+			console.log('kliknuo NO');
+			
+			$('#finish_total_cost').text('Total cost: $' + rezervacija.cena);
+			
+			odabrano = 'no';
+		}
 	});
 		
 });
@@ -137,6 +171,10 @@ function initWindow()
 		$("#zavrsena_dugme").hide();
 		$("#bookCar").hide();
 		$("#bookHotel").hide();
+		$('#finish_total_cost').text('Total cost: $' + rezervacija.cena);
+		$('#div_zavrsena_rez').show();
+		$('#finish_total_cost').show();
+		$('#div_bonus_points').hide();
 		}
 	
 	
@@ -147,7 +185,36 @@ function initWindow()
 	$("#flightArrival").text("Arrival time: " + processTime(flight.vremeSletanja));
 	$("#flightReserver").text("Reservation made by: " + rezervacija.korisnik.ime + " " + rezervacija.korisnik.prezime);
 	
-
+	if(rezervacija.zavrsena == false)
+	{
+		$('#total_cost').text('Total cost without bonus points: $' + rezervacija.cena);
+		
+		$.post({
+			url: "/api/users/set_bonus_points/" + rezervacija.let.udaljenost + '/' + rezervacija.korisnik.id,
+			  
+			success: function(data) {
+				
+				if(data.result == 'success')
+				{
+					bonus_poeni = data.bonusPoeni;
+					poeni_najblizeg = data.poeniNajblizeg;
+					
+					$('#users_bonus_points').text('Your bonus points: ' + data.bonusPoeni);
+					cenaSaPopustom = rezervacija.cena - rezervacija.cena*data.popust/100;
+					$('#cost_discount').text('Total cost with ' + data.poeniNajblizeg + ' bonus points: $' + cenaSaPopustom);
+				}
+				else
+				{
+					$('#div_bonus_points').hide();
+					$('#finish_total_cost').text('Total cost: $' + rezervacija.cena);
+					$('#div_zavrsena_rez').show();
+				}
+				
+			}
+		
+		});
+	}
+	
 	var vreme = flight.vremePoletanja;
 	var date = new Date(vreme);
 	var pravi = date.toString();
@@ -194,6 +261,7 @@ function initWindow()
 	}
 	else
 	{
+		
 		var id_rez_hotel = rezervacija.rezevacijaHotel.id;
 		
 		$.get({
@@ -516,6 +584,7 @@ function otkaziAuto()
 function zavrsiRezervaciju()
 {
 	$("#zavrsena_dugme").hide();
+	
 	$.ajax({
         type: 'POST',
         url: 'api/rezervacija/zavrsi/' + rezervacija.id,
@@ -525,6 +594,33 @@ function zavrsiRezervaciju()
             window.location.href="rezervacijaPreview.html?id=" + rezervacija.id;
 		}
     });
+	
+	if(odabrano == 'yes')
+	{
+		points = bonus_poeni - poeni_najblizeg;
+		$.ajax({
+	        type: 'POST',
+	        url: 'api/users/update_bonus/' + points + '/' + rezervacija.korisnik.id,
+	        contentType: 'application/json',
+	        success: function (rez)
+			{
+	        	console.log('uspesna promena bonus poena');
+			}
+	    });
+	}
+	else if(odabrano == 'no')
+	{
+		$.ajax({
+	        type: 'POST',
+	        url: 'api/users/update_bonus/' + bonus_poeni + '/' + rezervacija.korisnik.id,
+	        contentType: 'application/json',
+	        success: function (rez)
+			{
+	            console.log('uspesna promena bonus poena');
+			}
+	    });
+	}
+
 }
 
 function oceniLet()

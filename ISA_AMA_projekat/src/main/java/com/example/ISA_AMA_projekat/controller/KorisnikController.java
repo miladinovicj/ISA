@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,12 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Authority;
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
+import com.example.ISA_AMA_projekat.model.Bonus;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.service.AuthorityService;
 import com.example.ISA_AMA_projekat.service.AviokompanijaService;
+import com.example.ISA_AMA_projekat.service.BonusService;
 import com.example.ISA_AMA_projekat.service.EmailService;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.HotelService;
@@ -59,6 +63,9 @@ public class KorisnikController {
 	
 	@Autowired
 	private RentacarService rentacarService;
+	
+	@Autowired
+	private BonusService bonusService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -363,6 +370,94 @@ public class KorisnikController {
 		
 		
 		return new ResponseEntity<Collection<Korisnik>>(retVal,HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/set_bonus_points/{distance}/{id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getDiscountBonusPoints(@PathVariable("distance") double distance, @PathVariable("id") Integer id)	
+	{
+		int points = 0;
+		
+		if(distance >= 0 && distance < 1000) {
+			points = 1;
+		}else if(distance >= 1000 && distance < 2000) {
+			points = 2;
+		}else if(distance >= 2000 && distance < 3000) {
+			points = 3;
+		}else if(distance >= 3000 && distance < 4000) {
+			points = 4;
+		}else if(distance >= 4000 && distance < 5000) {
+			points = 5;
+		}else if(distance >= 5000 && distance < 6000) {
+			points = 6;
+		}else if(distance >= 6000 && distance < 7000) {
+			points = 7;
+		}else if(distance >= 7000 && distance < 8000) {
+			points = 8;
+		}else if(distance >= 8000 && distance < 9000) {
+			points = 9;
+		}else {
+			points = 10;
+		}
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		Korisnik korisnik = korisnikService.findById(id).get();
+		int stariPoeni = korisnik.getBonus_poeni();
+		int noviPoeni = stariPoeni + points;
+		//korisnikService.updateBonusPoints(noviPoeni, id);
+		
+		Bonus jednak = bonusService.findByPoeni(noviPoeni);
+		Bonus najblizi;
+		
+		if(jednak == null) {
+			
+			Collection<Bonus> bonusi = bonusService.findAll();
+			
+			if(!bonusi.isEmpty()) {
+				najblizi = bonusi.iterator().next();
+				System.out.println("[KorisnikController: getDiscountBonusPoints]: prvi bonus za poene: " + najblizi.getBonusPoeni());
+				
+				for(Bonus bonus : bonusi) {
+					if(bonus.getBonusPoeni() < noviPoeni && bonus.getBonusPoeni() > najblizi.getBonusPoeni()) {
+						najblizi = bonus;
+						System.out.println("[KorisnikController: getDiscountBonusPoints]: najblizi zamenjen, poeni: " + najblizi.getBonusPoeni());
+					}
+				}
+			}else {
+				System.out.println("[KorisnikController: getDiscountBonusPoints]: nema bonusa u bazi");
+				result.put("result", "error");
+				return ResponseEntity.accepted().body(result);
+			}
+			
+		}else {
+			najblizi = jednak;
+		}
+		
+		if(najblizi.getBonusPoeni() > noviPoeni) {
+			result.put("result", "error");
+			return ResponseEntity.accepted().body(result);
+		}else {
+			result.put("result", "success");
+			result.put("bonusPoeni", noviPoeni);
+			result.put("popust", najblizi.getPopust());
+			result.put("poeniNajblizeg", najblizi.getBonusPoeni());
+			
+			return ResponseEntity.accepted().body(result);
+		}
+		
+	}
+	
+	@RequestMapping(
+			value = "/update_bonus/{points}/{id}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateBonus(@PathVariable("points") int points, @PathVariable("id") Integer id)	
+	{
+		korisnikService.updateBonusPoints(points, id);
+		
 	}
 	
 }

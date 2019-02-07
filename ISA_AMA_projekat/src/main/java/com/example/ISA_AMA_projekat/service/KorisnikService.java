@@ -145,6 +145,10 @@ public class KorisnikService implements UserDetailsService{
 	public void updateKorisnik(Integer id, String ime, String prezime, String email, String telefon, Grad grad) {
 		korisnikRepository.updateKorisnik(id, ime, prezime, email, telefon, grad);
 	}
+	
+	public void updateBonusPoints(int points, Integer id) {
+		korisnikRepository.updateBonusPoints(points, id);
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String email)

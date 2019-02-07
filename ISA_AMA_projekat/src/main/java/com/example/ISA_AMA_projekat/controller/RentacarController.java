@@ -531,6 +531,7 @@ public class RentacarController {
 		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
 		double cena = rez.getCena();
 		cena+=rezervacijaVozila.getUkupna_cena();
+		cena = cena - (cena)*0.05;
 		rezervacijaService.updateCenaRez(cena, rez.getId());
 		
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);
@@ -754,6 +755,7 @@ public class RentacarController {
 		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
 		double cena = rez.getCena();
 		cena+=rezervacijaVozila.getUkupna_cena();
+		cena = cena - (cena)*0.05;
 		rezervacijaService.updateCenaRez(cena, rez.getId());
 		
 		
