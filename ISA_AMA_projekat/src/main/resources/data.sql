@@ -16,6 +16,7 @@ delete from luggage_info;
 delete from friend_request;
 delete from korisnik;
 
+delete from luggage_info;
 delete from vozilo_rezervacije;
 delete from rezervacija_vozila;
 delete from vozilo_popusti;
@@ -49,7 +50,6 @@ insert into grad (id, naziv, verzija) values (3, 'Stepanovicevo', 0);
 insert into grad (id, naziv, verzija) values (4, 'Ruma', 0);
 insert into grad (id, naziv, verzija) values (5, 'Sabac', 0);
 insert into grad (id, naziv, verzija) values (6, 'Zrenjanin', 0);
-
 
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (5, 'krsmanovicc.aleksa@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Aleksa', 'Krsmanovic', 4, '062522006', 0, true, 0);
@@ -216,6 +216,15 @@ insert into AUTHORITY (id, name) values (5, 'ROLE_SYSADMIN');
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id, verzija) values (3, 'makaric.milica@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 5, false, 6, 0);
 insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
+
+
+
+
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran,admin_id) values (5, 'krsmanovicc.aleksa@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Aleksa', 'Krsmanovic', 4, '062522006', 0, true,1);
+insert into AUTHORITY (id, name) values (11, 'ROLE_USER');
+insert into user_authority (user_id, authority_id) values (5, 4);
+
+
 
 
 insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);

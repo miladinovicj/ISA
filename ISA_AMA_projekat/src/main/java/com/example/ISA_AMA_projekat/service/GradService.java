@@ -1,5 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,15 @@ public class GradService {
 	@Autowired
 	GradRepository gradRepository;
 	
-	public Grad findByNaziv(String naziv){
+
+	public List<Grad> gimmieAll()
+	{
+		return gradRepository.findAll();
+	}
+	
+	public Grad findByNaziv(String naziv)
+	{
+
 		return gradRepository.findOneByNaziv(naziv);
 	}
 	

@@ -56,6 +56,7 @@ public class Aviokompanija implements Serializable {
 	
 	//SLOZENI ATRIBUTI:
 	@OneToMany(cascade={ALL}, fetch=LAZY, mappedBy="aviokompanija")
+	@JsonManagedReference(value = "airline-flight")
 	private List<Let> letovi = new ArrayList<Let>();
 	 
 	
@@ -63,7 +64,7 @@ public class Aviokompanija implements Serializable {
 	private List<Rating> rejtinzi = new ArrayList<Rating>();
 	
 	
-	@OneToMany(cascade={ALL}, fetch=LAZY)
+	@OneToMany(fetch=LAZY)
 	private List<Let> brziLetovi = new ArrayList<Let>();
 
 	
