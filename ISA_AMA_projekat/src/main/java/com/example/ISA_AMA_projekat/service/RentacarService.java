@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
+import com.example.ISA_AMA_projekat.repository.AddressRepository;
 import com.example.ISA_AMA_projekat.repository.RentacarRepository;
 
 @Service
@@ -15,6 +17,9 @@ public class RentacarService {
 	
 	@Autowired
 	RentacarRepository rentRepository;
+	
+	@Autowired
+	AddressRepository adresaRepository;
 	
 	public RentacarServis findByNaziv(String naziv) {
 		return rentRepository.findOneByNaziv(naziv);
@@ -39,18 +44,30 @@ public class RentacarService {
 	
 	@Transactional
 	public void updateAdmin(Integer rentalID, Integer adminID) {
-		rentRepository.updateAdmin(rentalID, adminID);
+		RentacarServis rent = rentRepository.findById(rentalID).get();
+		rent.setId_admin(adminID);
+		rentRepository.save(rent);
+		//rentRepository.updateAdmin(rentalID, adminID);
 	}
 
 	@Transactional
 	public void updateServis(String naziv, Integer adresa_id, String promotivni_opis, Integer id){
-		 rentRepository.updateServis(naziv, adresa_id, promotivni_opis, id);
+		RentacarServis rent = rentRepository.findById(id).get();
+		rent.setNaziv(naziv);
+		rent.setPromotivni_opis(promotivni_opis);
+		Adresa adr = adresaRepository.findById(adresa_id).get();
+		rent.setAdresa(adr);
+		rentRepository.save(rent);
+		//rentRepository.updateServis(naziv, adresa_id, promotivni_opis, id);
 	}
 	
 	@Transactional
 	public void updateProsecnaRent(double prosecna, Integer rent_id)
 	{
-		rentRepository.updateProsecnaRent(prosecna, rent_id);
+		RentacarServis rent = rentRepository.findById(rent_id).get();
+		rent.setProsecna_ocena(prosecna);
+		rentRepository.save(rent);
+		//rentRepository.updateProsecnaRent(prosecna, rent_id);
 	}
 
 }

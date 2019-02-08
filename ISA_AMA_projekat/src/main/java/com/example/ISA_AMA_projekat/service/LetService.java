@@ -4,8 +4,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.ISA_AMA_projekat.model.Let;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ISA_AMA_projekat.model.Let;
 import com.example.ISA_AMA_projekat.repository.LetRepository;
 
 @Service
@@ -24,14 +25,22 @@ public class LetService
 		return letRepository.save(let);
 	}
 	
+	@Transactional
 	public void deleteZauzetoSediste(Integer let_id, int sediste)
 	{
-		letRepository.deleteZauzetoSediste(let_id, sediste);
+		Let l = letRepository.findById(let_id).get();
+		l.getZauzetaSedista().remove(sediste);
+		letRepository.save(l);
+		//letRepository.deleteZauzetoSediste(let_id, sediste);
 	}
 	
+	@Transactional
 	public void updateProsecna(double prosecna_ocena, Integer let_id)
 	{
-		letRepository.updateProsecna(prosecna_ocena, let_id);
+		Let l = letRepository.findById(let_id).get();
+		l.setProsecna_ocena(prosecna_ocena);
+		letRepository.save(l);
+		//letRepository.updateProsecna(prosecna_ocena, let_id);
 	}
 	
 	public void updateFlight(Let let)
