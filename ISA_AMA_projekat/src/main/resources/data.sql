@@ -220,7 +220,7 @@ insert into user_authority (user_id, authority_id) values (5, 4);
 
 
 
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true, 0);
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milicau', 'Makaric', 3, '0652034133', 0, true, 0);
 insert into user_authority (user_id, authority_id) values (4, 5);
 
 insert into bonus (id, bonus_poeni, popust, verzija) values (1, 10, 10, 0);

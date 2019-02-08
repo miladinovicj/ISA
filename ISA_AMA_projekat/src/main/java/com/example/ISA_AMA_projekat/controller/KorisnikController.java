@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -373,6 +374,10 @@ public class KorisnikController {
 				}
 			}
 		}
+		
+		Korisnik thisUser = korisnikService.findById(userID).get();
+		if(retVal.contains(thisUser))
+			retVal.remove(thisUser);
 		
 		
 		return new ResponseEntity<Collection<Korisnik>>(retVal,HttpStatus.OK);

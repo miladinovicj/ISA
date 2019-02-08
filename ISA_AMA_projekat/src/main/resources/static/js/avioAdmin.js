@@ -5,8 +5,7 @@ var letovi = [];
 
 $(document).ready(function()
 {
-	clearAllForms()
-	setupPage();
+
 	getAdmin();
 
 });
@@ -904,6 +903,11 @@ function getAdmin()
         		window.location.replace("index.html");
         	}
         	aviokompanija = data;
+        	
+        	
+        	clearAllForms()
+        	setupPage();
+        	
         	console.log(aviokompanija)
         	fillAviokompanija();
         	calculateRatings();
@@ -1279,6 +1283,7 @@ function calculateRatingForFlight(flight)
 	
 	if(today > d)
 	{
+		$("#markAsSpecialButton"+flight.id).prop("hidden",true);
 		$("#flightRating" + flight.id).prop("hidden",false);
 		
 		if(flight.rejtinzi.length == 0)

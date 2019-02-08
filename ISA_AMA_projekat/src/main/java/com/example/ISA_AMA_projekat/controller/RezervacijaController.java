@@ -122,8 +122,14 @@ public class RezervacijaController
 		catch(Exception e)
 		{
 			System.err.println("NO FLIGHT FOUND: " + flightID);
+			return null;
 		}
 		
+		
+		Date today = new Date();
+		
+		if(today.compareTo(let.getVremePoletanja()) > 0)
+			return null;	
 		
 		
 		for(int i = 0 ; i < osobe.size() ; i ++ )
@@ -649,6 +655,110 @@ public class RezervacijaController
 		rezervacijaService.potvrdiRez(osoba_id, rez_id);
 		return rez;
 		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
+	@RequestMapping(
+			value = "/createBrza/{id}/{token}",
+			method = RequestMethod.POST)
+	public String brrrrzza( @PathVariable("id") Integer flightID, @PathVariable("token") String token)
+	{
+		String email = tokenUtils.getUsernameFromToken(token);
+		Korisnik korisnik = (Korisnik) this.userDetailsService.loadUserByUsername(email);
+				
+		//* * * BEKEND VALIDACIJA INFO O OSOBAMA U REZERVACIJI START* * * 
+		Optional<Let> letOp = letService.findById(flightID);
+		
+
+		Let let = null;
+		try
+		{
+			let = letOp.get();
+		}
+		catch(Exception e)
+		{
+			System.err.println("************NO FLIGHT FOUND: " + flightID);
+			return null;
+		}
+		
+		
+		Date today = new Date();
+		
+		if(today.compareTo(let.getVremePoletanja()) > 0)
+			return null;	
+		
+		
+		if(!let.getAviokompanija().getBrziLetovi().contains(let))
+		{
+			System.err.println("***********Aviokompanija ne sadzi ovaj let u svojim akcijskim ponudama.");
+			return null;
+		}
+		
+		Rezervacija rezervacija = new Rezervacija();
+		rezervacija.setLet(let);
+		
+		double cenaPopust = let.getCena() -  let.getCena()*((double)let.getPopust()/100);
+		
+		
+		rezervacija.setCena(cenaPopust);
+		rezervacija.setBrza(true);
+		rezervacija.setDatumRezervacije(new Date());
+		rezervacija.setKorisnik(korisnik);
+		
+		//settovanje ostalih rezervacija u okviru ove na null
+		rezervacija.setRezervacijaVozila(null);
+		rezervacija.setRezevacijaHotel(null);
+		rezervacija.setZavrsena(true);
+		
+		Rezervacija rez = rezervacijaService.save(rezervacija);
+		System.out.println("Upisana rezervacija id: " + rez.getId());
+		
+		
+		OsobaIzRez osoba = new OsobaIzRez();
+		osoba.setEmail(korisnik.getEmail());
+		osoba.setPotvrdjeno(true);
+		osoba.setRezervacija(rez);
+		osoba.setKorisnikUcesnik(korisnik);
+		osoba.setIme(korisnik.getIme());
+		osoba.setPrezime(korisnik.getPrezime());
+		osoba.setBrojPasosa("is not needed");
+		
+		int seatNum = let.getFirstFreeSeat();
+		if(seatNum == -1)
+			return "-1"; //nema vise slobodnih mesta 
+
+		osoba.setSediste(seatNum);
+		let.getZauzetaSedista().add(seatNum); //zauzmi sediste
+		osoba.setPrtljag(0); //nosi CARRYON uvek
+		OsobaIzRez new_osoba = osobaIzRezService.save(osoba);
+		
+		
+		
+		boolean poslatMejl= mejlKorisniku(korisnik, rez);
+		
+		
+		//zbog sedista?
+		Let l = letService.save(let);
+				
+		return rez.getId().toString();
 	}
 	
 }

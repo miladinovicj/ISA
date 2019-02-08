@@ -1,12 +1,11 @@
 var korisnik = null;
+token = localStorage.getItem('jwtToken');
+
 
 $(document).ready(function()
 {
 	
-	
-	function getKorisnik()
-	{
-		token = localStorage.getItem('jwtToken');
+
 		$.post
 		({
 			url: "/auth/userprofile",
@@ -17,32 +16,37 @@ $(document).ready(function()
 			success: function(user) 
 			{
 				korisnik = user;
+				console.log(korisnik)
+				
+
+				
+				
 			},
 			error: function() 
 			{
 			}
 		});
-	}
 	
-	
-	getAirlines();
-	
-	getAllActions();
-	
-	
-	
-	
-	$("#searchFlightsButton").click(function(){
-	
-		var ispravna = validateSearchQuery();
-		if(ispravna)
-		{
-			console.log("salji upit");
-			gimmieFlights();
-		}
 		
-	});
+		getAirlines();
+		
+		getAllActions();
+		
+		
+		
+		
+		$("#searchFlightsButton").click(function(){
+		
+			var ispravna = validateSearchQuery();
+			if(ispravna)
+			{
+				console.log("salji upit");
+				gimmieFlights();
+			}
+			
+		});
 	
+
 });
 
 
@@ -111,6 +115,37 @@ function getAllActions()
 				{
 					insertAkcija(flight);
 					
+					
+					
+					$("#quickRezButton"+flight.id).click(function(){
+						if(korisnik == null)
+						{
+							alert("To make a quick reservation you need to be logged on to your account.");
+							return;
+						}
+
+						$.post({
+							url: "/api/rezervacija/createBrza/" + flight.id + "/" + token,
+							headers: {"Authorization": "Bearer " + token},
+							contentType: 'application/json',
+							success: function(data) {
+								if(data==null || data=="")
+								{
+									alert("An error occured while processing information.")
+								}
+								else 
+								{
+									alert("Your flight is succesfully booked.")
+									window.location.replace("rezervacijaPreview.html?id=" + data);
+								}
+							}
+						
+							
+						});
+						
+						
+					});
+					
 				}
 			}
 		}
@@ -125,13 +160,15 @@ function insertAkcija(action)
 	var $listaAkcija = $("#action_list");
 	var item = Mustache.render(actionTemplate, action);
 	var $item_element = $(item);
+	var $Qdeparted = $item_element.find("#Qdeparted");    	
+
 	
 	var $poletanje = $item_element.find("#vremePoletanja");
 	var $sletanje = $item_element.find("#vremeSletanja");
 	var $cenaPopust = $item_element.find("#cenaPopust");
 
 	$item_element.find("#quickRezButton").prop("id","quickRezButton"+action.id);
-	
+	$Qdeparted.prop("id","Qdeparted"+action.id);
 	//parsiranje teksta vremena
 	$poletanje.text("Departures: " + action.vremePoletanja.substring(0,16).replace("T","   "));
 	$sletanje.text("Arrives: " + action.vremeSletanja.substring(0,16).replace("T","   "));
@@ -141,6 +178,18 @@ function insertAkcija(action)
 	
     
 	$listaAkcija.append($item_element.prop('outerHTML'));
+	
+	var today = new Date();
+	d = new Date(action.vremePoletanja);
+	if( today >= d )
+	{
+		$("#Qdeparted"+flight.id).prop("hidden",false);
+		$("#quickRez"+flight.id).prop("hidden",true);
+	}
+	
+
+	
+	
 }
 function gimmieFlights()
 {
@@ -299,6 +348,7 @@ function insertFlight(flight)
     	var $sletanje = $item_element.find("#vremeSletanja");
     	var $cenaPopust = $item_element.find("#cenaPopust");
     	var $rezButton = $item_element.find("#rezButton");
+    	var $departed = $item_element.find("#departed");
 
 
     	$cenaPopust.text(flight.cena.toFixed(2));
@@ -307,12 +357,26 @@ function insertFlight(flight)
     	$poletanje.text("Departure: " + flight.vremePoletanja.substring(0,16).replace("T","   "));
     	$sletanje.text("Arrives: " + flight.vremeSletanja.substring(0,16).replace("T","   "));            		    	    	
     	$rezButton.attr("id", "rezButton" + flight.id);
+    	$departed.attr("id", "departed" + flight.id);
     	$selektovaniLetovi.append($item_element.prop('outerHTML'));
     	
+    	
+		var today = new Date();
+		d = new Date(flight.vremePoletanja);
+		if( today >= d )
+		{
+			$("#departed"+flight.id).prop("hidden",false);
+			$("#rezButton"+flight.id).prop("hidden",true);
+		}
+    	
+    	
+		
+		
 
     	$("#rezButton"+flight.id).click(function(){
     		if(korisnik != null)
     		{
+    			
     			window.location.replace("rezervacija.html?id=" + flight.id);
     		}
     		else

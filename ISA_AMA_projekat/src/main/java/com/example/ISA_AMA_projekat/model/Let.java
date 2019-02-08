@@ -250,5 +250,16 @@ public class Let
 	}
 
 	
+	public int getFirstFreeSeat()
+	{
+		for(int i = 1 ; i <= maxKapacitet ; i ++)
+		{
+			if(!zauzetaSedista.contains(i))
+				return i;
+		}
+		
+		return -1;
+	}
+	
 		
 }

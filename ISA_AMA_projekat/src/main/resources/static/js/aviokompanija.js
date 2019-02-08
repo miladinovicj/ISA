@@ -172,14 +172,34 @@ function setUpForAirline(airline)
     			alert("To make a quick reservation you need to be logged on to your account.");
     			return;
     		}
-    		//post metoda za pravljenej rezervacije /token.user/id rezervacije
+
+    		$.post({
+    			url: "/api/rezervacija/createBrza/" + action.id + "/" + token,
+    			headers: {"Authorization": "Bearer " + token},
+    			contentType: 'application/json',
+    			success: function(data) {
+    				if(data==null || data=="")
+    				{
+    					alert("An error occured while processing information.")
+    				}
+    				else 
+    				{
+    					alert("Your flight is succesfully booked.")
+    					window.location.replace("rezervacijaPreview.html?id=" + data);
+    				}
+    			}
+    		
+    			
+    		});
+    		
+    		
     		console.log(action.id);
     	});
     		
     });
     
    
-    initMap()
+    initMap();
 
 }
 
@@ -196,6 +216,7 @@ function insertFlightIntoDestination(flight)
     	var $sletanje = $item_element.find("#vremeSletanja");
     	var $cenaPopust = $item_element.find("#cenaPopust");
     	var $rezButton = $item_element.find("#rezButton");
+    	var $departed = $item_element.find("#departed");
 
 
     	$cenaPopust.text(flight.cena.toFixed(2));
@@ -204,7 +225,18 @@ function insertFlightIntoDestination(flight)
     	$poletanje.text("Departure: " + flight.vremePoletanja.substring(0,16).replace("T","   "));
     	$sletanje.text("Arrives: " + flight.vremeSletanja.substring(0,16).replace("T","   "));            		    	    	
     	$rezButton.attr("id", "rezButton" + flight.id);
+    	$departed.attr("id", "departed" + flight.id);
     	$selektovaniLetovi.append($item_element.prop('outerHTML'));
+    	
+    	
+		var today = new Date();
+		d = new Date(flight.vremePoletanja);
+		if( today >= d )
+		{
+			$("#departed"+flight.id).prop("hidden",false);
+			$("#rezButton"+flight.id).prop("hidden",true);
+		}
+    	
 }
 
 
@@ -235,7 +267,9 @@ function insertAkcija(action)
 	var $poletanje = $item_element.find("#vremePoletanja");
 	var $sletanje = $item_element.find("#vremeSletanja");
 	var $cenaPopust = $item_element.find("#cenaPopust");
+	var $Qdeparted = $item_element.find("#Qdeparted");    	
 
+	
 	$item_element.find("#quickRezButton").prop("id","quickRezButton"+action.id);
 	
 	//parsiranje teksta vremena
@@ -244,8 +278,17 @@ function insertAkcija(action)
 	
 
     $cenaPopust.text( (action.cena - (action.cena*(action.popust/100))).toFixed(2));
-	
+	$Qdeparted.prop("id","Qdeparted"+action.id);
 	$listaAkcija.append($item_element.prop('outerHTML'));
+	
+	var today = new Date();
+	d = new Date(action.vremePoletanja);
+	if( today >= d )
+	{
+		$("#Qdeparted"+flight.id).prop("hidden",false);
+		$("#quickRez"+flight.id).prop("hidden",true);
+	}
+	
 }
 
 
