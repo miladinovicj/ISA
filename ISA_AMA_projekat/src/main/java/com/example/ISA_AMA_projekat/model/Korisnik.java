@@ -23,8 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
 import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,7 +33,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
 public class Korisnik implements Serializable, UserDetails 
 {
 
@@ -43,6 +41,9 @@ public class Korisnik implements Serializable, UserDetails
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@Column(unique = true, nullable = false)
 	private String email;
@@ -349,6 +350,14 @@ public class Korisnik implements Serializable, UserDetails
 
 	public void setRezervacijeUcestvovanje(List<OsobaIzRez> rezervacijeUcestvovanje) {
 		this.rezervacijeUcestvovanje = rezervacijeUcestvovanje;
+	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
     
 }

@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -22,6 +23,9 @@ public class Soba {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@Column(nullable = true)
 	private double prosecna_ocena;
@@ -149,6 +153,16 @@ public class Soba {
 
 	public void setCena_popust(double cena_popust) {
 		this.cena_popust = cena_popust;
+	}
+
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 	
 }

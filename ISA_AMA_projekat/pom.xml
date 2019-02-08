@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>ISA_AMA_projekat</artifactId>
+	<artifactId>isaamaprojekat</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
-	<name>ISA_AMA_projekat</name>
+	<name>isaamaprojekat</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>

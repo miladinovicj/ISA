@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Version;
 
 @Entity
 public class Popust {
@@ -19,6 +20,9 @@ public class Popust {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@Column
 	private Date pocetak_vazenja;
@@ -74,6 +78,14 @@ public class Popust {
 
 	public void setUsluge(Set<Usluga> usluge) {
 		this.usluge = usluge;
+	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 	
 }

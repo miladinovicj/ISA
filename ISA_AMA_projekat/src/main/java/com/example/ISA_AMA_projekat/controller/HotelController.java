@@ -1366,12 +1366,21 @@ public class HotelController {
 	
 	@PreAuthorize("hasRole('HOTELADMIN')")
 	@RequestMapping(
-			value = "/add_usluga_special_price/{popust_id}/{usluga_id}",
+			value = "/add_usluga_special_price/{usluge}/{size}/{popust_id}",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addUslugaSpecialPrice(@PathVariable("popust_id") Integer popust_id, @PathVariable("usluga_id") Integer usluga_id){
+	public ResponseEntity<?> addUslugaSpecialPrice(@PathVariable("usluge") int[] usluge, @PathVariable("size") int size, @PathVariable("popust_id") Integer popust_id){
 		
-		popustService.updateUsluga(popust_id, usluga_id);
+		Popust popust = popustService.findById(popust_id);
+		Usluga usluga;
+		for(int i=0; i<size; i++) {
+			System.out.println("[HotelController: addUslugaSpecialPrice] usluga: " + usluge[i]);
+			Integer usluga_id = usluge[i];
+			usluga = uslugaService.findById(usluga_id).get();
+			popust.getUsluge().add(usluga);
+		}
+		System.out.println("[HotelController: addUslugaSpecialPrice] kraj sa dodavanjem usluga; size: " + popust.getUsluge().size());
+		popustService.save(popust);
 		
 		Map<String, Object> result = new HashMap<>();
 		

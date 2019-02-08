@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
+
 
 @Entity
 public class Grad {
@@ -12,6 +14,9 @@ public class Grad {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@Column(nullable = false, unique = true)
 	private String naziv;
@@ -39,6 +44,16 @@ public class Grad {
 
 	public void setNaziv(String naziv) {
 		this.naziv = naziv;
+	}
+
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 
 }
