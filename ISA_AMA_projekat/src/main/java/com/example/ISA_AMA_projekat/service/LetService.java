@@ -33,4 +33,26 @@ public class LetService
 	{
 		letRepository.updateProsecna(prosecna_ocena, let_id);
 	}
+	
+	public void updateFlight(Let let)
+	{
+		letRepository.updateFlight(let.getId(), let.getOdakle(), let.getDokle(), let.getVremePoletanja(), let.getVremeSletanja(), let.getTrajanje(), let.getUdaljenost(), let.getCena(), let.getMaxKapacitet(), let.getPopust());
+	}
+	
+	
+	public void deleteFlight(Let let)
+	{
+		letRepository.deleteById(let.getId());
+	}
+	
+	
+	public void deleteFlightAction(Let let)
+	{
+		letRepository.deleteFromAction(let.getId());
+	}
+	
+	public void addToActions(Integer airlineID, Integer flightID)
+	{
+		letRepository.addToAcion(airlineID, flightID);
+	}
 }

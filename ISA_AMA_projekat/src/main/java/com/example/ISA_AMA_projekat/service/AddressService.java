@@ -14,6 +14,11 @@ public class AddressService {
 	@Autowired
 	private AddressRepository addressRepozitory;
 	
+	public List<Adresa> gimmieAll() {
+		return addressRepozitory.findAll();
+	}
+	
+	
 	public List<Adresa> checkAddress(Integer city_id, String street, String number) {
 		return addressRepozitory.checkAddress(city_id, street, number);
 	}

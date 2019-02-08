@@ -20,4 +20,11 @@ public interface AviokompanijaRepository extends JpaRepository<Aviokompanija, In
 	@Transactional
 	@Query(value = "update aviokompanija set aviokompanija.prosecna_ocena=?1 where aviokompanija.id=?2", nativeQuery = true)
 	public void updateProsecnaAvio(double prosecna_ocena, Integer avio_id);
+	
+	@Modifying
+	@Transactional
+	@Query("update Aviokompanija airline set airline.naziv = ?2, airline.opis = ?4, airline.adresa.id = ?3 where airline.id = ?1")
+	public void updateAirline(Integer id, String naziv, Integer adresa, String opis);
+	
+	
 }

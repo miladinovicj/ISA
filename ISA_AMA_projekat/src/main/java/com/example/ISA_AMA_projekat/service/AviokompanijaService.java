@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Aviokompanija;
 import com.example.ISA_AMA_projekat.repository.AviokompanijaRepository;
 
@@ -41,4 +42,10 @@ public class AviokompanijaService
 	{
 		avioRepo.updateProsecnaAvio(prosecna, avio_id);
 	}
+	
+	public void updateAirline(Integer id, String naziv, Adresa adresa, String opis)
+	{
+		avioRepo.updateAirline(id, naziv, adresa.getId(), opis);
+	}
+	
 }

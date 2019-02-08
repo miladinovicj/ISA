@@ -574,7 +574,7 @@ function prihvatiRez(rez_id)
 {
 	//alert("REZ ID: " + rez_id);
 	$.ajax({
-        type: 'POST',
+        type: 'PUT',
         url: 'api/rezervacija/prihvatiRez/' + korisnik.id + '/' + rez_id,
         contentType: 'application/json',
         success: function (rez)
