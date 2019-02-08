@@ -121,11 +121,8 @@ public class RezervacijaService
 	@Transactional
 	public void obrisiOsobu(Integer osoba_id, Integer rez_id)
 	{
-		Rezervacija r =rezervacijaRepository.findById(rez_id).get();
-		OsobaIzRez o = osobaIzRezRepository.findById(osoba_id).get();
-		r.getOsobe().remove(o);
-		rezervacijaRepository.save(r);
-		//rezervacijaRepository.obrisiOsobu(osoba_id, rez_id);
+	
+		rezervacijaRepository.obrisiOsobu(osoba_id, rez_id);
 	}
 
 	@Transactional
@@ -151,10 +148,8 @@ public class RezervacijaService
 	@Transactional
 	public void obrisiSveOsobe(Integer rez_id)
 	{
-		Rezervacija r =rezervacijaRepository.findById(rez_id).get();
-		r.getOsobe().clear();
-		rezervacijaRepository.save(r);
-		//rezervacijaRepository.obrisiSveOsobe(rez_id);
+		
+		rezervacijaRepository.obrisiSveOsobe(rez_id);
 	}
 	
 	

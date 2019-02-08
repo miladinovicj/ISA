@@ -225,7 +225,7 @@ function clickSpecialPrice()
 		//document.getElementById('ubaci_auto_template').style.display = 'none';
 		//document.getElementById('additional_services').style.display = 'none';
 		document.getElementById('special_price_a').innerHTML = 'Special prices:';
-		document.getElementById('button_back_carsp').style.display = 'block';
+		//document.getElementById('button_back_carsp').style.display = 'block';
 	}
 	else
 	{
@@ -233,7 +233,7 @@ function clickSpecialPrice()
 		//document.getElementById('ubaci_auto_template').style.display = 'block';
 		//document.getElementById('additional_services').style.display = 'block';
 		document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
-		document.getElementById('button_back_carsp').style.display = 'none';
+		//document.getElementById('button_back_carsp').style.display = 'none';
 	}
 }
 
@@ -243,7 +243,7 @@ function hideSpecialPrice()
 	//document.getElementById('ubaci_auto_template').style.display = 'block';
 	//document.getElementById('additional_services').style.display = 'block';
 	document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
-	document.getElementById('button_back_carsp').style.display = 'none';
+	//document.getElementById('button_back_carsp').style.display = 'none';
 }
 
 

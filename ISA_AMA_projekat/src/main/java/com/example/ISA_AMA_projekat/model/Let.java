@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -65,6 +66,9 @@ public class Let
 	
 	@Column(nullable = true)
 	private double prosecna_ocena;
+	
+	@Version
+	private int verzija;
 	
 	//SLOZENI ATRIBUTI:
 
@@ -235,6 +239,14 @@ public class Let
 
 	public void setProsecna_ocena(double prosecna_ocena) {
 		this.prosecna_ocena = prosecna_ocena;
+	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 
 	
