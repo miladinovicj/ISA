@@ -1,7 +1,6 @@
 package com.example.ISA_AMA_projekat.controller;
 
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_COUNT_HOTELS;
-import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_COUNT_HOTELS_ADMINS;
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_NAZIV;
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_PROMOTIVNI_OPIS;
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_PROSECNA_OCENA;
@@ -80,7 +79,7 @@ public class HotelControllerTest {
 	public void testGetHotelsForAdmin() throws Exception {
 		mockMvc.perform(get(URL_PREFIX + "/all_admin")).andExpect(status().isOk())
 		.andExpect(content().contentType(contentType))
-		.andExpect(jsonPath("$", hasSize(DB_COUNT_HOTELS_ADMINS)))
+		.andExpect(jsonPath("$", hasSize(HotelConstants.DB_COUNT_HOTELS_ADMINS)))
 		.andExpect(jsonPath("$.[*].naziv").value(hasItem(HotelConstants.NEW_NAZIV_NEG)));
 	}
 	

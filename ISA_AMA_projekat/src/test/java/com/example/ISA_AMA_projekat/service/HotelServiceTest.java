@@ -1,7 +1,10 @@
 package com.example.ISA_AMA_projekat.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -19,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ISA_AMA_projekat.constants.HotelConstants;
 import com.example.ISA_AMA_projekat.model.Hotel;
@@ -111,8 +115,20 @@ public class HotelServiceTest {
 		Hotel hotelChanged = hotelService.findById(HotelConstants.ID).get();
 		
 		assertEquals(dbHotel, hotelChanged);
-        verify(hotelRepositoryMock, times(2)).findById(HotelConstants.ID);
-        verify(hotelRepositoryMock, times(1)).updateAdmin(HotelConstants.ID, HotelConstants.ADMIN_ID);
+        verify(hotelRepositoryMock, times(3)).findById(HotelConstants.ID);
+        verify(hotelRepositoryMock, times(1)).save(dbHotel);
+        verifyNoMoreInteractions(hotelRepositoryMock);
+	}
+	
+	@Test
+    @Transactional
+	public void testSave() {
+		when(hotelRepositoryMock.save(hotelMock)).thenReturn(hotelMock);
+         
+        Hotel savedHotel = hotelService.save(hotelMock);
+           
+        assertThat(savedHotel, is(equalTo(hotelMock)));
+        verify(hotelRepositoryMock, times(1)).save(hotelMock);
         verifyNoMoreInteractions(hotelRepositoryMock);
 	}
 

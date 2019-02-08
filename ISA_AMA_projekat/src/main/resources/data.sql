@@ -51,9 +51,6 @@ insert into grad (id, naziv, verzija) values (4, 'Ruma', 0);
 insert into grad (id, naziv, verzija) values (5, 'Sabac', 0);
 insert into grad (id, naziv, verzija) values (6, 'Zrenjanin', 0);
 
-insert into AUTHORITY (id, name) values (11, 'ROLE_USER');
-
-
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (1, 1, 'Novosadskog sajma', '35', 45.252529, 19.826855, 0);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (2, 1, 'Bulevar Jase Tomica', '1', 45.263826, 19.824309, 0);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (3, 1, 'Novosadski put', '115', 45.244017, 19.781183, 0);
@@ -212,13 +209,13 @@ insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
 
 
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran,admin_id, verzija) values (5, 'krsmanovicc.aleksa@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Aleksa', 'Krsmanovic', 4, '062522006', 0, true,1, 0);
+insert into AUTHORITY (id, name) values (11, 'ROLE_USER');
 
-
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran,admin_id, verzija) values (5, 'krsmanovicc.aleksa@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Aleksa', 'Krsmanovic', 4, '062522006', 0, true,1,0);
 insert into user_authority (user_id, authority_id) values (5, 4);
 
-
-
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 4, '062522006', 0, true, 0);
+insert into user_authority (user_id, authority_id) values (1,11);
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milicau', 'Makaric', 3, '0652034133', 0, true, 0);
 insert into user_authority (user_id, authority_id) values (4, 5);

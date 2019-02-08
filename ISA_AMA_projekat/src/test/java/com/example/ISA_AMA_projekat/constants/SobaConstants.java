@@ -9,6 +9,13 @@ public class SobaConstants {
     public static final String DB_OPIS = "Apartman";
     public static final double DB_CENA_POPUST = 0;
     
+    public static final Integer DB_ID1 = 2;
+    public static final double DB_PROSECNA_OCENA1 = 2.6;
+    public static final double DB_CENA_NOCENJA1 = 53;
+    public static final int DB_BROJ_KREVETA1 = 2;
+    public static final String DB_OPIS1 = "Apartman sa terasom";
+    public static final double DB_CENA_POPUST1 = 10;
+    
     public static final String DB_POPUST_CHECK_IN = "2019-02-17";
 	public static final String DB_POPUST_CHECK_OUT = "2019-02-18";
 	
