@@ -12,6 +12,7 @@ insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) valu
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (3, 3, 'Ulica3', '3', 3.3, 3.3, 0);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (4, 4, 'Ulica4', '4', 4.4, 4.4, 0);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (5, 5, 'Ulica5', '5', 5.5, 5.5, 0);
+insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (6, 7, 'Njegoseva', '46', 19.36, 42.58, 0);
 
 insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Rent1', 1, 'Rent opis 1', 3.2);
 insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena, id_admin) values (2, 'Rent2', 2, 'Rent opis 2', 4.2, 1);
@@ -59,3 +60,5 @@ insert into usluga (id, naziv, cena, popust, verzija) values (1, 'air-conditione
 insert into usluga (id, naziv, cena, popust, verzija) values (2, 'Wi-Fi', 2, 0, 0);
 
 
+insert into bonus (id, bonus_poeni, popust, verzija) values (2, 13, 3, 0);
+insert into bonus (id, bonus_poeni, popust, verzija) values (1, 15, 5, 0);

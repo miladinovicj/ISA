@@ -1,6 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class AddressService {
 		return addressRepozitory.findAll();
 	}
 	
+	public Optional<Adresa> findById(Integer id){
+		return addressRepozitory.findById(id);
+	}
 	
 	public List<Adresa> checkAddress(Integer city_id, String street, String number) {
 		return addressRepozitory.checkAddress(city_id, street, number);

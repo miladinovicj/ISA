@@ -31,7 +31,6 @@ public class AddressController {
 	@RequestMapping(
 			value = "/checkCity/{city}/{street}/{number}/{longitude}/{latitude}",
 			method = RequestMethod.GET,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Adresa> checkCity(@PathVariable("city") String city, @PathVariable("street") String street, @PathVariable("number") String number, @PathVariable("longitude") double longitude, @PathVariable("latitude") double latitude){
 		
