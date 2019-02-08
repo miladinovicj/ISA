@@ -7,6 +7,7 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -28,12 +29,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ISA_AMA_projekat.model.Hotel;
+import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.Soba;
 import com.example.ISA_AMA_projekat.model.Usluga;
 import com.example.ISA_AMA_projekat.service.HotelService;
+import com.example.ISA_AMA_projekat.service.KorisnikService;
 import com.example.ISA_AMA_projekat.service.PopustService;
 import com.example.ISA_AMA_projekat.service.RezervacijaHotelService;
 import com.example.ISA_AMA_projekat.service.RezervacijaService;
@@ -63,6 +66,9 @@ public class HotelController {
 	@Autowired
 	private PopustService popustService;
 	
+	@Autowired
+	private KorisnikService korisnikService;
+	
 	@RequestMapping(
 			value = "/all",
 			method = RequestMethod.GET,
@@ -70,7 +76,9 @@ public class HotelController {
 	public ResponseEntity<Collection<Hotel>> getHotels(){
 		
 		Collection<Hotel> hotels = hotelService.findAll();
-		
+		ArrayList<Hotel> sortirani = (ArrayList<Hotel>) hotels;
+		sortirani.sort(Comparator.comparing(Hotel::getNaziv));
+		hotels = sortirani;
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
 	}
 	
@@ -108,19 +116,6 @@ public class HotelController {
 		Date date_check_in = format.parse(check_in);
 		Date date_check_out = format.parse(check_out);
 		
-		/*
-		RezervacijaHotel rezervacijaHotel = new RezervacijaHotel();
-		rezervacijaHotel.setDatum_dolaska(date_check_in);
-		rezervacijaHotel.setDatum_odlaska(date_check_out);
-		rezervacijaHotel.setBrza(false);
-		int broj_nocenja = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
-		rezervacijaHotel.setBroj_nocenja(broj_nocenja);
-		rezervacijaHotel.setAktivirana(false);
-		
-		rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
-		request.getSession().setAttribute("rezervacijaHotel", rezervacijaHotel);
-		*/
-		
 		List<Hotel> hotels = hotelService.search("%" + search[0] + "%");
 		List<Hotel> hoteli = pretraga(hotels, search, date_check_in, date_check_out, adults);
 		
@@ -145,8 +140,6 @@ public class HotelController {
 		int broj_nocenja = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
 		rezervacijaHotel.setBroj_nocenja(broj_nocenja);
 		rezervacijaHotel.setAktivirana(false);
-		
-		//rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 			
 		return new ResponseEntity<RezervacijaHotel>(rezervacijaHotel, HttpStatus.OK);
 	}
@@ -183,24 +176,31 @@ public class HotelController {
 	
 	@PreAuthorize("hasRole('HOTELADMIN')")
 	@RequestMapping(
-			value = "/admin/{id}",
+			value = "/admin/{id_hotel}/{id_korisnik}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hotel> getOneHotel(@PathVariable("id") Integer id){
+	public ResponseEntity<Hotel> getOneHotel(@PathVariable("id_hotel") Integer id_hotel, @PathVariable("id_korisnik") Integer id_korisnik){
 		
-		System.out.println("usao u metodu api/hotels/hotelAdmin/{id}; id: " + id);
+		System.out.println("usao u metodu api/hotels/hotelAdmin/{id}; id: " + id_hotel);
 		Hotel result = null;
 		
 		try{
-			result = hotelService.findById(id).get();
+			result = hotelService.findById(id_hotel).get();
 			System.out.println("Nasao hotel sa id:" + result.getId());
 		}catch(NoSuchElementException e)
 		{
-			System.out.println("Ne postoji hotel sa id: " + id);
+			System.out.println("Ne postoji hotel sa id: " + id_hotel);
 			return null; 	
 		}
 		
 		System.out.println("[HotelController: getHotel]: id pronadjenog hotela: " + result.getId());
+		
+		Korisnik korisnik = korisnikService.findById(id_korisnik).get();
+		
+		if(korisnik.getAdmin_id() != id_hotel) {
+			System.out.println("Korisnik: " + korisnik.getId() + " nije admin ovog hotela: " + id_hotel);
+			return null; 
+		}
 		
 		return new ResponseEntity<Hotel>(result, HttpStatus.OK);
 	}
@@ -272,78 +272,8 @@ public class HotelController {
 			}
 		}
 		
-		/*
-		List<Soba> result = new ArrayList<Soba>();
-		
-		for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
-			System.out.println("[HotelController: getHotelSpecialPrice]: usao u for za prolazak kroz sobe; ima " + hotel.getSobe().size() + " soba.");
-			Soba soba = (Soba) iteratorSoba.next();
-			
-			if(isBrzaSoba(soba, date_check_in, date_check_out)) {
-				System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id: " + soba.getId() + " je brza soba.");
-				result.add(soba);
-			}
-		}
-		*/
-		
 		return new ResponseEntity<Collection<Soba>>(result, HttpStatus.OK);
 	}
-	
-	/*@RequestMapping(
-			value = "specialPrice/{id}/{check_in}/{check_out}",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<RezervacijaHotel>> getHotelSpecialPrice(@PathVariable("id") Integer id, @PathVariable("check_in") String check_in, @PathVariable("check_out") String check_out) throws ParseException
-	{
-		System.out.println("usao u metodu api/hotels/specialPrice/{id}, id: " + id);
-		
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date_check_in = format.parse(check_in);
-		Date date_check_out = format.parse(check_out);
-		
-		Hotel hotel = null;
-		
-		try{
-			hotel = hotelService.findById(id).get();
-			System.out.println("[HotelController: getHotelSpecialPrice]: Nasao hotel sa id:" + hotel.getId());
-		}catch(NoSuchElementException e)
-		{
-			System.out.println("Ne postoji hotel sa id: " + id);
-			return null; 	
-		}
-		
-		Collection<RezervacijaHotel> brzeRez = rezervacijaHotelService.findBrzeRez(id, true);
-		Collection<RezervacijaHotel> result = new ArrayList<RezervacijaHotel>();
-		
-		for(Iterator<RezervacijaHotel> iteratorRez = brzeRez.iterator(); iteratorRez.hasNext();) {
-			RezervacijaHotel rezervacijaHotel = iteratorRez.next();
-			
-			if((date_check_in.equals(rezervacijaHotel.getDatum_dolaska()) || date_check_in.after(rezervacijaHotel.getDatum_dolaska())) && (date_check_out.equals(rezervacijaHotel.getDatum_odlaska()) || date_check_out.before(rezervacijaHotel.getDatum_odlaska())) ) {
-
-				System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id: " + rezervacijaHotel.getSoba().getId() + " je brza soba.");
-				result.add(rezervacijaHotel);
-			}else {
-				System.out.println("[HotelController: isBrzaSoba]: soba nije na popustu u trazenom periodu.");
-			}
-		}
-		
-		/*
-		List<Soba> result = new ArrayList<Soba>();
-		
-		for(Iterator<Soba> iteratorSoba = hotel.getSobe().iterator(); iteratorSoba.hasNext();) {
-			System.out.println("[HotelController: getHotelSpecialPrice]: usao u for za prolazak kroz sobe; ima " + hotel.getSobe().size() + " soba.");
-			Soba soba = (Soba) iteratorSoba.next();
-			
-			if(isBrzaSoba(soba, date_check_in, date_check_out)) {
-				System.out.println("[HotelController: getHotelSpecialPrice]: soba sa id: " + soba.getId() + " je brza soba.");
-				result.add(soba);
-			}
-		}
-		
-		
-		return new ResponseEntity<Collection<RezervacijaHotel>>(result, HttpStatus.OK);
-	}
-	*/
 	
 	@PreAuthorize("hasRole('SYSADMIN')")
 	@RequestMapping(
@@ -362,19 +292,9 @@ public class HotelController {
 			Hotel saved = hotelService.save(hotel);
 			return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
 		}
-		/*
-		Hotel saved = null;
-		try {
-			saved = hotelService.save(hotel);
-		} catch(Exception e) {
-			System.out.println("Hotel sa ovim nazivom vec postoji u bazi");
-			return new ResponseEntity<Hotel>(postoji, HttpStatus.CONFLICT);
-		}
-		
-		return new ResponseEntity<Hotel>(saved, HttpStatus.CREATED);
-		*/
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/add_usluga/{usluga_id}",
 			method = RequestMethod.POST,
@@ -389,6 +309,7 @@ public class HotelController {
 		return new ResponseEntity<RezervacijaHotel>(rezervacijaHotela, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/remove_usluga/{usluga_id}",
 			method = RequestMethod.POST,
@@ -440,6 +361,7 @@ public class HotelController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_room/{soba_id}/{id_rez}",
 			method = RequestMethod.PUT,
@@ -450,7 +372,7 @@ public class HotelController {
 		
 		Soba soba =  sobaService.findById(soba_id).get();
 		rezervacijaHotel.setSoba(soba);
-		rezervacijaHotel.setAktivirana(true);
+		rezervacijaHotel.setAktivirana(false);
 		
 		Date date_check_in = rezervacijaHotel.getDatum_dolaska();
 		Date date_check_out = rezervacijaHotel.getDatum_odlaska();
@@ -479,7 +401,8 @@ public class HotelController {
 		
 		rezervacijaService.updateRezHotel(rezervacijaHotel.getId(), id_rez);
 		Rezervacija rezervacija = rezervacijaService.findById(id_rez).get();
-		rezervacijaService.updateCenaRez(rezervacija.getCena() + rezervacijaHotel.getUkupna_cena(), id_rez);
+		double cena = rezervacija.getCena() + rezervacijaHotel.getUkupna_cena() - (rezervacija.getCena() + rezervacijaHotel.getUkupna_cena())*0.05;
+		rezervacijaService.updateCenaRez(cena, id_rez);
 		Date datum_rez = rezervacija.getDatumRezervacije();
 		rezervacijaHotelService.updateDatumRez(datum_rez, rezervacijaHotel.getId());
 		
@@ -498,20 +421,13 @@ public class HotelController {
 		return new ResponseEntity<Soba>(soba, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_room_special/{soba_id}/{check_in}/{check_out}/{rez_id}",
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Soba> bookRoomSpecial(@PathVariable("soba_id") Integer soba_id, @PathVariable("check_in") String check_in_string, @PathVariable("check_out") String check_out_string, @PathVariable("rez_id") Integer rez_id, @RequestBody Popust popust) throws ParseException {
-		
-		/*
-		RezervacijaHotel rezervacijaHotel = rezervacijaHotelService.findById(rezervacija_id).get();
-		
-		rezervacijaHotelService.updateAktivirana(rezervacija_id, true);
-		
-		return new ResponseEntity<RezervacijaHotel>(rezervacijaHotel, HttpStatus.OK);
-		*/
 		
 		Soba soba =  sobaService.findById(soba_id).get();
 		
@@ -528,7 +444,7 @@ public class HotelController {
 		rezervacijaHotel.setBroj_nocenja(broj_nocenja);
 		rezervacijaHotel.setBrza(true);
 		rezervacijaHotel.setPopust(popust.getPopust());
-		rezervacijaHotel.setAktivirana(true);
+		rezervacijaHotel.setAktivirana(false);
 		rezervacijaHotel.setSoba(soba);
 		double cena_rez = broj_nocenja * (soba.getCena_nocenja() * 0.01 * (100 - popust.getPopust()));
 		
@@ -545,7 +461,8 @@ public class HotelController {
 		
 		rezervacijaService.updateRezHotel(rezervacijaHotel.getId(), rez_id);
 		Rezervacija rezervacija = rezervacijaService.findById(rez_id).get();
-		rezervacijaService.updateCenaRez(rezervacija.getCena() + rezervacijaHotel.getUkupna_cena(), rez_id);
+		double cena = rezervacija.getCena() + rezervacijaHotel.getUkupna_cena() - (rezervacija.getCena() + rezervacijaHotel.getUkupna_cena())*0.05;
+		rezervacijaService.updateCenaRez(cena, rez_id);
 		Date datum_rez = rezervacija.getDatumRezervacije();
 		rezervacijaHotelService.updateDatumRez(datum_rez, rezervacijaHotel.getId());
 		

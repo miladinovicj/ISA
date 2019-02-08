@@ -1,5 +1,7 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,15 @@ public class BonusService {
 		return bonusRepository.save(bonus);
 	}
 	
-	public Bonus findByPoeni(int poeni)
-	{
+	public Bonus findByPoeni(int poeni){
 		return bonusRepository.findOneByBonusPoeni(poeni);
 	}
 
+	public Collection<Bonus> findAll() {
+		return bonusRepository.findAll();
+	}
+	
+	public void updateBonus(int popust, int poeni) {
+		bonusRepository.updateBonus(popust, poeni);
+	}
 }

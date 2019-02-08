@@ -7,6 +7,7 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ISA_AMA_projekat.model.Adresa;
 import com.example.ISA_AMA_projekat.model.Filijala;
 import com.example.ISA_AMA_projekat.model.Grad;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.Popust;
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
@@ -84,6 +86,10 @@ public class RentacarController {
 		{
 			System.out.println("IMA LI FILIJALA: " + rs.getFilijale().size());
 		}
+		
+		ArrayList<RentacarServis> sortirani = (ArrayList<RentacarServis>) rents;
+		sortirani.sort(Comparator.comparing(RentacarServis::getNaziv));
+		rents = sortirani;
 		return new ResponseEntity<Collection<RentacarServis>>(rents, HttpStatus.OK);
 	}
 	
@@ -91,24 +97,24 @@ public class RentacarController {
 			value = "/getVozilo/{rez_id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Vozilo getCarFromRez(@PathVariable("rez_id") Integer rez_id){
+	public ResponseEntity<Vozilo> getCarFromRez(@PathVariable("rez_id") Integer rez_id){
 		
 			RezervacijaVozila rv = rezervacijaVozilaService.findById(rez_id).get();
 			Vozilo v = rv.getVozilo();
-			return v;
+			return new ResponseEntity<Vozilo>(v, HttpStatus.OK);
 	}
 	
 	@RequestMapping(
 			value = "/getRent/{rez_id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public RentacarServis getRentFromRez(@PathVariable("rez_id") Integer rez_id){
+	public ResponseEntity<RentacarServis> getRentFromRez(@PathVariable("rez_id") Integer rez_id){
 		
 			RezervacijaVozila rv = rezervacijaVozilaService.findById(rez_id).get();
 			Vozilo v = rv.getVozilo();
 			Filijala fil = v.getFilijala();
 			RentacarServis rs = fil.getRentacar();
-			return rs;
+			return new ResponseEntity<RentacarServis>(rs, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('SYSADMIN')")
@@ -134,7 +140,7 @@ public class RentacarController {
 			value = "admin/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentacarServis> getRentacarServis(@PathVariable("id") Integer id)
+	public ResponseEntity<RentacarServis> getRentacarServisAdm(@PathVariable("id") Integer id)
 	{
 		try
 		{
@@ -505,6 +511,7 @@ public class RentacarController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_car/{vozilo_id}/{id_rez}",
 			method = RequestMethod.PUT,
@@ -517,7 +524,7 @@ public class RentacarController {
 		Vozilo vozilo =  voziloService.findById(vozilo_id).get();
 		rezervacijaVozila.setVozilo(vozilo);
 		
-		rezervacijaVozila.setAktivirana(true);
+		rezervacijaVozila.setAktivirana(false);
 		
 		Date date_check_in = rezervacijaVozila.getDatum_preuzimanja();
 		Date date_check_out = rezervacijaVozila.getDatum_vracanja();
@@ -538,6 +545,7 @@ public class RentacarController {
 		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
 		double cena = rez.getCena();
 		cena+=rezervacijaVozila.getUkupna_cena();
+		cena = cena - (cena)*0.05;
 		rezervacijaService.updateCenaRez(cena, rez.getId());
 		
 		return new ResponseEntity<Vozilo>(vozilo, HttpStatus.OK);
@@ -555,8 +563,8 @@ public class RentacarController {
 		Date date_check_out = format.parse(check_out);
 		
 		RezervacijaVozila rezervacijavozila = new RezervacijaVozila();
-		rezervacijavozila.setDatum_preuzimanja(date_check_in);;
-		rezervacijavozila.setDatum_vracanja(date_check_out);;
+		rezervacijavozila.setDatum_preuzimanja(date_check_in);
+		rezervacijavozila.setDatum_vracanja(date_check_out);
 		rezervacijavozila.setBrza(false);
 		Grad grad_preuzimanja = gradService.findByNaziv(check_in_town);
 		Grad grad_vracanja = gradService.findByNaziv(check_out_town);
@@ -717,6 +725,7 @@ public class RentacarController {
 		
 	}
 	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/book_car_special/{vozilo_id}/{check_in}/{check_in_town}/{check_out}/{check_out_town}/{passengers}/{id_rez}",
 			method = RequestMethod.PUT,
@@ -745,7 +754,7 @@ public class RentacarController {
 		rezervacijaVozila.setBroj_putnika(passengers);
 		rezervacijaVozila.setBrza(true);
 		rezervacijaVozila.setPopust(popust.getPopust());
-		rezervacijaVozila.setAktivirana(true);
+		rezervacijaVozila.setAktivirana(false);
 		rezervacijaVozila.setVozilo(vozilo);
 		double cena_rez = broj_dana * (vozilo.getCena_dan() * 0.01 * (100 - popust.getPopust()));
 		
@@ -761,6 +770,7 @@ public class RentacarController {
 		rezervacijaVozilaService.updateDatumRez(datum_rez, rezervacijaVozila.getId());
 		double cena = rez.getCena();
 		cena+=rezervacijaVozila.getUkupna_cena();
+		cena = cena - (cena)*0.05;
 		rezervacijaService.updateCenaRez(cena, rez.getId());
 		
 		
@@ -794,7 +804,7 @@ public class RentacarController {
 			method = RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public RentacarServis editServis(@PathVariable("id") Integer id, @PathVariable("naziv") String naziv,
+	public ResponseEntity<RentacarServis> editServis(@PathVariable("id") Integer id, @PathVariable("naziv") String naziv,
 			@PathVariable("ulica") String ulica, @PathVariable("broj") String broj, @PathVariable("grad") String grad_str, @PathVariable("opis") String opis,
 			 @PathVariable("latitude") double latitude,  @PathVariable("longitude") double longitude)
 	{
@@ -830,7 +840,7 @@ public class RentacarController {
 		}
 		System.out.println("[RentacarControler]: adr: " + adr.getId() + " " + adr.getUlica() + " " + adr.getBroj());
 		rentService.updateServis(naziv, adr.getId(), opis, ser.getId());
-		return ser;
+		return  new ResponseEntity<RentacarServis>(ser, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('RENTADMIN')")

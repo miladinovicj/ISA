@@ -115,7 +115,7 @@
 						<br>
 						<br>
 
-						<h3><b>Flight Information: <button id="rate_flight" style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;vertical-align:center" class="button search_button">Rate flight</button><button style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_let">Cancel flight</button>
+						<h3><b>Flight Information: <button id="rate_flight" style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;vertical-align:center" class="button search_button" onclick="javascript:oceniLet();">Rate flight</button><button id="rate_avio" style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;vertical-align:center" class="button search_button" onclick="javascript:oceniAvio();">Rate aviocompany</button><button style="margin-left:7%; margin-top:0px; height:40px; align-content: center;text-align: center;" class="button search_button" id="cancel_let" onclick="javascript:otkaziLet();">Cancel flight</button>
 
 						</b></h3>
 						<br>
@@ -126,7 +126,7 @@
 						  <span></span>
 						  <span></span>
 						  <span></span>
-						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaLeta" onclick="javascript:oceniLet();">Rate</button>
+						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaLeta" >Rate</button>
 						</div>
 						<div id='rating2' hidden="true">
 						  <span></span>
@@ -134,7 +134,7 @@
 						  <span></span>
 						  <span></span>
 						  <span></span>
-						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaAvio" onclick="javascript:oceniAvio();">Rate</button>
+						  <button type="submit" class="button search_button" style="margin-left:2%; margin-top:0px; height:40px;" id="ocenaAvio" >Rate</button>
 						</div>
 						<br>
 						<br>
@@ -288,8 +288,18 @@
 							<li><p id="cost">Cost: $</p></li>
 						</ul>
 						</div>
-						<button id="zavrsena_dugme" style="margin-left:77%; align-content: center;text-align: center;" class="button search_button" onclick="javascript:zavrsiRezervaciju();">FINISH RESERVATION<span></span><span></span><span></span></button>
-	
+						<div id="div_bonus_points" style="float: right; position: relative; margin-top: 30px; margin-bottom: 60px;">
+							<p id="users_bonus_points">Your bonus points: </p>
+							<p id="total_cost">Total cost without bonus points: $</p>
+							<p id="cost_discount">Total cost with bonus points: $</p>
+							<p id="question_bonus_points">Do you want to use bonus points?</p>
+							<span><button id="use_bonus_points" style="margin-left:0%; align-content: center;text-align: center;" class="button search_button bonus_points">Yes</button></span>
+							<span><button id="not_use_bonus_points" style="margin-left:0%; align-content: center;text-align: center;" class="button search_button bonus_points">No</button></span>
+						</div>
+						<div id="div_zavrsena_rez" style="display: none; float: right; position: relative; margin-top: 30px; margin-bottom: 60px;">
+							<p id="finish_total_cost" style="font-size: 30px; margin-left: 15px;">Total cost: $</p>
+							<button id="zavrsena_dugme" style="margin-top: 6px; align-content: center;text-align: center;" class="button search_button" onclick="javascript:zavrsiRezervaciju();">FINISH RESERVATION<span></span><span></span><span></span></button>
+						</div>
 					</div>
 		
 		</div>
@@ -327,7 +337,6 @@
 <script src="plugins/Isotope/isotope.pkgd.min.js"></script>
 <script src="plugins/easing/easing.js"></script>
 <script src="js/offers_custom.js"></script>
-
 
 
 

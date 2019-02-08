@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.security.TokenUtils;
 import com.example.ISA_AMA_projekat.service.AddressService;
+import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.service.AviokompanijaService;
 import com.example.ISA_AMA_projekat.service.GradService;
 import com.example.ISA_AMA_projekat.service.KorisnikService;
@@ -82,7 +84,9 @@ public class AviokompanijaController
 	public ResponseEntity<Collection<Aviokompanija>> getAviokompanije(){
 		
 		Collection<Aviokompanija> los_avios = avioServis.findAll();
-		
+		ArrayList<Aviokompanija> sortirani = (ArrayList<Aviokompanija>)los_avios;
+		sortirani.sort(Comparator.comparing(Aviokompanija::getNaziv));
+		los_avios = sortirani;
 		return new ResponseEntity<Collection<Aviokompanija>>(los_avios, HttpStatus.OK);
 	}
 	

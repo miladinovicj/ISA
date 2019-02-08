@@ -6,11 +6,6 @@ $(document).ready(function()
 		{
 	token=localStorage.getItem('jwtToken');
 	
-	
-
-	
-	
-	
 	$.post({
 		url: "/auth/userprofile",
 		headers: {"Authorization": "Bearer " + token},
@@ -28,6 +23,7 @@ $(document).ready(function()
 					$("#div_buttons").hide();
 					$("#div_buttons_admin").hide();
 					$("#div_buttons_system_admin").hide();
+					$('#div_button_discount').hide();
 					
 				}
 				else
@@ -35,7 +31,7 @@ $(document).ready(function()
 					$("#div_buttons").show();
 					$("#div_buttons_admin").show();
 					$("#div_buttons_system_admin").show();
-					
+					$('#div_button_discount').show();
 				}
 				
 				document.getElementById("name_profile").value  = user.ime;
@@ -82,6 +78,14 @@ $(document).ready(function()
   	  $(this).val($(this).val().replace(/[\r\n\v]+/g, ''));
 	});
 	*/
+	
+	$("input[name=bonus_points]").bind('keyup mouseup', function () {
+		$('#error_bonus_points').hide();
+	});
+	
+	$("input[name=discount]").bind('keyup mouseup', function () {
+		$('#error_bonus_points').hide();
+	});
 	
 	$('#add_form').submit(function(event) {
 		console.log('add_form submit');
@@ -170,20 +174,21 @@ $(document).ready(function()
 		if(ispravno == true)
 		{
 			$.get({
-				url: "/api/address/checkCity/" + city,
-				  
+				url: "/api/address/checkCity/" + city + '/' + street + '/' + number + '/' + longitude + '/' + latitude,
+				headers: {"Authorization": "Bearer " + token},
+				contentType: 'application/json',
 				success: function(data) {
 					if(data == null || data == "")
 					{
-						console.log('nije pronadjen grad');
-						newCity(city);
+						alert('nije pronadjen grad');
+						//newCity(city);
 					}
 					else
 					{
-						console.log('pronadjen grad: ' + data.naziv);
-						checkAddress(data);
+						console.log('pronadjena adresa: ' + data.id);
+						finalAdd(data);
 					}
-					window.location.search='';
+					//window.location.search='';
 				},
 				
 				error: function() {
@@ -356,6 +361,7 @@ $(document).ready(function()
 				url: "/api/users/changeData/" + korisnik.email,
 				data: JSON.stringify({email: email_profile, ime: name_profile, prezime: lastname_profile, grad: city_profile, telefon: phone_profile}),
 				contentType: 'application/json',
+				headers: {"Authorization": "Bearer " + token},
 				success: function() {
 					console.log('uspesna promena podataka korisnika');
 					window.location.href = 'profil.html';
@@ -459,6 +465,7 @@ $(document).ready(function()
 	{
 		$.get({
 			url: "/api/rezervacija/getAllReservations/" + korisnik.id,
+			headers: {"Authorization": "Bearer " + token},
 			success: function(data) 
 			{
 				$.each(data, function( index, value ) 
@@ -525,6 +532,7 @@ $(document).ready(function()
 	    		$.ajax({
 	    	        type: 'DELETE',
 	    	        url: 'api/rezervacija/obrisiOsobu/' + korisnik.id + '/' + rezervacija.id,
+	    	        headers: {"Authorization": "Bearer " + token},
 	    	        contentType: 'application/json',
 	    	        success: function (rez)
 	    			{
@@ -558,6 +566,7 @@ function odbijRez(rez_id)
 	$.ajax({
         type: 'DELETE',
         url: 'api/rezervacija/obrisiOsobu/' + korisnik.id + '/' + rez_id,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         success: function (rez)
 		{
@@ -576,6 +585,7 @@ function prihvatiRez(rez_id)
 	$.ajax({
         type: 'PUT',
         url: 'api/rezervacija/prihvatiRez/' + korisnik.id + '/' + rez_id,
+        headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
         success: function (rez)
 		{
@@ -647,6 +657,7 @@ function prihvatiRez(rez_id)
 		    $.ajax({
 		        type: 'PUT',
 		        url: 'api/friendRequest/' + token + "/" + zahtevID,
+		        headers: {"Authorization": "Bearer " + token},
 		        complete: function (data)
 				{
 		        	if(data == null)
@@ -675,6 +686,7 @@ function prihvatiRez(rez_id)
 					    $.ajax({
 					        type: 'DELETE',
 					        url: 'api/friendRequest/delete/' + token + "/" + zahtevID,
+					        headers: {"Authorization": "Bearer " + token},
 					        complete: function (data)
 							{
 					        	if(data == null)
@@ -814,58 +826,6 @@ function back()
     window.scrollBy(0, -100);
 }
 
-
-function newCity(city)
-{
-	console.log('[profil.js: newCity()]');
-	
-	$.post({
-		url: "/api/address/newCity/" + city,
-		  
-		success: function(data) {
-			if(data == null || data == "")
-			{
-				console.log('nije sacuvan grad');
-			}
-			else
-			{
-				console.log('sacuvan grad: ' + data.naziv);
-				checkAddress(data);
-			}
-		},
-		
-		error: function() {
-			alert('Error with saving city');
-		}
-	
-	});
-}
-
-function checkAddress(newCity)
-{
-	console.log('[profil.js: checkAddress()]');
-	
-	$.get({
-		url: "/api/address/checkAddress/" + street + '/' + number + '/' + longitude + '/' + latitude + '/' + newCity.id,
-		success: function(data) {
-			if(data == null || data == "")
-			{
-				console.log('nije pronadjena adresa');
-			}
-			else
-			{
-				console.log('pronadjena adresa sa id: ' + data.id);
-				finalAdd(data);
-			}
-		},
-		
-		error: function() {
-			alert('Error with saving address');
-		}
-	
-	});
-}
-
 function finalAdd(address)
 {
 	console.log('[profil.js: finalAdd()]');
@@ -874,7 +834,7 @@ function finalAdd(address)
 	{
 		$.post({
 			url: "/rest/airline/save",
-			data: JSON.stringify({naziv: name, opis: description, adresa: address}),
+			data: JSON.stringify({naziv: name, opis: description, adresa: address, prosecna_ocena: 0}),
 			contentType: 'application/json',
 			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
@@ -883,7 +843,9 @@ function finalAdd(address)
 			},
 			
 			error: function() {
-				alert('Error');
+				//alert('Error');
+				document.getElementById("error_new_name").innerHTML = "There is already airline with this name.";
+				document.getElementById("error_new_name").style.display  = 'block';
 			}
 		
 		});
@@ -892,7 +854,7 @@ function finalAdd(address)
 	{
 		$.post({
 			url: "/api/hotels/save",
-			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
+			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address, prosecna_ocena: 0}),
 			contentType: 'application/json',
 			headers: {"Authorization": "Bearer " + token},
 			success: function(airline) {
@@ -901,7 +863,9 @@ function finalAdd(address)
 			},
 			
 			error: function() {
-				alert('Error');
+				//alert('Error');
+				document.getElementById("error_new_name").innerHTML = "There is already car rental with this name.";
+				document.getElementById("error_new_name").style.display  = 'block';
 			}
 		
 		});
@@ -910,7 +874,7 @@ function finalAdd(address)
 	{
 		$.post({
 			url: "/api/rents/save",
-			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address}),
+			data: JSON.stringify({naziv: name, promotivni_opis: description, adresa: address, prosecna_ocena: 0}),
 			headers: {"Authorization": "Bearer " + token},
 			contentType: 'application/json',
 			  
@@ -920,7 +884,9 @@ function finalAdd(address)
 			},
 			
 			error: function() {
-				alert('Error');
+				//alert('Error');
+				document.getElementById("error_new_name").innerHTML = "There is already hotel with this name.";
+				document.getElementById("error_new_name").style.display  = 'block';
 			}
 		
 		});
@@ -1160,6 +1126,8 @@ function setFriends()
 {
 	$.get({
 		url: "/api/users/friendsOf/" + korisnik.id,
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
 		success: function(data) 
 		{
 			if(data == null)
@@ -1206,6 +1174,8 @@ function insertFirend(friend)
 	    $.ajax({
 	        type: 'DELETE',
 	        url: 'api/friendRequest/deleteFriend/' + token + "/" + friend.id,
+	        headers: {"Authorization": "Bearer " + token},
+			contentType: 'application/json',
 	        complete: function (data)
 			{
 	        	if(data == null)
@@ -1243,6 +1213,8 @@ function insertUser(friend)
 	    $.ajax({
 	        type: 'POST',
 	        url: 'api/friendRequest/befriend/' + token + "/" + friend.id,
+	        headers: {"Authorization": "Bearer " + token},
+			contentType: 'application/json',
 	        complete: function (data)
 			{
 	        	if(data == null || data == undefined || data =="")
@@ -1320,6 +1292,8 @@ function setSearch()
 			if(searchText == "") return;
 			$.get({
 				url: "/api/users/withNames/" + searchText + "/" + korisnik.id,
+				headers: {"Authorization": "Bearer " + token},
+				contentType: 'application/json',
 				success: function(data) 
 				{
 					if(data == null)

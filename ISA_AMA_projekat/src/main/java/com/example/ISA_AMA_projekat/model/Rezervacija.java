@@ -19,14 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
 
 @Entity
 public class Rezervacija implements Serializable{
@@ -165,7 +159,5 @@ public class Rezervacija implements Serializable{
 	public void setZavrsena(boolean zavrsena) {
 		this.zavrsena = zavrsena;
 	}
-	
-	
 	
 }

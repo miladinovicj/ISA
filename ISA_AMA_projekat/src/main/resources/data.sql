@@ -12,6 +12,7 @@ delete from aviokompanija_brzi_letovi;
 delete from zauzeta_sedista;
 delete from let;
 delete from aviokompanija;
+delete from luggage_info;
 delete from friend_request;
 delete from korisnik;
 
@@ -50,12 +51,12 @@ insert into grad (id, naziv) values (4, 'Ruma');
 insert into grad (id, naziv) values (5, 'Sabac');
 insert into grad (id, naziv) values (6, 'Zrenjanin');
 
+
+
+
+
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 4, '062522006', 0, true);
-insert into AUTHORITY (id, name) values (1, 'ROLE_USER');
-insert into user_authority (user_id, authority_id) values (1, 1);
-
-
-
+insert into user_authority (user_id, authority_id) values (1,11);
 
 
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (1, 1, 'Novosadskog sajma', '35', 45.252529, 19.826855);
@@ -84,17 +85,18 @@ insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (6, 'Rezidencija Makarica', 5, 'Luksuzna vila sa 4 apartmana. Svaki apartman poseduje tv, klima uredjaj, mini bar, terasu, kupatilo. Odlican Wi-Fi signal. Prostrano dvoriste i obezbedjen parking za goste. Najupecatljiviji utisak ostavljaju ljubaznost i gostoprimljivost domacina.', 4.99);
 insert into hotel (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (7, 'Sole mio', 6, 'Hotel sa tradicijom dugom 78 godina.', 4.5);
 
-insert into luggage_info(id,opis,standard_max_kila,cena_standard,extra_max_kila,cena_extra) values(1,"The airline does not take responsability for any lost suitcases or handbags.",20,20,35,40);
+insert into luggage_info(id,opis,standard_max_kila,cena_standard,extra_max_kila,cena_extra) values(1,'The airline does not take responsability for any lost suitcases or handbags.',20,20,35,40);
 
 insert into aviokompanija(id, adresa_id, opis, naziv, ocena, info, prosecna_ocena,luggage_info_id) values (1, 7,'Najjaci popusti najjace zezanje drugari', 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari', 4,1);
 
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 80, 3);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 100, 4.5);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (5,5000,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 50, 3.5);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (2,250,'Milano - ITA', 'Belgrade - SRB', 10, 15, 15000,'2018-12-30 11:59:59.999999','2018-12-31 23:59:59.999999',1, 250, 2.9);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (3,500,'Washington DC - USA', ' Nis - SRB', 0, 15, 15000,'2019-1-15 02:59:59.999999','2019-1-15 23:59:59.999999',1, 115,4.2);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 15000,'2019-12-25 3:00:00.999999','2019-12-25 6:00:00.999999',1, 75, 5);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 15000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1, 100, 4.8);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 5000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 80, 3);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 200,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 100, 4.5);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (5,5000,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 3000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 50, 3.5);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (2,250,'Milano - ITA', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 250, 2.9);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (3,500,'Washington - USA', ' Nis - SRB', 0, 15, 4500,'2019-1-15 02:59:59.999999','2019-1-15 23:59:59.999999',1, 115,4.2);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 9900,'2019-12-25 3:00:00.999999','2019-12-25 6:00:00.999999',1, 75, 5);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 10000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1, 100, 4.8);
+
 
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,1);
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,2);
@@ -163,13 +165,16 @@ insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 11
 insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 6);
 insert into rentacar_servis_usluge (rentacar_servis_id, usluge_id) values (3, 9);
 
-insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (2, '2019-01-25', '2019-01-27', 30);
+insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (2, '2019-02-16', '2019-02-20', 30);
 insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (1, '2019-01-06', '2019-01-08', 20);
-insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (3, '2019-01-24', '2019-01-30', 25);
+insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (3, '2019-02-16', '2019-02-20', 25);
+insert into popust (id, pocetak_vazenja, kraj_vazenja, popust) values (4, '2019-02-16', '2019-02-20', 25);
+
 
 insert into soba_popusti (soba_id, popusti_id) values (1, 1);
 insert into soba_popusti (soba_id, popusti_id) values (2, 2);
 insert into vozilo_popusti (vozilo_id, popusti_id) values (3, 3);
+insert into vozilo_popusti (vozilo_id, popusti_id) values (2, 4);
 
 insert into popust_usluge (popust_id, usluge_id) values (2, 1);
 insert into popust_usluge (popust_id, usluge_id) values (2, 3);
@@ -208,7 +213,7 @@ insert into AUTHORITY (id, name) values (3, 'ROLE_HOTELADMIN');
 insert into AUTHORITY (id, name) values (4, 'ROLE_AVIOADMIN');
 insert into AUTHORITY (id, name) values (5, 'ROLE_SYSADMIN');
 
-insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (3, 'makaric.milica@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, false, 6);
+insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, admin_id) values (3, 'makaric.milica@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 5, false, 6);
 insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
 
@@ -228,3 +233,8 @@ insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true);
 insert into user_authority (user_id, authority_id) values (4, 5);
+
+insert into bonus (id, bonus_poeni, popust) values (1, 10, 10);
+insert into bonus (id, bonus_poeni, popust) values (2, 13, 13);
+insert into bonus (id, bonus_poeni, popust) values (3, 15, 15);
+insert into bonus (id, bonus_poeni, popust) values (4, 17, 17);

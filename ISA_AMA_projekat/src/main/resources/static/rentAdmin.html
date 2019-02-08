@@ -34,6 +34,9 @@
 				<div class="row">
 					<div class="col d-flex flex-row">
 						<div class="user_box ml-auto">
+							<div id="prijava" class="user_box_login user_box_link"><a href="prijava.html">login</a></div>
+							<div id="reg" class="user_box_register user_box_link"><a href="registration.html">register</a></div>
+							<div id="odjava" class="user_box_login user_box_link" onclick="javascript:odjava()" ><a href="index.html">logout</a></div>
 							<div id="profilKorisnika" class="user_box_register user_box_link" ><a href="profil.html">profile</a></div>
 						</div>
 					</div>
@@ -113,6 +116,7 @@
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/rentacar_background.jpg"></div>
 		<div class="home_content">
 			<div class="home_title" id="rentacar_name">ime rentacar</div>
+			<div class="home_title" id="ocenaRentacara" style="font-size:20pt; float:right;">ocena rentacar</div>			
 		</div>
 	</div>
 
@@ -135,8 +139,9 @@
 							
 							<div class="rentacar_info_text" style="padding-bottom: 20px;">
 								<p id="rentacar_info_text" style="font-size: 20px; color: #4d0066;">promotivni opis rent-a-car servisa</p>
-								
+																	
 								</div>
+										
 								<div id="div_changing_buttons">
 								<span class="button book_button"  id="izmenaServisa" style=" height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeIzmena">Edit rentacar</a></span>
 								<span class="button book_button"  id="dodajFilijalu" style="height : 45px; font-size: 15pt; float: left; font-weight: bold; color: #4d0066;"><a id="dugmeFil">Add branch</a></span>
@@ -325,7 +330,7 @@
 							<div class="logo_container footer_logo">
 								<div class="logo"><a href="index.html"><img src="images/logo.png" alt="">where to</a></div>
 							</div>
-							<p class="footer_about_text" style="font-size: 40px; font-family: 'Beyond'; align: 'center';">Putujte sa nama, najbolji smo!</p>
+							<p class="footer_about_text" style="font-size: 40px; font-family: 'Beyond'; align: 'center';">Travel with us, we are the best!</p>
 						</div>
 					</div>
 				</div>
@@ -338,11 +343,11 @@
 							<ul class="contact_info_list">
 								<li class="contact_info_item d-flex flex-row">
 									<div><div class="contact_info_icon"><img src="images/placeholder.svg" alt=""></div></div>
-									<div class="contact_info_text">Step town</div>
+									<div class="contact_info_text">Step, Ruma, Sabac</div>
 								</li>
 								<li class="contact_info_item d-flex flex-row">
 									<div><div class="contact_info_icon"><img src="images/phone-call.svg" alt=""></div></div>
-									<div class="contact_info_text">+381 65 203 41 33</div>
+									<div class="contact_info_text">+381 65 123 45 67</div>
 								</li>
 								<li class="contact_info_item d-flex flex-row">
 									<div><div class="contact_info_icon"><img src="images/message.svg" alt=""></div></div>
@@ -364,10 +369,9 @@
 			<div class="row">
 				<div class="col-lg-3 order-lg-1 order-2  ">
 					<div class="copyright_content d-flex flex-row align-items-center">
-						<div><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
-					</div>
+						<div  style="margin-left:0%;">
+						&copy; Internet software architecture project by: Milica, Andrijana and Aleksa 
+						</div>
 				</div>
 				<div class="col-lg-9 order-lg-2 order-1">
 					<div class="footer_nav_container d-flex flex-row align-items-center justify-content-lg-end">

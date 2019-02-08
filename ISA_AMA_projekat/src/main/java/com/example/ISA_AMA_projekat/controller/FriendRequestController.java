@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +32,7 @@ public class FriendRequestController
 	private KorisnikService userDetailsService;
 	
 
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/{token}/{id}",
 			method = RequestMethod.PUT)
@@ -66,7 +68,7 @@ public class FriendRequestController
 	    
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/delete/{token}/{id}",
 			method = RequestMethod.DELETE)
@@ -100,7 +102,7 @@ public class FriendRequestController
 	    }
 	}
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/deleteFriend/{token}/{id}",
 			method = RequestMethod.DELETE)
@@ -126,7 +128,7 @@ public class FriendRequestController
 	}
 	
 	
-	
+	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/befriend/{token}/{id}",
 			method = RequestMethod.POST,

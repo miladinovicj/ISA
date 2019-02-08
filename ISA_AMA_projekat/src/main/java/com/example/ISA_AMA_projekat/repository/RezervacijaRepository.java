@@ -1,5 +1,4 @@
 package com.example.ISA_AMA_projekat.repository;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -60,5 +59,10 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Intege
 	@Transactional
 	@Query(value = "update Rezervacija r set r.cena = ?1 where r.id = ?2", nativeQuery = true)
 	public void updateCena( double cena, Integer id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "delete from osoba_iz_rez where osoba_iz_rez.rezervacija_id=?1", nativeQuery = true)
+	public void obrisiSveOsobe( Integer rez_id);
 
 }

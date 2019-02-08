@@ -69,6 +69,15 @@ public class RentacarServis {
 		this.adresa.getGrad().setNaziv(grad);
 		this.promotivni_opis=opis;
 	}
+	
+	public RentacarServis(Integer id,String naziv, Adresa adresa, String opis, double prosecna_ocena) {
+		
+		this.id=id;
+		this.naziv=naziv;
+		this.adresa = adresa;
+		this.prosecna_ocena=prosecna_ocena;
+		this.promotivni_opis=opis;
+	}
 
 
 	public Integer getId() {

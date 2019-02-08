@@ -103,18 +103,18 @@ function showHotel(hotel)
     			var li = $('<li><span>' + usluga.naziv + ' - $' + usluga.cena + '/per day</span></li>');
     		$('#usluge_hotela').append(li);
     		
-    		if(!(check_in == '0001-01-01' || check_out == '0001-01-01'))
-    		{
+    		if(id_rez != 0)
+        	{
     			let buttonAdd;
-    			var token = localStorage.getItem('jwtToken');
-        		if(token!=null)
-        		{
+    			//var token = localStorage.getItem('jwtToken');
+        		//if(token!=null)
+        		//{
         			buttonAdd = $('<span class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
         			buttonAdd.click(clickAddUsluga(usluga));
         			li.append(buttonAdd);
-        		}
-        		else
-        			buttonAdd = $('<span hidden="true" class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
+        		//}
+        		//else
+        			//buttonAdd = $('<span hidden="true" class="button_add book_button button trans_200" style="cursor: pointer; width: 70px; height: 30px; margin-left: 10px; text-align: center; color: white; display: inline-table; vertical-align: middle" id="add'+usluga.id+'"><a style="padding-left: 0px; padding-right: 0px;">Add<a/></span>');
     			
     		}
     		
@@ -127,7 +127,7 @@ function showHotel(hotel)
 
 function clickAddUsluga(usluga){
 	return function(){
-		
+		var token=localStorage.getItem('jwtToken');
 		if($(this).hasClass('dodata_usluga'))
 		{
 			$(this).removeClass('dodata_usluga');
@@ -138,6 +138,7 @@ function clickAddUsluga(usluga){
 				url: 'api/hotels/remove_usluga/' + usluga.id,
 				type: 'POST',
 				data:  JSON.stringify(rezervacijaHotela),
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(rezervacija) {
 					rezervacijaHotela = rezervacija;
@@ -155,6 +156,7 @@ function clickAddUsluga(usluga){
 				url: 'api/hotels/add_usluga/' + usluga.id,
 				type: 'POST',
 				data: JSON.stringify(rezervacijaHotela),
+				headers: {"Authorization": "Bearer " + token},
 				contentType: 'application/json',
 				success: function(rezervacija) {
 					rezervacijaHotela = rezervacija;
@@ -249,10 +251,13 @@ function addSoba(soba)
 
 function bookRoom(id)
 {
+	
 	return function(){
-		
+		var token=localStorage.getItem('jwtToken');
 		$.ajax({
 			url: 'api/hotels/book_room/' + id + '/' + id_rez,
+			headers: {"Authorization": "Bearer " + token},
+			contentType: 'application/json',
 			type: 'PUT',
 			data: JSON.stringify(rezervacijaHotela),
 			contentType: 'application/json; charset=utf-8',
@@ -524,7 +529,8 @@ function bookRoomSpecial(check_in, check_out, pronadjen_popust, soba_id)
 			url: 'api/hotels/book_room_special/' + soba_id + '/' + check_in + '/' + check_out + '/' + rez_id,
 			type: 'PUT',
 			data: JSON.stringify(pronadjen_popust),
-			contentType: 'application/json; charset=utf-8',
+			headers: {"Authorization": "Bearer " + token},
+			contentType: 'application/json',
 			success: function(soba) {
 				console.log("uspesna rezervacija brze sobe sa id_sobe: " + soba.id);
 				alert('uspesna rezervacija brze sobe sa id_sobe: ' + soba.id);
