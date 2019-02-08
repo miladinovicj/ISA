@@ -126,7 +126,7 @@ public class KorisnikService implements UserDetailsService{
 	}
 	
 	
-	
+	@Transactional
 	public Korisnik save(Korisnik korisnik)
 	{
 		return korisnikRepository.save(korisnik);

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 
 @Entity
@@ -15,6 +16,9 @@ public class Usluga {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@Column(nullable = false)
 	private String naziv;
@@ -59,6 +63,15 @@ public class Usluga {
 
 	public void setPopust(double popust) {
 		this.popust = popust;
+	}
+	
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 
 	@Override
