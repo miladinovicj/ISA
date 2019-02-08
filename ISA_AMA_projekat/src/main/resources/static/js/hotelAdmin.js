@@ -522,31 +522,26 @@ function checkAdmin()
 
 function dodajUsluge(popust_id, usluge)
 {
-	for(var i = 0, size = usluge.length; i < size ; i++)
-	{
-		var usluga_id = usluge[i];
-		var id_popust = '' + popust_id + '';
-		
-		if(usluga_id != '0')
-		{
-			$.post({
-				url: '/api/hotels/add_usluga_special_price/' + id_popust + '/' + usluga_id,
-				headers: {"Authorization": "Bearer " + token},
-				contentType: 'application/json',
-				success: function(data) {
-					if(data.result == 'success'){
-						console.log('Popust uspesno dodat');
-						window.location.href="hotelAdmin.html?id=" + id_presented;
-					}
-					else 
-					{
-						console.log('Popust nije uspesno dodat');
-						
-					}
-				}
-			});
+	size = usluge.length;
+	var id_popust = '' + popust_id + '';
+	
+	$.post({
+		url: '/api/hotels/add_usluga_special_price/' + usluge + '/' + size + '/' + id_popust,
+		headers: {"Authorization": "Bearer " + token},
+		contentType: 'application/json',
+		success: function(data) {
+			if(data.result == 'success'){
+				console.log('Popust uspesno dodat');
+				window.location.href="hotelAdmin.html?id=" + id_presented;
+			}
+			else 
+			{
+				console.log('Popust nije uspesno dodat');
+				
+			}
 		}
-	}	
+	});
+	
 }
 
 function finalEdit(address)

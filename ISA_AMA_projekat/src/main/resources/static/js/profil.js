@@ -583,7 +583,7 @@ function prihvatiRez(rez_id)
 {
 	//alert("REZ ID: " + rez_id);
 	$.ajax({
-        type: 'POST',
+        type: 'PUT',
         url: 'api/rezervacija/prihvatiRez/' + korisnik.id + '/' + rez_id,
         headers: {"Authorization": "Bearer " + token},
         contentType: 'application/json',
@@ -776,7 +776,7 @@ function newAirline()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add airline';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new');
     el.scrollIntoView(true);
@@ -792,7 +792,7 @@ function newHotel()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add hotel';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new');
     el.scrollIntoView(true);
@@ -808,7 +808,7 @@ function newRental()
 	document.getElementById("div_buttons_admin").style.display  = 'block';
 	document.getElementById("div_buttons_system_admin").style.display  = 'block';
 	document.getElementById('button_add').value = 'Add car rental';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new');
     el.scrollIntoView(true);
@@ -904,7 +904,7 @@ function newAirlineAdmin()
 	document.getElementById('button_add_admin').value = 'Add airline administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Airlines:';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
@@ -957,7 +957,7 @@ function newHotelAdmin()
 	document.getElementById('button_add_admin').value = 'Add hotel administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Hotels: ';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
@@ -1010,7 +1010,7 @@ function newRentalAdmin()
 	document.getElementById('button_add_admin').value = 'Add car rental administrator';
 	document.getElementById('admin_sys_close').style.display = 'block';
 	document.getElementById('admin_id').innerHTML = 'Car rentals: ';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);
@@ -1062,7 +1062,7 @@ function newSystemAdmin()
 	document.getElementById("div_buttons").style.display  = 'block';
 	document.getElementById('button_add_admin').value = 'Add system administrator';
 	document.getElementById('admin_sys_close').style.display = 'none';
-	document.getElementById("div_define_discount").style.display  = 'none';
+	document.getElementById("div_define_discount").style.display  = 'block';
 	
 	var el = document.getElementById('div_new_admin');
     el.scrollIntoView(true);

@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ISA_AMA_projekat.model.Hotel;
 
@@ -18,17 +17,14 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer>{
 	List<Hotel> search(String name_location);
 	
 	@Modifying
-	@Transactional
 	@Query(value = "update hotel h set h.id_admin = ?2 where h.id = ?1", nativeQuery = true)
 	public void updateAdmin(Integer hotelID, Integer adminID);
 	
 	@Modifying
-	@Transactional
-	@Query("update Hotel h set h.naziv = ?2, h.promotivni_opis = ?3, h.adresa.id = ?4 where h.id = ?1")
-	public void updateHotel(Integer id, String naziv, String opis, Integer adresa);
+	@Query("update Hotel h set h.naziv = ?2, h.promotivni_opis = ?3, h.adresa.id = ?4 where h.id = ?1 and h.verzija = ?5")
+	public void updateHotel(Integer id, String naziv, String opis, Integer adresa, int verzija);
 	
 	@Modifying
-	@Transactional
 	@Query(value = "update hotel set hotel.prosecna_ocena=?1 where hotel.id=?2", nativeQuery = true)
 	public void updateProsecnaHotel(double prosecna_ocena, Integer hotel_id);
 }

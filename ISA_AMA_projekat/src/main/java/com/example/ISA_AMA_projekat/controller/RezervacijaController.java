@@ -203,7 +203,7 @@ public class RezervacijaController
 			{
 				osoba.setPotvrdjeno(true);
 				osoba.setKorisnikUcesnik(korisnik);
-				boolean poslatMejl= sendRezervationInfo(korisnik, rez, true);
+				boolean poslatMejl= mejlKorisniku(korisnik, rez);
 			}
 			else
 			{	
@@ -640,7 +640,7 @@ public class RezervacijaController
 	@PreAuthorize("hasRole('SYSADMIN') or hasRole('HOTELADMIN') or hasRole('RENTADMIN') or hasRole('AVIOADMIN') or hasRole('USER')")
 	@RequestMapping(
 			value = "/prihvatiRez/{osoba_id}/{rez_id}",
-			method = RequestMethod.POST,
+			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public Rezervacija prihvatiRez(@PathVariable("osoba_id") Integer osoba_id, @PathVariable("rez_id") Integer rez_id)
 	{

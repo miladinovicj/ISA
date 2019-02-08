@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Entity
 public class Adresa {
@@ -13,6 +14,9 @@ public class Adresa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@ManyToOne(optional = false)
 	private Grad grad;
@@ -86,6 +90,14 @@ public class Adresa {
 
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
+	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 
 }

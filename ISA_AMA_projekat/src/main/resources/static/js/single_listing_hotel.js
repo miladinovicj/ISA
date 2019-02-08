@@ -523,10 +523,10 @@ function addSpecialPrice(soba)
 function bookRoomSpecial(check_in, check_out, pronadjen_popust, soba_id)
 {
 	return function(){
-		
+		var token=localStorage.getItem('jwtToken');
 		console.log('book room special, id sobe: ' + soba_id + '; popust id: ' + pronadjen_popust.id);
 		$.ajax({
-			url: 'api/hotels/book_room_special/' + soba_id + '/' + check_in + '/' + check_out + '/' + rez_id,
+			url: 'api/hotels/book_room_special/' + soba_id + '/' + check_in + '/' + check_out + '/' + id_rez,
 			type: 'PUT',
 			data: JSON.stringify(pronadjen_popust),
 			headers: {"Authorization": "Bearer " + token},
@@ -550,6 +550,7 @@ function clickSpecialPrice()
 		document.getElementById('additional_services').style.display = 'none';
 		document.getElementById('special_price_a').innerHTML = 'Special prices:';
 		document.getElementById('button_back_roomsp').style.display = 'block';
+		$("#text_no_rooms").hide();
 	}
 	else
 	{
@@ -558,6 +559,7 @@ function clickSpecialPrice()
 		document.getElementById('additional_services').style.display = 'block';
 		document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
 		document.getElementById('button_back_roomsp').style.display = 'none';
+		$("#text_no_rooms").show();
 	}
 }
 
@@ -568,6 +570,7 @@ function hideSpecialPrice()
 	document.getElementById('additional_services').style.display = 'block';
 	document.getElementById('special_price_a').innerHTML = 'Special prices (click to see)';
 	document.getElementById('button_back_roomsp').style.display = 'none';
+	$("#text_no_rooms").show();
 }
 
 function initMap()

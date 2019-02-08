@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 @Entity
 public class Bonus {
@@ -12,6 +13,9 @@ public class Bonus {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Version
+	private int verzija;
 	
 	@Column
 	private int bonusPoeni;
@@ -45,6 +49,14 @@ public class Bonus {
 
 	public void setPopust(int popust) {
 		this.popust = popust;
+	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 
 }
