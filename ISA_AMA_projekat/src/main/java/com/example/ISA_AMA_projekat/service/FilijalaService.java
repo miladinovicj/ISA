@@ -1,5 +1,6 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,11 @@ public class FilijalaService {
 
 	@Autowired
 	private FilijalaRepository filijalaRepository;
+	
+	public List<Filijala> findAll()
+	{
+		return filijalaRepository.findAll();
+	}
 	
 	public Optional<Filijala> findById(Integer id)
 	{

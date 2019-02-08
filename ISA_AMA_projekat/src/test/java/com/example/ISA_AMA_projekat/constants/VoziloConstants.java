@@ -30,4 +30,5 @@ public class VoziloConstants {
    
     
     public static final int DB_COUNT_F = 2;
+    public static final Integer DB_ID_TO_DELETE = 2;
 }

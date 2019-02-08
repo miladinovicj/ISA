@@ -15,5 +15,12 @@ public class RentacarServisConstants {
 	    
 	    public static final int DB_COUNT_R = 3;
 	    public static final int DB_RENT_ADMIN_1_R = 2;
+	    
+	    public static final String SEARCH_R = "Rent";
+		public static final int SEARCH_SIZE_R = 3;
 	 
+		
+		public static final Integer ID_R = 2;
+		public static final Integer ADMIN_ID_R = 2;
+		public static final Integer ADMIN_ID_CHANGED_R = 1;
 }
