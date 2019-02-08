@@ -140,8 +140,6 @@ public class HotelController {
 		int broj_nocenja = (int) Math.round((date_check_out.getTime() - date_check_in.getTime()) / (double) 86400000) + 1;
 		rezervacijaHotel.setBroj_nocenja(broj_nocenja);
 		rezervacijaHotel.setAktivirana(false);
-		
-		//rezervacijaHotel = rezervacijaHotelService.save(rezervacijaHotel);
 			
 		return new ResponseEntity<RezervacijaHotel>(rezervacijaHotel, HttpStatus.OK);
 	}

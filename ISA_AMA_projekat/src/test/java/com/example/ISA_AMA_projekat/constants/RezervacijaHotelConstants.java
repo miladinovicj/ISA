@@ -16,10 +16,16 @@ public class RezervacijaHotelConstants {
 	
 	public static final Date DB_DATE = dateCalendar.getTime();
 	
-    public static final Integer DB_ID = 1;  
-    public static final int DB_BROJ_NOCENJA = 2;
-	public static final double DB_UKUPNA_CENA = 3.5;
+	public static final Integer DB_ID = 1;  
+	public static final Integer DB_ID_3 = 1;  
+    public static final Integer DB_USLUGA_ID = 1;  
+    public static final int DB_BROJ_NOCENJA = 1;
 	public static final boolean DB_BRZA = false;
-	public static final double DB_POPUST = 3.5;
 	public static final boolean DB_AKTIVIRANA = false;
+	public static final boolean DB_AKTIVIRANA_TRUE = true;
+	public static final String DB_DATE_CHECK_IN = "2019-02-07";
+	
+
+	public static final double DB_UKUPNA_CENA_PRE = 10;
+	public static final double DB_POPUST = 0;
 }

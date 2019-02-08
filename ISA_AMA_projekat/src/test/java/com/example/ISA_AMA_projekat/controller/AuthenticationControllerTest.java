@@ -1,6 +1,6 @@
 package com.example.ISA_AMA_projekat.controller;
 
-import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_COUNT;
+import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_COUNT_HOTELS;
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_NAZIV;
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_PROMOTIVNI_OPIS;
 import static com.example.ISA_AMA_projekat.constants.HotelConstants.DB_PROSECNA_OCENA;
