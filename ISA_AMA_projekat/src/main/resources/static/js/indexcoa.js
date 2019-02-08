@@ -17,8 +17,7 @@ $(document).ready(function()
 			{
 				korisnik = user;
 				console.log(korisnik)
-				
-
+		
 				
 				
 			},

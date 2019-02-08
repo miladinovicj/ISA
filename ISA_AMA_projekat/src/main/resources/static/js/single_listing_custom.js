@@ -29,6 +29,8 @@ var token = localStorage.getItem('jwtToken');
 		$('#profilKorisnika').hide();
 		$('#rentacarS').hide();
 		$('#hotelAdmin').hide();
+		$('#avioAdmin').hide();
+
 		
 	}
 	else
@@ -39,6 +41,7 @@ var token = localStorage.getItem('jwtToken');
 		$('#profilKorisnika').show();
 		$('#hotelAdmin').hide();
 		$('#rentacarS').hide();
+		$('#avioAdmin').hide();
 		
 		$.post({
 			url: "/auth/userprofile",
@@ -54,6 +57,7 @@ var token = localStorage.getItem('jwtToken');
 						var prosledi = "rentAdmin.html?id="+user.admin_id;
 						$("#linkServis").attr("href", prosledi);
 						$('#rentacarS').show();
+						$('#avioAdmin').hide();
 					
 					}
 					else if(user.authority.authority =="ROLE_HOTELADMIN")
@@ -61,6 +65,14 @@ var token = localStorage.getItem('jwtToken');
 						var prosledi = "hotelAdmin.html?id=" + user.admin_id;
 						$("#linkHotelAdmin").attr("href", prosledi);
 						$('#hotelAdmin').show();
+						$('#rentacarS').hide();
+						$('#avioAdmin').hide();
+					}
+					else if(user.authority.authority =="ROLE_AVIOADMIN")
+					{
+						var prosledi = "avioAdmin.html?id=" + user.admin_id;
+						$("#linkAvioAdmin").attr("href", prosledi);
+						$('#avioAdmin').show();
 						$('#rentacarS').hide();
 					}
 				}
