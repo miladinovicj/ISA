@@ -18,17 +18,14 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Integer>{
 	public void updateAktiviran(boolean aktiviran, Integer id);
 	
 	@Modifying
-	@Transactional
 	@Query("update Korisnik u set u.aktiviran = ?1, u.lozinka = ?2 where u.id = ?3")
 	public void updateAktiviranPass(boolean aktiviran, String new_pass, Integer id);
 	
 	@Modifying
-	@Transactional
 	@Query("update Korisnik u set u.ime = ?2, u.prezime = ?3, u.email = ?4, u.telefon = ?5, u.grad = ?6 where u.id = ?1")
 	public void updateKorisnik(Integer id, String ime, String prezime, String email, String telefon, Grad grad);
 	
 	@Modifying
-	@Transactional
 	@Query("update Korisnik u set u.bonuspoeni = ?1 where u.id = ?2")
 	public void updateBonusPoints(int points, Integer id);
 	

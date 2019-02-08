@@ -10,12 +10,10 @@ import com.example.ISA_AMA_projekat.model.Filijala;
 public interface FilijalaRepository extends JpaRepository<Filijala, Integer>{
 
 	@Modifying
-	@Transactional
 	@Query("update Filijala f set f.adresa.id = ?1 where f.id = ?2")
 	public void updateFilijala(Integer adresa_id,  Integer id);
 	
 	@Modifying
-	@Transactional
 	@Query("update Filijala f set f.rentacar.id = ?1 where f.id = ?2")
 	public void updateRentacarFil(Integer idr,  Integer id);
 

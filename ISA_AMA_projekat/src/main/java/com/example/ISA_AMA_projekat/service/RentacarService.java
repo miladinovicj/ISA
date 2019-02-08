@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ISA_AMA_projekat.model.RentacarServis;
 import com.example.ISA_AMA_projekat.repository.RentacarRepository;
@@ -27,6 +28,7 @@ public class RentacarService {
 		return rentRepository.findById(id);
 	}
 	
+	@Transactional
 	public RentacarServis save(RentacarServis rent){
 		return rentRepository.save(rent);
 	}
@@ -35,14 +37,17 @@ public class RentacarService {
 		return rentRepository.search(name_location);
 	}
 	
+	@Transactional
 	public void updateAdmin(Integer rentalID, Integer adminID) {
 		rentRepository.updateAdmin(rentalID, adminID);
 	}
 
+	@Transactional
 	public void updateServis(String naziv, Integer adresa_id, String promotivni_opis, Integer id){
 		 rentRepository.updateServis(naziv, adresa_id, promotivni_opis, id);
 	}
 	
+	@Transactional
 	public void updateProsecnaRent(double prosecna, Integer rent_id)
 	{
 		rentRepository.updateProsecnaRent(prosecna, rent_id);

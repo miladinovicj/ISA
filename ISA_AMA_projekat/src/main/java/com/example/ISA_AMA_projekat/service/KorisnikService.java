@@ -126,7 +126,7 @@ public class KorisnikService implements UserDetailsService{
 	}
 	
 	
-	
+	@Transactional
 	public Korisnik save(Korisnik korisnik)
 	{
 		return korisnikRepository.save(korisnik);
@@ -138,14 +138,17 @@ public class KorisnikService implements UserDetailsService{
 		korisnikRepository.updateAktiviran(aktiviran, id);
 	}
 	
+	@Transactional
 	public void updateAktPass(boolean aktiviran, String new_pass, Integer id){
 		korisnikRepository.updateAktiviranPass(aktiviran, new_pass, id);
 	}
 	
+	@Transactional
 	public void updateKorisnik(Integer id, String ime, String prezime, String email, String telefon, Grad grad) {
 		korisnikRepository.updateKorisnik(id, ime, prezime, email, telefon, grad);
 	}
 	
+	@Transactional
 	public void updateBonusPoints(int points, Integer id) {
 		korisnikRepository.updateBonusPoints(points, id);
 	}
@@ -162,7 +165,7 @@ public class KorisnikService implements UserDetailsService{
 	}
 	
 
-
+	@Transactional
 	public boolean changePassword(String oldPassword, String newPassword) {
 
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
