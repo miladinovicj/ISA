@@ -17,13 +17,11 @@ public interface LetRepository extends JpaRepository<Let,Integer>
 	public Let save(Let let);
 	
 	@Modifying
-	@Transactional
 	@Query(value = "delete from zauzeta_sedista where zauzeta_sedista.let_id=?1 and zauzeta_sedista.zauzeta_sedista=?2", nativeQuery = true)
 	void deleteZauzetoSediste(Integer let_id, int sediste);
 	
 	
 	@Modifying
-	@Transactional
 	@Query(value = "update let set let.prosecna_ocena=?1 where let.id=?2", nativeQuery = true)
 	public void updateProsecna(double prosecna_ocena, Integer let_id);
 	

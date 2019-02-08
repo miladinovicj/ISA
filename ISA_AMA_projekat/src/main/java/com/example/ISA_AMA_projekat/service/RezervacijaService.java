@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ISA_AMA_projekat.model.OsobaIzRez;
 import com.example.ISA_AMA_projekat.model.Rezervacija;
 import com.example.ISA_AMA_projekat.model.RezervacijaHotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
+import com.example.ISA_AMA_projekat.repository.OsobaIzRezRepository;
 import com.example.ISA_AMA_projekat.repository.RezervacijaHotelRepository;
 import com.example.ISA_AMA_projekat.repository.RezervacijaRepository;
 import com.example.ISA_AMA_projekat.repository.RezervacijaVozilaRepository;
@@ -24,6 +26,9 @@ public class RezervacijaService
 	
 	@Autowired
 	private RezervacijaVozilaRepository rezervacijaVozilaRepository;
+	
+	@Autowired
+	private OsobaIzRezRepository osobaIzRezRepository;
 	
 	@Transactional
 	public Rezervacija save(Rezervacija rez)
@@ -116,13 +121,18 @@ public class RezervacijaService
 	@Transactional
 	public void obrisiOsobu(Integer osoba_id, Integer rez_id)
 	{
+	
 		rezervacijaRepository.obrisiOsobu(osoba_id, rez_id);
 	}
 
 	@Transactional
 	public void potvrdiRez(Integer osoba_id, Integer rez_id)
 	{
-		rezervacijaRepository.potvrdiRez(osoba_id, rez_id);
+		Rezervacija r = rezervacijaRepository.findById(rez_id).get();
+		OsobaIzRez o = osobaIzRezRepository.findById(osoba_id).get();
+		o.setPotvrdjeno(true);
+		osobaIzRezRepository.save(o);
+		//rezervacijaRepository.potvrdiRez(osoba_id, rez_id);
 	}
 
 	@Transactional
@@ -138,6 +148,7 @@ public class RezervacijaService
 	@Transactional
 	public void obrisiSveOsobe(Integer rez_id)
 	{
+		
 		rezervacijaRepository.obrisiSveOsobe(rez_id);
 	}
 	

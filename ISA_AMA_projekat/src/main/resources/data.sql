@@ -51,8 +51,6 @@ insert into grad (id, naziv, verzija) values (4, 'Ruma', 0);
 insert into grad (id, naziv, verzija) values (5, 'Sabac', 0);
 insert into grad (id, naziv, verzija) values (6, 'Zrenjanin', 0);
 
-
-
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (1, 1, 'Novosadskog sajma', '35', 45.252529, 19.826855, 0);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (2, 1, 'Bulevar Jase Tomica', '1', 45.263826, 19.824309, 0);
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude, verzija) values (3, 1, 'Novosadski put', '115', 45.244017, 19.781183, 0);
@@ -83,13 +81,13 @@ insert into luggage_info(id,opis,standard_max_kila,cena_standard,extra_max_kila,
 
 insert into aviokompanija(id, adresa_id, opis, naziv, ocena, info, prosecna_ocena,luggage_info_id) values (1, 7,'Najjaci popusti najjace zezanje drugari', 'CoaAir', null, '20kg rucna torba, kofer 100kg drugari', 4,1);
 
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 5000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 80, 3);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 200,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 100, 4.5);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (5,5000,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 3000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 50, 3.5);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (2,250,'Milano - ITA', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 250, 2.9);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (3,500,'Washington - USA', ' Nis - SRB', 0, 15, 4500,'2019-1-15 02:59:59.999999','2019-1-15 23:59:59.999999',1, 115,4.2);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 9900,'2019-12-25 3:00:00.999999','2019-12-25 6:00:00.999999',1, 75, 5);
-insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 10000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1, 100, 4.8);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (6,750,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 5000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 80, 3, 0);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (1,500,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 200,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 100, 4.5, 0);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (5,5000,'Tokyo - JPN', 'Belgrade - SRB', 10, 15, 3000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 50, 3.5, 0);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (2,250,'Milano - ITA', 'Belgrade - SRB', 10, 15, 15000,'2019-12-30 11:59:59.999999','2019-12-31 23:59:59.999999',1, 250, 2.9, 0);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (3,500,'Washington - USA', ' Nis - SRB', 0, 15, 4500,'2019-1-15 02:59:59.999999','2019-1-15 23:59:59.999999',1, 115,4.2, 0);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (4,500,'Madrid - SPN', 'Podgorica - MNG', 0, 15, 9900,'2019-12-25 3:00:00.999999','2019-12-25 6:00:00.999999',1, 75, 5, 0);
+insert into let(id,cena,dokle,odakle,popust,trajanje,udaljenost,vreme_poletanja,vreme_sletanja, aviokompanija_id, max_kapacitet, prosecna_ocena, verzija) values (7,500, 'Beograd - SRB', 'Tokyo - JPN', 10, 15, 10000,'2019-02-15 11:59:59.999999','2019-02-16 23:59:59.999999',1, 100, 4.8, 0);
 
 
 insert into aviokompanija_brzi_letovi(aviokompanija_id, brzi_letovi_id) values (1,1);
@@ -127,20 +125,20 @@ insert into soba_rezervacije (soba_id, rezervacije_id) values (1, 3);
 insert into soba_rezervacije (soba_id, rezervacije_id) values (2, 4);
 insert into soba_rezervacije (soba_id, rezervacije_id) values (2, 5);
 
-insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (1, 'Angel', 8, 'Mlada firma sa velikom vizijom. Iznajmljivanje automobila sa i bez vozaca.', 3.2);
-insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (2, 'Cartize Company', 9, 'Najpovoljnije cene rentiranja automobila u Novom Sadu', 4.8);
-insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena) values (3, 'Stars', 10, 'U Beogradu svi iznajmljuju automobile od nas.', 4);
+insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena, verzija) values (1, 'Angel', 8, 'Mlada firma sa velikom vizijom. Iznajmljivanje automobila sa i bez vozaca.', 3.2, 0);
+insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena, verzija) values (2, 'Cartize Company', 9, 'Najpovoljnije cene rentiranja automobila u Novom Sadu', 4.8, 0);
+insert into rentacar_servis (id, naziv, adresa_id, promotivni_opis, prosecna_ocena, verzija) values (3, 'Stars', 10, 'U Beogradu svi iznajmljuju automobile od nas.', 4, 0);
 
-insert into filijala (id, adresa_id, rentacar_id) values (1, 11, 1);
-insert into filijala (id, adresa_id, rentacar_id) values (2, 12, 1);
-insert into filijala (id, adresa_id, rentacar_id) values (3, 13, 1);
-insert into filijala (id, adresa_id, rentacar_id) values (4, 14, 3);
+insert into filijala (id, adresa_id, rentacar_id, verzija) values (1, 11, 1, 0);
+insert into filijala (id, adresa_id, rentacar_id, verzija) values (2, 12, 1, 0);
+insert into filijala (id, adresa_id, rentacar_id, verzija) values (3, 13, 1, 0);
+insert into filijala (id, adresa_id, rentacar_id, verzija) values (4, 14, 3, 0);
 
-insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (1, 'SportTourer', 'Opel', 'Astra', 2011, 5, 'Executive car', 400,4.5, 1 , 0, false);
-insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (3, 'Comfortline', 'Volkswagen', 'Polo', 2015, 5, 'City car', 300,4.7, 1 , 0, false);
-insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (2, '70 Trend', 'Ford', 'Fiesta', 2018, 5, 'Supermini', 280, 4, 4 , 0, false);
-insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (4, 'S', 'Porche', 'Macan', 2019, 5, 'City car', 500, 4.8, 2 , 0, false);
-insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto) values (5, 'C 1.4', 'Opel', 'Corsa', 1999, 5, 'Comfort', 210, 3, 3 , 0, false);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto, verzija) values (1, 'SportTourer', 'Opel', 'Astra', 2011, 5, 'Executive car', 400,4.5, 1 , 0, false, 0);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto, verzija) values (3, 'Comfortline', 'Volkswagen', 'Polo', 2015, 5, 'City car', 300,4.7, 1 , 0, false, 0);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto, verzija) values (2, '70 Trend', 'Ford', 'Fiesta', 2018, 5, 'Supermini', 280, 4, 4 , 0, false, 0);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto, verzija) values (4, 'S', 'Porche', 'Macan', 2019, 5, 'City car', 500, 4.8, 2 , 0, false, 0);
+insert into vozilo (id, naziv, marka, model, godina_proizvodnje, broj_sedista, tip, cena_dan, prosecna_ocena, filijala_id, cena_popust, zauzeto, verzija) values (5, 'C 1.4', 'Opel', 'Corsa', 1999, 5, 'Comfort', 210, 3, 3 , 0, false, 0);
 
 
 
@@ -180,13 +178,13 @@ insert into popust_usluge (popust_id, usluge_id) values (1, 5);
 insert into popust_usluge (popust_id, usluge_id) values (3, 8);
 insert into popust_usluge (popust_id, usluge_id) values (3, 10);
 
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (1, true, 3, false, '2019-01-03', '2019-02-01', 0, 1105, 1, 1, 1);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (2, true, 3, false, '2019-01-29', '2019-02-01', 0, 2000, 1, 1, 3);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (3, true, 3, false, '2019-02-17', '2019-02-20', 0, 650, 1, 1, 1);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (4, true, 3, false, '2019-01-26', '2019-01-30', 0, 880, 1, 1, 1);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (5, true, 5, false, '2019-02-03', '2019-02-15', 0, 1105, 1, 1, 2);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (6, true, 2, false, '2019-01-26', '2019-01-28', 0, 889, 1, 1, 2);
-insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id) values (7, true, 1, false, '2018-11-01', '2018-11-03', 0, 770, 1, 1, 4);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (1, true, 3, false, '2019-01-03', '2019-02-01', 0, 1105, 1, 1, 1, 0);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (2, true, 3, false, '2019-01-29', '2019-02-01', 0, 2000, 1, 1, 3, 0);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (3, true, 3, false, '2019-02-17', '2019-02-20', 0, 650, 1, 1, 1, 0);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (4, true, 3, false, '2019-01-26', '2019-01-30', 0, 880, 1, 1, 1, 0);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (5, true, 5, false, '2019-02-03', '2019-02-15', 0, 1105, 1, 1, 2, 0);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (6, true, 2, false, '2019-01-26', '2019-01-28', 0, 889, 1, 1, 2, 0);
+insert into rezervacija_vozila (id, aktivirana, broj_putnika, brza, datum_preuzimanja, datum_vracanja, popust, ukupna_cena, mesto_preuzimanja_id, mesto_vracanja_id, vozilo_id, verzija) values (7, true, 1, false, '2018-11-01', '2018-11-03', 0, 770, 1, 1, 4, 0);
 
 insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (1, 1);
 insert into vozilo_rezervacije (vozilo_id, rezervacije_id) values (3, 2);
@@ -210,16 +208,14 @@ insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonusp
 insert into user_authority (user_id, authority_id) values (3, 3);
 update hotel h set h.id_admin = 3 where h.id = 6;
 
+
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran,admin_id, verzija) values (5, 'krsmanovicc.aleksa@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Aleksa', 'Krsmanovic', 4, '062522006', 0, true,1, 0);
 insert into AUTHORITY (id, name) values (11, 'ROLE_USER');
+
 insert into user_authority (user_id, authority_id) values (5, 4);
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 4, '062522006', 0, true, 0);
 insert into user_authority (user_id, authority_id) values (1,11);
-
-insert into friend_request (id, stanje, salje_id, prima_id) values (1, 0, 1, 2);
-insert into friend_request (id, stanje, salje_id, prima_id) values (2, 0, 3, 1);
-
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran, verzija) values (4, 'sysadmin@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Milica', 'Makaric', 3, '0652034133', 0, true, 0);
 insert into user_authority (user_id, authority_id) values (4, 5);

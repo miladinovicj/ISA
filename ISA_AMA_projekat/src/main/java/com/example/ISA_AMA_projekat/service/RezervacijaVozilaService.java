@@ -8,15 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.ISA_AMA_projekat.model.Hotel;
 import com.example.ISA_AMA_projekat.model.RezervacijaVozila;
+import com.example.ISA_AMA_projekat.model.Vozilo;
 import com.example.ISA_AMA_projekat.repository.RezervacijaVozilaRepository;
+import com.example.ISA_AMA_projekat.repository.VoziloRepository;
 
 @Service
 public class RezervacijaVozilaService {
 	
 	@Autowired
 	private RezervacijaVozilaRepository rezervacijaVozilaRepository;
+	
+	@Autowired
+	private VoziloRepository voziloRepository;
 
 	@Transactional
 	public RezervacijaVozila save(RezervacijaVozila rezervacijaVozila) {
@@ -25,7 +29,11 @@ public class RezervacijaVozilaService {
 	
 	@Transactional
 	public void insertRezervacijaVozila(Integer rezervacija_id, Integer vozilo_id) {
-		rezervacijaVozilaRepository.insertRezervacijaVozila(rezervacija_id, vozilo_id);
+		RezervacijaVozila rv = rezervacijaVozilaRepository.findById(rezervacija_id).get();
+		Vozilo v =voziloRepository.findById(vozilo_id).get();
+		v.getRezervacije().add(rv);
+		
+		//rezervacijaVozilaRepository.insertRezervacijaVozila(rezervacija_id, vozilo_id);
 	}
 	
 	public List<RezervacijaVozila> getAll()
@@ -36,7 +44,10 @@ public class RezervacijaVozilaService {
 	@Transactional
 	public void updateDatumRez(Date datum_rez, Integer id)
 	{
-		rezervacijaVozilaRepository.updateDatumRez(datum_rez, id);
+		RezervacijaVozila rv = rezervacijaVozilaRepository.findById(id).get();
+		rv.setDatum_rezervacije(datum_rez);
+		rezervacijaVozilaRepository.save(rv);
+		//rezervacijaVozilaRepository.updateDatumRez(datum_rez, id);
 	}
 	
 	public Optional<RezervacijaVozila> findById(Integer id){
@@ -64,6 +75,9 @@ public class RezervacijaVozilaService {
 	@Transactional
 	public void updateAktivirana(Integer id, boolean aktivirana)
 	{
-		rezervacijaVozilaRepository.updateAktivirana(id, aktivirana);
+		RezervacijaVozila rv = rezervacijaVozilaRepository.findById(id).get();
+		rv.setAktivirana(aktivirana);
+		rezervacijaVozilaRepository.save(rv);
+		//rezervacijaVozilaRepository.updateAktivirana(id, aktivirana);
 	}
 }

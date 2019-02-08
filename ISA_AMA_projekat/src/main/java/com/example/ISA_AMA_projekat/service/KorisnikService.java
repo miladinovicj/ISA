@@ -19,12 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.controller.AuthenticationController;
-
+import com.example.ISA_AMA_projekat.model.FriendRequest;
 import com.example.ISA_AMA_projekat.model.Grad;
 import com.example.ISA_AMA_projekat.model.Korisnik;
 import com.example.ISA_AMA_projekat.repository.FriendRequestRepository;
+import com.example.ISA_AMA_projekat.repository.GradRepository;
 import com.example.ISA_AMA_projekat.repository.KorisnikRepository;
 
 
@@ -35,6 +35,9 @@ public class KorisnikService implements UserDetailsService{
 	
 	@Autowired
 	private KorisnikRepository korisnikRepository;
+	
+	@Autowired
+	private GradRepository gradRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -135,22 +138,39 @@ public class KorisnikService implements UserDetailsService{
 	@Transactional
 	public void updateAkt(boolean aktiviran, Integer id)
 	{
-		korisnikRepository.updateAktiviran(aktiviran, id);
+		Korisnik user = korisnikRepository.findById(id).get();
+		user.setAktiviran(aktiviran);
+		korisnikRepository.save(user);
+		//korisnikRepository.updateAktiviran(aktiviran, id);
 	}
 	
 	@Transactional
 	public void updateAktPass(boolean aktiviran, String new_pass, Integer id){
-		korisnikRepository.updateAktiviranPass(aktiviran, new_pass, id);
+		Korisnik user = korisnikRepository.findById(id).get();
+		user.setAktiviran(aktiviran);
+		user.setLozinka(new_pass);
+		korisnikRepository.save(user);
+		//korisnikRepository.updateAktiviranPass(aktiviran, new_pass, id);
 	}
 	
 	@Transactional
 	public void updateKorisnik(Integer id, String ime, String prezime, String email, String telefon, Grad grad) {
-		korisnikRepository.updateKorisnik(id, ime, prezime, email, telefon, grad);
+		Korisnik user = korisnikRepository.findById(id).get();
+		user.setIme(ime);
+		user.setPrezime(prezime);
+		user.setEmail(email);
+		user.setTelefon(telefon);
+		user.setGrad(grad);
+		korisnikRepository.save(user);
+		//korisnikRepository.updateKorisnik(id, ime, prezime, email, telefon, grad);
 	}
 	
 	@Transactional
 	public void updateBonusPoints(int points, Integer id) {
-		korisnikRepository.updateBonusPoints(points, id);
+		Korisnik user = korisnikRepository.findById(id).get();
+		user.setBonus_poeni(points);
+		korisnikRepository.save(user);
+		//korisnikRepository.updateBonusPoints(points, id);
 	}
 
 	@Override

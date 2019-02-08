@@ -119,32 +119,39 @@
 
 							<!-- Search panel za letove -->
 							<div class="search_panel active">
-								<form style="width: 100%;" action="#" id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-									<div style="width: 25%;" class="search_item">
+								<div style="width: 100%;"  id="search_form_1" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+									<div style="width: 20%; height:90px" class="search_item">
 										<div>From</div>
-										<input type="text" class="destination search_input" required="required">
+										<input id="searchFrom" type="text" class="destination search_input">
+										
 									</div>
 
-									<div style="width: 25%;" class="search_item">
+									<div style="width: 20%; height:90px" class="search_item">
 										<div>To</div>
-										<input type="text" class="destination search_input" required="required">
+										<input id="seatchTo" type="text" class="destination search_input">
 									</div>
 
-									<div class="search_item" style="width: 15%;">
-										<div>check in</div>
-										<input type="date" class="check_in search_input" placeholder="dd/mm/yyyy">
+									<div class="search_item" style="width: 20%; height:90px">
+										<div>Flight departure:</div>
+										<input style="" id="searchDeparture" type="date" class="check_in search_input" placeholder="dd/mm/yyyy">
+										<p hidden id="searchDateError" style="color:white;">Please insert a valid date.</p>
 									</div>
-									<div class="search_item" style="width: 15%;">
-										<div>check out</div>
-										<input type="date" class="check_out search_input" placeholder="dd/mm/yyyy">
+									
+									<div class="search_item" style="width: 15%; height:90px">
+										<div>Maximum price:</div>
+										<input id="searchMaxPrice" type="text" class="check_in search_input">
+										<p hidden id="searchPriceError" style="color:white;">Please insert a valid price.</p>
+										
 									</div>
-									<div class="search_item">
-										<div>adults</div>
-										<input type="number" class="adults search_input" placeholder="0" min="0">
+									
+									<div  class="search_item" style="width: 15%; margin-top:-38px; height:90px">
+										<div>Maximum flight duration:</div>
+										<input id="searchMaxDuration" type="text" class="check_in search_input" >
+										<p hidden id="searchDurationError" style="color:white;">Please insert a valid number.</p>
 									</div>
 
-									<button style="margin-left: 80%;" class="button search_button" >search<span></span><span></span><span></span></button>
-								</form>
+									<button id="searchFlightsButton" style="margin-left: 80%;margin-top:5%" class="button search_button" >search<span></span><span></span><span></span></button>
+								</div>
 							</div>
 
 
@@ -303,14 +310,125 @@
 				
 				<div class="col-lg-11">
 					
-					<!-- Offers Sorting -->
-					<div class="offers_sorting_container" id="id_special_prices" style="display: block;">
 
 
 
-						<!-- PREPORUCENI LETOVI -->
 
+					<div hidden style="display: none; margin-top:0%;margin-bottom:-10%" id="searchListing" class="single_listing letoviStuff2">		
+						<h1 style="margin-bottom:10%"  class="hotel_title" id="naslovListing" >Search Results</h1>
+						<p hidden id="noFlightsFound" style="margin-top:0%; text-align:center">No flights found.</p>
+						<br><br>
+						
+						<ul style="list-style-type:none"  id="selektovaniLetovi">
+	
+						</ul>
+						
+						<template id="pretragaTemplate">
+							<div class="room">
+								<!-- Room -->
+								<div class="row">
+									<div class="col-lg-2">
+										<div class="room_image"><img src="images/departure.png" style="float:left;height: 30px;width: 50px; margin-top: 35%; margin-left: 35%" alt=""></div>
+									</div>
+									<div class="col-lg-7">
+										<div class="room_content">
+											<div class="room_title">{{odakle}}</div>
+											<div class="room_price" id="vremePoletanja" style="margin-top: 0%">Departure: {{vremePoletanja}}</div>
+											<br>
+											<div class="room_title">{{dokle}}</div>
+											<div class="room_price" id="vremeSletanja" style="margin-top: 0%">Arrives: {{vremeSletanja}}</div>
+												<div style="font-size: x-large" id="cenaPopust" class="room_text">{{cena}}</div>
+										</div>
+									</div>
+									<div class="col-lg-3 text-lg-right">
+										<div class="room_button">
+											<div style="margin-top: 0%" class="button book_button trans_200 "><a id="rezButton" class href="javascript:void(0)">book<span></span><span></span><span></span></a></div>
+										</div>
+									</div>
+
+								</div>
+
+								<hr>
+							</div>
+						</template>
 					</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					 <div style="margin-top:15%;margin-bottom:5%" class="letoviStuff3" id="specialOffers">
+							<br>
+							<h1 class="hotel_title">Special Offers</h1>
+							<h4>BOOK THIS FLIGHTS WITH JUST ONE CLICK!</h4>
+							<p>( available for one person with CARRY ON luggage only )</p>
+							<br>
+							<div class="rooms">
+								<ul style="list-style-type:none" id="action_list">
+
+								 </ul>
+								 
+								 <template id="action_template">
+									<div class="room">
+										<!-- Room -->
+										<div class="row">
+											<div class="col-lg-2">
+												<div class="room_image"><img src="images/departure.png" style="height: 30px;width: 50px; margin-top: 35%; margin-left: 35%" alt=""></div>
+											</div>
+											<div class="col-lg-7">
+												<div class="room_content">
+													<div class="room_title">{{odakle}}</div>
+													<div class="room_price" id="vremePoletanja" style="margin-top: 0%">{{vremePoletanja}}</div>
+													<br>
+													<div class="room_title">{{dokle}}</div>
+													<div class="room_price" id="vremeSletanja" style="margin-top: 0%">{{vremeSletanja}}</div>
+														<div style="margin-top:15px;float:left; margin-right:30px" id="cenaOriginal" ><strike> {{cena}}.00</strike></div>
+														<div style="font-size: x-large" id="cenaPopust" class="room_text">{{cena}}</div>
+												</div>
+											</div>
+											<div class="col-lg-3 text-lg-right">
+												<div class="room_button">
+													<div style="margin-top: 0%" class="button book_button trans_200"><a href="javascript:void(0)" id="quickRezButton">book right now<span></span><span></span><span></span></a></div>
+												</div>
+											</div>
+	
+										</div>
+	
+										<hr>
+									</div>
+								</template>
+							</div>
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 				</div>
 				
 
@@ -403,12 +521,26 @@
 					</div>
 				</div>
 				
-				
-				<h1 class="hotel_title" id="aviokompanije_naslov">Aviokompanije</h1>
-				<ul style="margin-top: 5%; margin-left:-17%" id="aviokompanije">
-				
-				
-				</ul>
+				<div class="letoviStuff1" style="width:90%">
+					<h1 style="margin-top:7%" class="hotel_title" id="aviokompanije_naslov">Airlines</h1>
+					<ul style="margin-top:5%;width:100%" id="aviokompanije">
+						
+					</ul>
+						<template id="airlineTemplate">
+							<div class="room">
+								<div id="airlineNaziv" style="font-size: x-large;margin-left:5%;margin-bottom: -5px" class="room_text">Ime Aviokompanije</div>
+									
+								<div style="float:right;margin-top:-45px;margin-bottom: 50px;" class="button book_button trans_200"><a href="" class="selektovanjeDestinacije" id="link">visit page<span></span><span></span><span></span></a></div>
+								
+								<div class="col-lg-3 text-lg-right">
+									<div >
+									</div>
+								</div>
+								<hr>	
+							</div>
+						</template>
+					
+				</div>
 				
 			</div>
 		</div>		
@@ -511,6 +643,7 @@
 <script src="js/offers_custom.js"></script>
 <script src="js/search.js"></script>
 <script src="js/indexcoa.js"></script>
+<script src="js/mustache.js"></script>
 <script src="js/map.js"></script>
 <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
 <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>

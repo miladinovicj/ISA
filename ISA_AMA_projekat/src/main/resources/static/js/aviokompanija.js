@@ -18,7 +18,7 @@ $(document).ready(function()
         complete: function (data)
 		{
             aviokompanija = data.responseJSON;
-            console.log(aviokompanija.luggageInfo);
+            console.log(aviokompanija);
             setUpForAirline(aviokompanija)
 		}
     });
@@ -101,7 +101,9 @@ function setUpForAirline(airline)
     		
     		uniqueDests.push(dest.dokle);
     		
-        	console.log("let");
+        	console.log(dest);
+        	
+        	
             var item = Mustache.render(destinationTemplate, dest);
         	var $item_element = $(item);
 

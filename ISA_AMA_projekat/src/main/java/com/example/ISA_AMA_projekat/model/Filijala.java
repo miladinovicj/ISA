@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -25,7 +26,10 @@ public class Filijala {
 	@OneToOne
 	private Adresa adresa;
 	
+	@Version
+	private int verzija;
 	
+
 	@OneToMany(mappedBy = "filijala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private Set<Vozilo> vozila = new HashSet<Vozilo>();
@@ -71,7 +75,13 @@ public class Filijala {
 		this.rentacar = rentacar;
 	}
 
-	
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
+	}
 	
 	
 }

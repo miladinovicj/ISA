@@ -1,5 +1,9 @@
 package com.example.ISA_AMA_projekat.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +63,28 @@ public class LetController
 		}
 	}
 	
+	
+	@RequestMapping(
+			value = "/allActions",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Let>> getAllActions()
+	{
+		List<Let> retVal = new ArrayList<Let>();
+		List<Aviokompanija> airlines = (List<Aviokompanija>) avioServis.findAll();
+		
+		for(Aviokompanija a : airlines)
+		{
+			List<Let> akcije = a.getBrziLetovi();
+			for (Let akcija : akcije)
+			{
+				retVal.add(akcija);
+			}
+		}
+		
+		return new ResponseEntity<List<Let>>(retVal,HttpStatus.OK);
+		
+	}
 	
 	
 	
@@ -282,6 +308,127 @@ public class LetController
 		}		
 		
 		return null;
+	}
+	
+	
+	
+	@RequestMapping(
+			value = "/search/{from}/{to}/{departure}/{price}/{duration}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Let>> searchQuery(@PathVariable("from") String from, @PathVariable("to") String to, @PathVariable("departure") String departure, @PathVariable("price") Double maxPrice, @PathVariable("duration") Integer maxDuration)
+	{
+		
+
+		List<Let> allFlights = letService.findAll();
+		List<Let> stage1 = new ArrayList<Let>();
+		List<Let> stage2 = new ArrayList<Let>();
+		List<Let> stage3 = new ArrayList<Let>();
+		List<Let> stage4 = new ArrayList<Let>();
+		List<Let> retVal = new ArrayList<Let>();
+		
+		//pretraga po pocetnoj destinaciji
+		if(!from.equals("empt"))
+		{
+			for(Let l : allFlights)
+			{
+				if(l.getOdakle().toLowerCase().contains(from.toLowerCase()))
+				{
+					stage1.add(l);
+				}
+			}
+		}
+		else
+		{
+			stage1 = allFlights;
+		}
+		
+		
+		//pretraga po krajnjoj destinaciji
+		if(!to.equals("empt"))
+		{
+			for(Let l : stage1)
+			{
+				if(l.getDokle().toLowerCase().contains(to.toLowerCase()))
+				{
+					stage2.add(l);
+				}
+			}
+		}
+		else
+		{
+			stage2 = stage1;
+		}
+		
+		
+		
+		//pretraga po datumu
+		if(!departure.equals("empt"))
+		{
+			try
+			{
+				Date date = new SimpleDateFormat("yyyy-MM-dd").parse(departure);  
+			
+				
+				for(Let l : stage2)
+				{
+					Date second = l.getVremePoletanja();
+					
+					if(date.getYear() == second.getYear() && date.getMonth() == second.getMonth() && date.getDate() == second.getDate())
+					{
+						stage3.add(l);
+					}
+				}
+				
+			}
+			catch(Exception e)
+			{
+				return null;
+			}
+		}
+		else
+		{
+			stage3 = stage2;
+		}
+		
+		
+		
+		
+		
+		if(maxPrice != -1)
+		{
+			for(Let l : stage3)
+			{
+				if(l.getCena() <= maxPrice)
+				{
+					stage4.add(l);
+				}
+			}		
+		}
+		else
+		{
+			stage4 = stage3;
+		}
+		
+		
+		
+		if(maxDuration != -1)
+		{
+			for(Let l : stage4)
+			{
+				if(l.getTrajanje() <= maxDuration)
+				{
+					retVal.add(l);
+				}
+			}		
+		}
+		else
+		{
+			retVal = stage4;
+		}
+		
+		return new ResponseEntity<List<Let>>(retVal, HttpStatus.OK);
+
 	}
 	
 

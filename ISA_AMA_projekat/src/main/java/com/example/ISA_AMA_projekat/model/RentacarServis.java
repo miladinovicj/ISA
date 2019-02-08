@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -31,6 +32,9 @@ public class RentacarServis {
 	
 	@OneToOne
 	private Adresa adresa;
+	
+	@Version
+	private int verzija;
 	
 	@Column
 	private String promotivni_opis;
@@ -178,6 +182,16 @@ public class RentacarServis {
 		return "Rent-a-car servis [id=" + id + ", naziv=" + naziv + ", adresa="
 				+ adresa + ", promotivni opis=" + promotivni_opis + "]";
 	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
+	}
+	
+	
 }
 	
 	

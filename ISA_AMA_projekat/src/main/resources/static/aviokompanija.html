@@ -133,30 +133,48 @@
 							<ul style="list-style-type:none" id="destination_list">
 
 							</ul>
-							<template id="destination_template">
-										<div class="room">
-			
-											<!-- Room -->
-												<div class="row">
-													<div class="col-lg-2">
-														<div class="room_image"></div>
-													</div>
-													<div class="col-lg-7">
-														<div class="room_content">
-			
-															<div style="font-size: x-large; margin-top: 7%;margin-left: -29%" class="room_text">{{dokle}}</div>
-														</div>
-													</div>
-													<div class="col-lg-3 text-lg-right">
-														<div class="room_button">
-															<div style="margin-top: 3%" class="button book_button trans_200"><a href="javascript:void(0)" class="selektovanjeDestinacije" id="">show flights<span></span><span></span><span></span></a></div>
-														</div>
-													</div>
-			
-												</div>
-			
-											<hr>	
+							
+						<template id=destination_template>
+							<div class="room" style="margin-bottom:10%">
+								<div id="airlineNaziv" style="font-size: x-large;margin-left:5%;margin-bottom: -5px" class="room_text">{{dokle}}</div>
+									
+								<div style="float:right;margin-top:-45px;margin-bottom: 50xp;" class="button book_button trans_200"><a href="javascript:void(0)" class="selektovanjeDestinacije" >SHOW DESTINATION<span></span><span></span><span></span></a></div>
+								
+								<div class="col-lg-3 text-lg-right">
+									<div >
+									</div>
+								</div>
+								<hr>	
+							</div>
+						</template>
+							
+							
+							
+							
+							<template class="template_hotel" id="airlineTemplate">
+									<div class="row">
+										<div class="col-lg-3 col-1680-4">
+											<div class="offers_image_container">
+												<div class="offer_name" style=" height: 70%; text-align: center; padding: 13% 0px"><p id = "name_hotel" style = "color:white;"></p></div>
+											</div>
 										</div>
+										<div class="col-lg-8">
+										
+											<div class="offers_content">
+												<div>
+													<span class="contact_info_icon" style="float: left;"><img src="images/placeholder.svg" alt="" height="20" width="20"></span>
+													<span><p class="offers_text" id = "text_hotel"></p></span>
+												</div>
+												<div class="button book_button" id="dugme_view_details"></div>
+												<div class="offer_reviews">
+													<div class="offer_reviews_content">
+														<div class="offer_reviews_title">rating</div>
+													</div>
+													<div class="offer_reviews_rating text-center" id = "rating_hotel"></div>
+												</div>
+											</div>
+										</div>
+									</div>
 							</template>
 						</div>
 					</div>
