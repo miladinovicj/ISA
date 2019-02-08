@@ -1,5 +1,6 @@
 package com.example.ISA_AMA_projekat.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +56,10 @@ public class LetService
 	{
 		letRepository.addToAcion(airlineID, flightID);
 	}
+	
+	public List<Let> findAll()
+	{
+		return letRepository.findAll();
+	}
+	
 }

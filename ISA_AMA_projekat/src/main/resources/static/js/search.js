@@ -1,5 +1,16 @@
+$(document).ready(function(){
+	
+	showContentAvio();
+	
+});
+
 function showContentHotel() {
 	
+	
+	$(".letoviStuff1").prop("hidden",true);
+	$(".letoviStuff2").prop("hidden",true);
+	$(".letoviStuff3").prop("hidden",true);
+	showContentAvio();
 	if(window.location.search.indexOf('id_rez') == -1)
 	{
 		if(document.getElementById('ubaci_hotele_template').style.display=='none') { 
@@ -59,7 +70,9 @@ function showContentHotel() {
 			}
 		});
 	}
-
+	$(".letoviStuff1").prop("hidden",true);
+	$(".letoviStuff2").prop("hidden",true);
+	$(".letoviStuff3").prop("hidden",true);
 }
 
 function addHotelLi(hotel) {
@@ -112,6 +125,11 @@ function singleListingHotel(hotel_id)
 
 function showContentAvio() {
 	
+	
+	$(".letoviStuff1").prop("hidden",false);
+	$(".letoviStuff2").prop("hidden",false);
+	$(".letoviStuff3").prop("hidden",false);
+	
 	if(window.location.search.indexOf('id_rez') == -1)
 	{
 	    if(document.getElementById('ubaci_hotele_template').style.display=='block') { 
@@ -134,6 +152,12 @@ function showContentAvio() {
 }
 
 function showContentRent() {
+	
+	
+	$(".letoviStuff1").prop("hidden",true);
+	$(".letoviStuff2").prop("hidden",true);
+	$(".letoviStuff3").prop("hidden",true);
+	
 	if(window.location.search.indexOf('id_rez') == -1)
 	{
 		if(document.getElementById('ubaci_hotele_template').style.display=='block') { 

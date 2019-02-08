@@ -56,7 +56,6 @@ insert into grad (id, naziv) values (6, 'Zrenjanin');
 
 
 insert into korisnik (id, email, lozinka, ime, prezime, grad_id, telefon, bonuspoeni, aktiviran) values (1, 'andrijana.jeremi@gmail.com', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'Andrijana', 'Jeremic', 4, '062522006', 0, true);
-insert into user_authority (user_id, authority_id) values (1,11);
 
 
 insert into adresa (id, grad_id, ulica, broj, latitude, longitude) values (1, 1, 'Novosadskog sajma', '35', 45.252529, 19.826855);
@@ -238,3 +237,6 @@ insert into bonus (id, bonus_poeni, popust) values (1, 10, 10);
 insert into bonus (id, bonus_poeni, popust) values (2, 13, 13);
 insert into bonus (id, bonus_poeni, popust) values (3, 15, 15);
 insert into bonus (id, bonus_poeni, popust) values (4, 17, 17);
+
+
+insert into user_authority (user_id, authority_id) values (1,11);
