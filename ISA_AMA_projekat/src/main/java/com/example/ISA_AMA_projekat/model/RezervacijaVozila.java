@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -22,6 +23,8 @@ public class RezervacijaVozila {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Version
+	private int verzija;
 	
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JsonBackReference(value = "RezervacijaVozila-Vozilo")
@@ -191,6 +194,18 @@ public class RezervacijaVozila {
 	public String toString() {
 		return "RezervacijaVozila [id=" + id  + ", ukupna_cena=" + ukupna_cena + "]";
 	}
+
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
+	}
+	
+	
 	
 
 }

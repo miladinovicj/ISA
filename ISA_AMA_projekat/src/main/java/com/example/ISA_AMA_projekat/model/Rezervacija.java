@@ -20,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
+import javax.persistence.Version;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -71,6 +73,9 @@ public class Rezervacija implements Serializable{
 	
 	@Column(nullable = false)
 	private boolean zavrsena;
+	
+	@Version
+	private int verzija;
 	
 	public Rezervacija() {
 		super();
@@ -159,5 +164,15 @@ public class Rezervacija implements Serializable{
 	public void setZavrsena(boolean zavrsena) {
 		this.zavrsena = zavrsena;
 	}
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
+	}
+	
+	
 	
 }

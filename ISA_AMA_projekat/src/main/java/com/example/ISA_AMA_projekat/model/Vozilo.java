@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -45,6 +46,9 @@ public class Vozilo {
 	
 	@Column
 	private double cena_dan;
+	
+	@Version
+	private int verzija;
 	
 	@Column(nullable = true)
 	private double prosecna_ocena;
@@ -222,6 +226,20 @@ public class Vozilo {
 
 	public void setFilijala(Filijala filijala) {
 		this.filijala = filijala;
+	}
+
+
+
+
+	public int getVerzija() {
+		return verzija;
+	}
+
+
+
+
+	public void setVerzija(int verzija) {
+		this.verzija = verzija;
 	}
 	
 	

@@ -28,10 +28,8 @@ public class LetService
 	@Transactional
 	public void deleteZauzetoSediste(Integer let_id, int sediste)
 	{
-		Let l = letRepository.findById(let_id).get();
-		l.getZauzetaSedista().remove(sediste);
-		letRepository.save(l);
-		//letRepository.deleteZauzetoSediste(let_id, sediste);
+		
+		letRepository.deleteZauzetoSediste(let_id, sediste);
 	}
 	
 	@Transactional
